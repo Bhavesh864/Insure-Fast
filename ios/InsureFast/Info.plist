@@ -36,7 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string />
+	<key>NSCameraUsageDescription</key>
+	<string>This allows us to use your device camera to upload and share picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This allows us to use gallery to upload pictures.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
