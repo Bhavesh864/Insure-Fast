@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Modal, StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { InputField, ModalTitleHeader } from '../CustomFields';
 import { AppText } from '../../Utility/TextUtility';
@@ -17,49 +17,53 @@ const ShareQuotationEmailModal = ({ onClose, title = "Select", list = [], onItem
             onRequestClose={onClose}
             animationType='slide'
         >
-            <View style={styles.modalCont}>
-                <View style={[styles.cont]}>
-                    <ModalTitleHeader
-                        title={title}
-                        onPress={onClose}
-                    />
-                    <View style={{
-                        flexGrow: 1,
-                        justifyContent: 'flex-start',
-                        // alignItems: 'center',
-                        flex: 1
-                    }}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                padding: 20
-                            }}>
+            <TouchableOpacity onPressOut={() => onClose()} activeOpacity={1} style={styles.modalCont}>
+                <TouchableWithoutFeedback>
+
+                    <View style={[styles.cont]}>
+                        <ModalTitleHeader
+                            title={title}
+                            onPress={onClose}
+                        />
+                        <View style={{
+                            flexGrow: 1,
+                            justifyContent: 'flex-start',
+                            // alignItems: 'center',
+                            flex: 1
+                        }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    padding: 20
+                                }}>
+
+                            </View>
+                            <InputField placeholder='Enter Email' onTextChange={(text) => {
+                                onItemSelect(text)
+                            }}
+                                value={selectedItem}
+                                keyboardType='email-address'
+                            />
 
                         </View>
-                        <InputField placeholder='Enter Email' onTextChange={(text) => {
-                            onItemSelect(text)
+                        <TouchableOpacity onPress={() => {
+                            if (selectedItem && selectedItem.includes('.com') && selectedItem.includes('@')) {
+                                sendQuotation(selectedItem);
+                                onClose();
+                                onItemSelect('');
+                            } else {
+                                onClose()
+                                AppToastMessage('Please enter valid email')
+                                return;
+                            }
                         }}
-                            value={selectedItem}
-                            keyboardType='email-address'
-                        />
-
+                            style={{ backgroundColor: colors.primary, ...Center, width: '50%', alignSelf: 'center', borderRadius: 10, marginBottom: 10 }}>
+                            <AppText text='Submit' color={colors.white} size={14} style={{ textAlign: 'right', padding: 15 }} />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => {
-                        if (selectedItem && selectedItem.includes('.com') && selectedItem.includes('@')) {
-                            sendQuotation(selectedItem);
-                            onClose();
-                            onItemSelect('');
-                        } else {
-                            onClose()
-                            AppToastMessage('Please enter valid email')
-                            return;
-                        }
-                    }}
-                        style={{ backgroundColor: colors.primary, ...Center, width: '50%', alignSelf: 'center', borderRadius: 10, marginBottom: 10 }}>
-                        <AppText text='Submit' color={colors.white} size={14} style={{ textAlign: 'right', padding: 15 }} />
-                    </TouchableOpacity>
-                </View>
-            </View>
+                </TouchableWithoutFeedback>
+
+            </TouchableOpacity>
         </Modal>
     )
 }

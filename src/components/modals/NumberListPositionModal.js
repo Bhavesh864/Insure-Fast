@@ -28,7 +28,7 @@ const NumberListPositionModal = ({ close, position, options, optionPress = () =>
                 onRequestClose={() => close()}
                 transparent={true}
             >
-                <TouchableOpacity activeOpacity={1} onPress={() => close()} style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <TouchableOpacity activeOpacity={1} onPressOut={() => close()} style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
                     <View style={[
                         styles.moreModal,
                         // { top: height - position < 170 ? position - 80 : position + 10, },

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppToastMessage } from '../../components/custom/SnackBar';
 import { navigate } from '../../routes/RootNavigation';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
 const ClaimFormScreen = ({ navigation }) => {
@@ -220,6 +221,16 @@ const ClaimFormScreen = ({ navigation }) => {
                             showsHorizontalScrollIndicator={false}
                             renderItem={({ item, index }) => {
                                 return <View style={{ marginTop: 15, marginHorizontal: 10 }} >
+                                    <AntDesign
+
+                                        name='minuscircle'
+                                        size={20}
+                                        color={colors.red}
+                                        onPress={() => {
+                                            setimageList(imageList.filter((el) => el !== item));
+                                        }}
+                                        style={{ position: 'absolute', top: -10, right: -5, zIndex: 1 }}
+                                    />
                                     <Image style={styles.addAttach} source={{ uri: imageList[index].uri }} />
                                 </View>
                             }}

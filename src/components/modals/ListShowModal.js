@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { colors } from '../../styles/colors'
 import { Center, height, width } from '../../styles/CommonStyling'
 import { InputField, ModalTitleHeader } from '../CustomFields'
@@ -24,43 +24,46 @@ const ListShowModal = ({ onClose, title = "Select", list = [], onItemSelect, sel
             onRequestClose={onClose}
             animationType='slide'
         >
-            <View style={styles.modalCont}>
-                <View style={[styles.cont, contStyle]}>
-                    <ModalTitleHeader
-                        title={title}
-                        onPress={onClose}
-                    />
-                    {isSearch &&
-                        <View style={{ marginTop: 15 }}>
-                            <InputField
-                                placeholder='Search'
-                                value={search}
-                                onTextChange={txt => searchAction(txt)}
-                                style={{ marginBottom: 0 }}
-                            />
-                        </View>
-                    }
-                    <ScrollView style={{ flexGrow: 1 }}>
-                        <View style={styles.itemCont}>
-                            {list.map((item, index) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={String(index)}
-                                        activeOpacity={0.8}
-                                        style={[styles.item, { borderColor: selectedItem == item[selectedKey] ? colors.primary : colors.grey }]}
-                                        onPress={() => onItemSelect(item)}
-                                    >
-                                        <AppText
-                                            text={item[textKey]}
-                                        // color={}
-                                        />
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
-                    </ScrollView>
-                </View>
-            </View>
+            <TouchableOpacity style={styles.modalCont} onPressOut={() => onClose()} activeOpacity={1}>
+                <TouchableWithoutFeedback>
+                    <View style={[styles.cont, contStyle]}>
+                        <ModalTitleHeader
+                            title={title}
+                            onPress={onClose}
+                        />
+                        {isSearch &&
+                            <View style={{ marginTop: 15 }}>
+                                <InputField
+                                    placeholder='Search'
+                                    value={search}
+                                    onTextChange={txt => searchAction(txt)}
+                                    style={{ marginBottom: 0 }}
+                                />
+                            </View>
+                        }
+                        <ScrollView style={{ flexGrow: 1 }}>
+                            <View style={styles.itemCont}>
+                                {list.map((item, index) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={String(index)}
+                                            activeOpacity={0.8}
+                                            style={[styles.item, { borderColor: selectedItem == item[selectedKey] ? colors.primary : colors.grey }]}
+                                            onPress={() => onItemSelect(item)}
+                                        >
+                                            <AppText
+                                                text={item[textKey]}
+                                            // color={}
+                                            />
+                                        </TouchableOpacity>
+                                    )
+                                })}
+                            </View>
+                        </ScrollView>
+                    </View>
+                </TouchableWithoutFeedback>
+
+            </TouchableOpacity>
         </Modal>
     )
 }
