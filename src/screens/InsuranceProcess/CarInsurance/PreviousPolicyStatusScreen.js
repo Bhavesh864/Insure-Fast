@@ -87,14 +87,14 @@ const PreviousPolicyStatusScreen = () => {
             AppToastMessage("Please provide previous policy status");
             return;
         }
-        if (!odType && !selectedPolicyStatus) {
-            AppToastMessage("Please provide your previous policy type");
-            return;
-        }
-        if (!selectedpreviousPol) {
-            AppToastMessage("Please provide your previous policy insurer");
-            return;
-        }
+        // if (!odType && !selectedPolicyStatus && policyExpire != 'none') {
+        //     AppToastMessage("Please provide your previous policy type");
+        //     return;
+        // }-
+        // if (!selectedpreviousPol && policyExpire != 'none') {
+        //     AppToastMessage("Please provide your previous policy insurer");
+        //     return;
+        // }
         dispatchQuickQuote('PrePolicyEndDate', prevPolEndDate);
         dispatchQuickQuote('PolicyStatus', policyExpire);
         dispatchQuickQuote('PreviousPolicyType', selectedPolicyStatus);
@@ -108,7 +108,6 @@ const PreviousPolicyStatusScreen = () => {
             'PreviousPolicyType': selectedPolicyStatus,
         }
 
-        console.log('obj2 ==> ', obj2)
         let formData = new FormData();
         for (let key in obj2) {
             formData.append(key, obj2[key]);
@@ -201,7 +200,7 @@ const PreviousPolicyStatusScreen = () => {
                         )
                     })}
                 </View>
-                <View style={styles.dataCont}>
+                {policyExpire != 'none' && <View style={styles.dataCont}>
                     <HeadingText
                         text={!odType ? "What is your previous policy type?" : "Your previous policy insurer"}
                         style={{ marginBottom: 10 }}
@@ -248,7 +247,7 @@ const PreviousPolicyStatusScreen = () => {
                             marginHorizontal={0}
                         />
                     </View>
-                </View>
+                </View>}
                 <View style={{ margin: 20, marginTop: 0 }}>
                     <Button
                         title='Continue'
