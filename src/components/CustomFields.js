@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,13 @@ import {
   ActivityIndicator,
   Linking,
   NativeModules,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 // import RNFetchBlob from 'react-native-blob-util';
 import {
   Center,
@@ -22,23 +24,23 @@ import {
   fonts,
   fontSize,
   normalTextStyle,
+  screenStyle,
   SemiMediumTextStyle,
   smallTextSize,
 } from '../styles/CommonStyling';
-import { colors } from '../styles/colors';
-import { goBack, navigate } from '../routes/RootNavigation';
+import {colors} from '../styles/colors';
+import {goBack, navigate} from '../routes/RootNavigation';
 // import { AppText, HeadingText } from '../utility/TextUtility';
-import { shadows } from '../styles/shadow';
-import { AppConst, englishLanguageKey } from '../constants/AppConst';
-import { AppText, HeadingText } from '../Utility/TextUtility';
-
+import {shadows} from '../styles/shadow';
+import {AppConst, englishLanguageKey} from '../constants/AppConst';
+import {AppText, HeadingText} from '../Utility/TextUtility';
 
 export const InputField = ({
   placeholder = 'Password',
   value,
   onTextChange,
-  onFocus = () => { },
-  onBlur = () => { },
+  onFocus = () => {},
+  onBlur = () => {},
   showIcon,
   isDescription = false,
   error,
@@ -54,10 +56,9 @@ export const InputField = ({
   ref = null,
   containerStyle = {},
   errorColor = colors.red,
-  autoCapitalize = "none",
-  onKeyPress = () => { },
-  autoCorrect = false
-
+  autoCapitalize = 'none',
+  onKeyPress = () => {},
+  autoCorrect = false,
 }) => {
   const [activeField, setActiveField] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(password);
@@ -65,13 +66,13 @@ export const InputField = ({
   const inputPasswordWidth =
     activeField && !isDescription
       ? {
-        border: 0.5,
-        borderColor: activeBorderColor ? activeBorderColor : colors.primary,
-      }
+          border: 0.5,
+          borderColor: activeBorderColor ? activeBorderColor : colors.primary,
+        }
       : {};
   // console.log("editable--", editable)
   return (
-    <View style={{ marginVertical: 5, ...containerStyle, }}>
+    <View style={{marginVertical: 5, ...containerStyle}}>
       {label && (
         <AppText
           text={label}
@@ -88,7 +89,9 @@ export const InputField = ({
           styles.InputView,
           // inputPasswordWidth,
           // shadows[1],
-          isDescription ? { height: 120, maxHeight: 120 } : { alignItems: 'center' },
+          isDescription
+            ? {height: 120, maxHeight: 120}
+            : {alignItems: 'center'},
           // error ? { borderColor: colors.secondary, borderWidth: 0.8 } : null,
           isDescription ? null : flexRow,
           style,
@@ -123,33 +126,41 @@ export const InputField = ({
               fontSize: 15,
               paddingLeft: showIcon && showIcon ? 10 : 10,
               textAlignVertical: isDescription ? 'top' : 'center',
-              ...textStyle
+              ...textStyle,
             },
           ]}
         />
         {leftIcon && leftIcon}
-        {password && <Entypo name={secureTextEntry ? 'eye-with-line' : 'eye'} size={20} color={colors.white} style={{ padding: 5, marginLeft: 5 }} onPress={() => setSecureTextEntry(!secureTextEntry)} />}
+        {password && (
+          <Entypo
+            name={secureTextEntry ? 'eye-with-line' : 'eye'}
+            size={20}
+            color={colors.white}
+            style={{padding: 5, marginLeft: 5}}
+            onPress={() => setSecureTextEntry(!secureTextEntry)}
+          />
+        )}
       </View>
       {error ? (
         <AppText
           text={error}
-          style={[{ color: errorColor, paddingHorizontal: 25, top: -10 }]}
+          style={[{color: errorColor, paddingHorizontal: 25, top: -10}]}
         />
-        // <Text
-        //   style={[
-        //     normalTextStyle,
-        //     { color: colors.secondary, paddingHorizontal: 25, top: -10 },
-        //   ]}>
-        //   {error}
-        // </Text>
-      ) : null}
+      ) : // <Text
+      //   style={[
+      //     normalTextStyle,
+      //     { color: colors.secondary, paddingHorizontal: 25, top: -10 },
+      //   ]}>
+      //   {error}
+      // </Text>
+      null}
     </View>
   );
 };
 
-export const AppName = ({ size = 28 }) => {
+export const AppName = ({size = 28}) => {
   return (
-    <View style={{ ...flexRow, alignSelf: 'center' }}>
+    <View style={{...flexRow, alignSelf: 'center'}}>
       <HeadingText text="my" size={28} />
       <HeadingText text="fans" size={28} color={colors.secondary} />
     </View>
@@ -161,7 +172,7 @@ export const Loader = ({
   backgroundColor = 'rgba(0,0,0,0.5)',
 }) => {
   return (
-    <View style={[styles.loader, { backgroundColor: backgroundColor }]}>
+    <View style={[styles.loader, {backgroundColor: backgroundColor}]}>
       <ActivityIndicator size={'large'} color={color} style={styles.loaderC} />
     </View>
   );
@@ -169,24 +180,24 @@ export const Loader = ({
 
 export const Button = ({
   title = 'Login',
-  onPress = () => { },
+  onPress = () => {},
   backgroundColor = colors.primary,
   textStyle = {},
   icon,
   style = {},
-  textColor = colors.white
+  textColor = colors.white,
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={[styles.button, { backgroundColor: backgroundColor, ...style }]}
+      style={[styles.button, {backgroundColor: backgroundColor, ...style}]}
       onPress={() => onPress()}>
       {icon && icon}
 
       <AppText
         text={title}
         color={textColor}
-        style={{ ...SemiMediumTextStyle, ...textStyle }}
+        style={{...SemiMediumTextStyle, ...textStyle}}
       />
     </TouchableOpacity>
   );
@@ -195,7 +206,7 @@ export const Button = ({
 export const TouchableTextView = ({
   placeholder,
   value,
-  onPress = () => { },
+  onPress = () => {},
   Icon,
   leftIcon,
   style = {},
@@ -205,12 +216,12 @@ export const TouchableTextView = ({
   label,
   error,
   valueColor = colors.black,
-  marginHorizontal = 20
+  marginHorizontal = 20,
 }) => {
   return (
-    <View style={{ marginVertical: 2 }}>
+    <View style={{marginVertical: 2}}>
       <SpacerHorizontal marginHorizontal={marginHorizontal}>
-        {label &&
+        {label && (
           <AppText
             text={label}
             style={{
@@ -219,15 +230,15 @@ export const TouchableTextView = ({
             }}
             size={15}
           />
-        }
+        )}
         <TouchableOpacity
           activeOpacity={touchable ? 0.7 : 1}
           style={[
             styles.InputView,
             // shadows[0],
             {
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: 'row',
+              alignItems: 'center',
               backgroundColor: backgroundColor,
               marginBottom,
               justifyContent: 'space-between',
@@ -241,7 +252,11 @@ export const TouchableTextView = ({
             numberOfLines={1}
             style={[
               normalTextStyle,
-              { color: value ? valueColor : colors.grey, paddingLeft: 10, flex: 1 },
+              {
+                color: value ? valueColor : colors.grey,
+                paddingLeft: 10,
+                flex: 1,
+              },
             ]}>
             {value ? value : placeholder}
           </Text>
@@ -251,7 +266,7 @@ export const TouchableTextView = ({
       {error ? (
         <AppText
           text={error}
-          style={[{ color: colors.red, paddingHorizontal: 25, top: -10 }]}
+          style={[{color: colors.red, paddingHorizontal: 25, top: -10}]}
         />
       ) : null}
     </View>
@@ -262,11 +277,11 @@ export const Checkbox = ({
   value = false,
   size = 20,
   backgroundColor = colors.primary,
-  onPress = () => { },
+  onPress = () => {},
   checkText = false,
 }) => {
   return (
-    <View style={{ ...flexRow }}>
+    <View style={{...flexRow}}>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
@@ -296,11 +311,11 @@ export const Selectbox = ({
   value = false,
   size = 22,
   backgroundColor = colors.primary,
-  onPress = () => { },
+  onPress = () => {},
   checkText = false,
 }) => {
   return (
-    <View style={{ ...flexRow }}>
+    <View style={{...flexRow}}>
       <TouchableOpacity
         onPress={onPress}
         style={[
@@ -311,10 +326,21 @@ export const Selectbox = ({
             width: size,
             borderColor: value ? colors.primary : colors.grey,
             borderRadius: 20,
-            padding: 2
+            padding: 2,
           },
         ]}>
-        {value && <View style={[{ backgroundColor, borderRadius: 20, height: size - 7, width: size - 7 }]} />}
+        {value && (
+          <View
+            style={[
+              {
+                backgroundColor,
+                borderRadius: 20,
+                height: size - 7,
+                width: size - 7,
+              },
+            ]}
+          />
+        )}
       </TouchableOpacity>
       {value && checkText && (
         <HeadingText
@@ -327,37 +353,53 @@ export const Selectbox = ({
   );
 };
 
-export const YesNoButton = ({ value = true, onPress = () => { }, noValueType = false }) => {
+export const YesNoButton = ({
+  value = true,
+  onPress = () => {},
+  noValueType = false,
+}) => {
   const backgroundColor = value ? colors.primary : colors.white;
   return (
-    <View style={[flexRow, { marginVertical: 20, marginBottom: 0 }]}>
+    <View style={[flexRow, {marginVertical: 20, marginBottom: 0}]}>
       <TouchableOpacity
         onPress={() => onPress(true)}
-        style={[styles.yesNoBtn, { backgroundColor: value ? colors.primary : colors.white }]}
-      >
+        style={[
+          styles.yesNoBtn,
+          {backgroundColor: value ? colors.primary : colors.white},
+        ]}>
         {/* <Selectbox value={true} /> */}
         <AppText
-          text={"Yes"}
+          text={'Yes'}
           color={value ? colors.white : colors.grey}
-          style={{ marginLeft: 0 }}
+          style={{marginLeft: 0}}
         />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onPress(false)}
-        style={[styles.yesNoBtn, { marginLeft: 20, backgroundColor: (value != noValueType) ? colors.white : colors.primary }]}
-      >
+        style={[
+          styles.yesNoBtn,
+          {
+            marginLeft: 20,
+            backgroundColor:
+              value != noValueType ? colors.white : colors.primary,
+          },
+        ]}>
         {/* <Selectbox value={false} /> */}
         <AppText
-          text={"No"}
-          color={(value != noValueType) ? colors.grey : colors.white}
-          style={{ marginLeft: 0 }}
+          text={'No'}
+          color={value != noValueType ? colors.grey : colors.white}
+          style={{marginLeft: 0}}
         />
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export const CustomBackButton = ({ style = {}, iconName = 'chevron-back', onPress = () => goBack() }) => {
+export const CustomBackButton = ({
+  style = {},
+  iconName = 'chevron-back',
+  onPress = () => goBack(),
+}) => {
   return (
     <TouchableOpacity
       onPress={() => onPress()}
@@ -367,49 +409,51 @@ export const CustomBackButton = ({ style = {}, iconName = 'chevron-back', onPres
   );
 };
 
-export const ModalHeader = ({ title = '', onPress = () => { } }) => {
+export const ModalHeader = ({title = '', onPress = () => {}}) => {
   return (
-    <View
-      style={styles.modalHeader}>
+    <View style={styles.modalHeader}>
       <CustomBackButton onPress={onPress} />
-      <AppText
-        size={17}
-        style={{ marginHorizontal: 20 }}
-        text={title}
-      />
+      <AppText size={17} style={{marginHorizontal: 20}} text={title} />
     </View>
   );
 };
 
-
-export const ModalTitleHeader = ({ title = '', onPress = () => { }, style = {}, color = colors.black }) => {
+export const ModalTitleHeader = ({
+  title = '',
+  onPress = () => {},
+  style = {},
+  color = colors.black,
+}) => {
   return (
-    <View
-      style={[styles.modalTitleHeader, style]}>
+    <View style={[styles.modalTitleHeader, style]}>
       <AppText
         size={17}
-        style={{ marginHorizontal: 20 }}
+        style={{marginHorizontal: 20}}
         text={title}
         color={color}
       />
-      <AntDesign name='close' size={25} color={color} style={styles.closeIcon} onPress={() => onPress()} />
+      <AntDesign
+        name="close"
+        size={25}
+        color={color}
+        style={styles.closeIcon}
+        onPress={() => onPress()}
+      />
     </View>
   );
 };
 
-
-export const SpacerVertical = ({ children, marginVertical = 15 }) => {
-  return <View style={{ marginVertical: marginVertical }}>{children}</View>;
+export const SpacerVertical = ({children, marginVertical = 15}) => {
+  return <View style={{marginVertical: marginVertical}}>{children}</View>;
 };
 
-export const SpacerHorizontal = ({ children, marginHorizontal = 20 }) => {
-  return <View style={{ marginHorizontal: marginHorizontal }}>{children}</View>;
+export const SpacerHorizontal = ({children, marginHorizontal = 20}) => {
+  return <View style={{marginHorizontal: marginHorizontal}}>{children}</View>;
 };
 
-
-export const OverLayView = ({ borderRadius = 0, opacity = 0.5, style = {} }) => {
-  return <View style={[styles.overlayView, { borderRadius, opacity }, style]} />
-}
+export const OverLayView = ({borderRadius = 0, opacity = 0.5, style = {}}) => {
+  return <View style={[styles.overlayView, {borderRadius, opacity}, style]} />;
+};
 
 export const Spacer = ({
   children,
@@ -427,35 +471,40 @@ export const Spacer = ({
   );
 };
 
-
 export const SingleTab = ({
   text = 'Account',
-  onPress = () => { },
+  onPress = () => {},
   Icon,
   showBorder = true,
-  badgeValue = null
+  badgeValue = null,
 }) => {
   const appLanguage = useSelector(state => state.app.appLanguage);
 
-  AppConst.showConsoleLog("cart - ", badgeValue)
+  AppConst.showConsoleLog('cart - ', badgeValue);
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => onPress()}
-      style={[{ ...styles.tabView, borderBottomWidth: showBorder ? 0.3 : 0 }, flexSpaceBetween]}>
+      style={[
+        {...styles.tabView, borderBottomWidth: showBorder ? 0.3 : 0},
+        flexSpaceBetween,
+      ]}>
       <View style={flexRow}>
         {Icon && <View style={styles.tabIconView}>{Icon}</View>}
         <AppText text={text} size={16} onPress={onPress} />
       </View>
-      <View style={{ marginRight: 20, ...flexRow }}>
-        {badgeValue ?
+      <View style={{marginRight: 20, ...flexRow}}>
+        {badgeValue ? (
           <View style={styles.badge}>
             <AppText text={badgeValue} />
           </View>
-          : null
-        }
+        ) : null}
         <Ionicons
-          name={appLanguage == "AR" ? "chevron-back-outline" : "chevron-forward-outline"}
+          name={
+            appLanguage == 'AR'
+              ? 'chevron-back-outline'
+              : 'chevron-forward-outline'
+          }
           size={22}
           color={colors.fadeGrey}
         />
@@ -464,30 +513,58 @@ export const SingleTab = ({
   );
 };
 
-
-export const HeaderWithCloseIcon = ({ onPress = () => goBack() }) => (
+export const HeaderWithCloseIcon = ({onPress = () => goBack()}) => (
   <View style={styles.backBtnView}>
     <CustomBackButton
       iconName="close-outline"
       onPress={() => onPress()}
-      style={{ backgroundColor: colors.darkGrey }}
+      style={{backgroundColor: colors.darkGrey}}
     />
   </View>
-)
+);
 
-
-
-export const ScreenCenterText = ({ text = "No Data Found", textStyle = {}, textColor, textSize = 16 }) => {
+export const ScreenCenterText = ({
+  text = 'No Data Found',
+  textStyle = {},
+  textColor,
+  textSize = 16,
+}) => {
   return (
     <HeadingText
       text={text}
-      style={{ position: "absolute", top: "47%", alignSelf: "center", ...textStyle }}
+      style={{
+        position: 'absolute',
+        top: '47%',
+        alignSelf: 'center',
+        ...textStyle,
+      }}
       color={textColor}
       size={textSize}
     />
-  )
-}
+  );
+};
 
+export const keyboardVerticalOffset = Platform.OS === 'ios' ? 20 : 0;
+
+export const CustomKeyboardAvoidingView = ({
+  children,
+  style,
+  behavior = 'padding',
+}) => {
+  if (Platform.OS == 'android') {
+    return <View style={[screenStyle, style]}>{children}</View>;
+  } else {
+    return (
+      <KeyboardAvoidingView
+        style={[screenStyle, style]}
+        behavior={'padding'}
+        enabled
+        keyboardVerticalOffset={keyboardVerticalOffset}>
+        {children}
+      </KeyboardAvoidingView>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
   InputView: {
@@ -518,7 +595,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: fonts.medium,
-    fontSize: 16
+    fontSize: 16,
   },
   loader: {
     position: 'absolute',
@@ -547,9 +624,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   closeIcon: {
-    position: "absolute",
+    position: 'absolute',
     right: 0,
-    padding: 10
+    padding: 10,
   },
   loaderC: {
     padding: 10,
@@ -578,7 +655,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   overlayView: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
@@ -590,9 +667,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    alignItems: "center",
+    alignItems: 'center',
     borderBottomWidth: 0.5,
-    borderColor: colors.grey
+    borderColor: colors.grey,
   },
   videoView: {
     height: 100,
@@ -600,19 +677,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: colors.darkGrey,
     marginTop: 10,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backBtnView: {
     margin: 15,
-    alignSelf: "flex-end"
+    alignSelf: 'flex-end',
   },
   badge: {
     height: 24,
     width: 24,
     ...Center,
     borderRadius: 30,
-    backgroundColor: colors.secondary
+    backgroundColor: colors.secondary,
   },
   yesNoBtn: {
     height: 40,
@@ -622,6 +699,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     ...flexRow,
     borderWidth: 0.6,
-    borderColor: colors.grey
-  }
+    borderColor: colors.grey,
+  },
 });

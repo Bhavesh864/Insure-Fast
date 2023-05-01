@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   Animated,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import {colors} from '../../styles/colors';
 import {
@@ -26,6 +27,7 @@ import {
   YesNoButton,
   Checkbox,
   TouchableTextView,
+  CustomKeyboardAvoidingView,
 } from '../CustomFields';
 import {AppText, HeadingText} from '../../Utility/TextUtility';
 import SelectNCBValue from '../insurance/motor/SelectNCBValue';
@@ -137,70 +139,55 @@ const IdvSelectModal = ({
   };
 
   return (
-    <Modal
-      transparent
-      onRequestClose={() => {
-        onClose();
-      }}
-      animationType="slide">
-      <View style={[styles.modalCont, {justifyContent: 'flex-end'}]}>
-        <View style={[styles.cont, {marginBottom: 10}]}>
-          <ModalTitleHeader
-            title={title}
-            onPress={onClose}
-            style={{backgroundColor: colors.primary}}
-            color={colors.white}
-          />
+    <SafeAreaView>
+      <Modal
+        transparent
+        onRequestClose={() => {
+          onClose();
+        }}
+        animationType="slide">
+        <CustomKeyboardAvoidingView
+          style={[styles.modalCont, {justifyContent: 'flex-end'}]}>
+          <View style={[styles.modalCont, {justifyContent: 'flex-end'}]}>
+            <View style={[styles.cont, {marginBottom: 10}]}>
+              <ModalTitleHeader
+                title={title}
+                onPress={onClose}
+                style={{backgroundColor: colors.primary}}
+                color={colors.white}
+              />
 
-          {textKey == 'NCB' ? (
-            <SelectedNCBValue />
-          ) : (
-            <ScrollView style={{flexGrow: 1}}>
-              <View style={styles.itemCont}>
-                {textKey == 'Addons' && (
-                  <AppText
-                    style={{marginHorizontal: 10, marginTop: 10}}
-                    text="Addons"
-                    size={fontSize.medium}
-                  />
-                )}
-                {list.map((item, index) => {
-                  return (
-                    <View key={String(index)}>
-                      <TouchableOpacity
-                        key={String(index)}
-                        activeOpacity={0.8}
-                        style={[
-                          styles.item,
-                          {
-                            borderColor: colors.grey,
-                            marginVertical: textKey == 'Addons' ? 3 : 15,
-                          },
-                        ]}
-                        onPress={() => {
-                          // onAddonsSelect(item.title)
-                          if (textKey == 'IDV') {
-                            setselectedIDV(item);
-                            onClose();
-                          } else {
-                            if (!selectedAddons.includes(item.key)) {
-                              onAddonsSelect([...selectedAddons, item.key]);
-                            } else {
-                              onAddonsSelect(
-                                selectedAddons.filter(i => item.key != i),
-                              );
-                            }
-                          }
-                        }}>
-                        {textKey == 'IDV' ? (
-                          <View style={styles.letterView}>
-                            <HeadingText text={null} size={0} />
-                          </View>
-                        ) : (
-                          <View style={styles.checkbox}>
-                            <Checkbox
-                              value={selectedAddons.includes(item.key)}
-                              onPress={() => {
+              {textKey == 'NCB' ? (
+                <SelectedNCBValue />
+              ) : (
+                <ScrollView style={{flexGrow: 1}}>
+                  <View style={styles.itemCont}>
+                    {textKey == 'Addons' && (
+                      <AppText
+                        style={{marginHorizontal: 10, marginTop: 10}}
+                        text="Addons"
+                        size={fontSize.medium}
+                      />
+                    )}
+                    {list.map((item, index) => {
+                      return (
+                        <View key={String(index)}>
+                          <TouchableOpacity
+                            key={String(index)}
+                            activeOpacity={0.8}
+                            style={[
+                              styles.item,
+                              {
+                                borderColor: colors.grey,
+                                marginVertical: textKey == 'Addons' ? 3 : 15,
+                              },
+                            ]}
+                            onPress={() => {
+                              // onAddonsSelect(item.title)
+                              if (textKey == 'IDV') {
+                                setselectedIDV(item);
+                                onClose();
+                              } else {
                                 if (!selectedAddons.includes(item.key)) {
                                   onAddonsSelect([...selectedAddons, item.key]);
                                 } else {
@@ -208,258 +195,296 @@ const IdvSelectModal = ({
                                     selectedAddons.filter(i => item.key != i),
                                   );
                                 }
-                              }}
-                            />
-                          </View>
-                        )}
-
-                        <AppText
-                          text={item.title}
-                          style={{flex: 1}}
-                          numberOfLines={2}
-                          // color={}
-                        />
-                        {item.showInput && (
-                          <TextInput
-                            // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
-                            placeholder={item.placeholderTxt}
-                            keyboardType={'number-pad'}
-                            value={item.value}
-                            onChangeText={text => {
-                              handleIDV(text, index);
-                            }}
-                            // onTextChange={t => onRegTextChange(t)}
-                            style={styles.input}
-                          />
-                        )}
-                      </TouchableOpacity>
-                      {selectedAddons.includes(item.key) && item.key == 12 ? (
-                        <TextInput
-                          // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
-                          placeholder={item.placeholderTxt}
-                          keyboardType={'number-pad'}
-                          value={item.value}
-                          onChangeText={text => {
-                            handleAddons(text, index);
-                          }}
-                          // onTextChange={t => onRegTextChange(t)}
-                          style={styles.input}
-                        />
-                      ) : null}
-                    </View>
-                  );
-                })}
-              </View>
-
-              {textKey == 'Addons' && (
-                <View View style={styles.itemCont}>
-                  <AppText
-                    style={{marginHorizontal: 10, marginTop: 10}}
-                    text="Accessories"
-                    size={fontSize.medium}
-                  />
-                  {accLists.map((item, index) => {
-                    return (
-                      <View key={String(index)}>
-                        <TouchableOpacity
-                          key={String(index)}
-                          activeOpacity={0.8}
-                          style={[styles.item, {borderColor: colors.white}]}
-                          onPress={() => {
-                            if (textKey == 'IDV') {
-                              onClose();
-                            } else {
-                              if (!selectedAccessories.includes(item.key)) {
-                                onAccSelect([...selectedAccessories, item.key]);
-                              } else {
-                                onAccSelect(
-                                  selectedAccessories.filter(
-                                    i => item.key != i,
-                                  ),
-                                );
                               }
-                            }
-                          }}>
-                          <View style={styles.checkbox}>
-                            <Checkbox
-                              value={selectedAccessories.includes(item.key)}
-                              onPress={() => {
-                                if (!selectedAccessories.includes(item.key)) {
-                                  onAccSelect([
-                                    ...selectedAccessories,
-                                    item.key,
-                                  ]);
-                                } else {
-                                  onAccSelect(
-                                    selectedAccessories.filter(
-                                      i => item.key != i,
-                                    ),
-                                  );
-                                }
-                              }}
+                            }}>
+                            {textKey == 'IDV' ? (
+                              <View style={styles.letterView}>
+                                <HeadingText text={null} size={0} />
+                              </View>
+                            ) : (
+                              <View style={styles.checkbox}>
+                                <Checkbox
+                                  value={selectedAddons.includes(item.key)}
+                                  onPress={() => {
+                                    if (!selectedAddons.includes(item.key)) {
+                                      onAddonsSelect([
+                                        ...selectedAddons,
+                                        item.key,
+                                      ]);
+                                    } else {
+                                      onAddonsSelect(
+                                        selectedAddons.filter(
+                                          i => item.key != i,
+                                        ),
+                                      );
+                                    }
+                                  }}
+                                />
+                              </View>
+                            )}
+
+                            <AppText
+                              text={item.title}
+                              style={{flex: 1}}
+                              numberOfLines={2}
+                              // color={}
                             />
-                          </View>
-
-                          <AppText
-                            text={item.title}
-                            style={{flex: 1}}
-                            numberOfLines={2}
-                            // color={}
-                          />
-                        </TouchableOpacity>
-                        {selectedAccessories.includes(item.key) && (
-                          <TextInput
-                            // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
-                            placeholder={item.placeholderTxt}
-                            keyboardType={'number-pad'}
-                            value={item.value}
-                            onChangeText={text => {
-                              handleAccessoriesList(text, index);
-                            }}
-                            // onTextChange={t => onRegTextChange(t)}
-                            style={styles.input}
-                          />
-                        )}
-                      </View>
-                    );
-                  })}
-                </View>
-              )}
-
-              {textKey == 'Addons' ? (
-                <View style={styles.itemCont}>
-                  <AppText
-                    style={{marginHorizontal: 10, marginTop: 10}}
-                    text="Additional Covers"
-                    size={fontSize.medium}
-                  />
-                  {AdditionalCoversList.map((item, index) => {
-                    return (
-                      <View key={index}>
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          style={[
-                            styles.item,
-                            {
-                              borderColor: colors.grey,
-                              marginVertical: textKey == 'Addons' ? 3 : 15,
-                            },
-                          ]}
-                          onPress={() => {
-                            // onAddonsSelect(item.title)
-                            if (textKey == 'IDV') {
-                              setselectedIDV(item);
-                              onClose();
-                            } else {
-                              if (!selectedAddons.includes(item.key)) {
-                                onAddonsSelect([...selectedAddons, item.key]);
-                                ListUpAndDownAnimation();
-                              } else {
-                                onAddonsSelect(
-                                  selectedAddons.filter(i => item.key != i),
-                                );
-                              }
-                            }
-                          }}>
-                          {textKey == 'IDV' ? (
-                            <View style={styles.letterView}>
-                              <HeadingText text={null} size={0} />
-                            </View>
-                          ) : (
-                            <View style={styles.checkbox}>
-                              <Checkbox
-                                value={selectedAddons.includes(item.key)}
-                                onPress={() => {
-                                  if (!selectedAddons.includes(item.key)) {
-                                    ListUpAndDownAnimation();
-                                    onAddonsSelect([
-                                      ...selectedAddons,
-                                      item.key,
-                                    ]);
-                                  } else {
-                                    onAddonsSelect(
-                                      selectedAddons.filter(i => item.key != i),
-                                    );
-                                  }
+                            {item.showInput && (
+                              <TextInput
+                                // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
+                                placeholder={item.placeholderTxt}
+                                keyboardType={'number-pad'}
+                                value={item.value}
+                                onChangeText={text => {
+                                  handleIDV(text, index);
                                 }}
+                                // onTextChange={t => onRegTextChange(t)}
+                                style={styles.input}
                               />
-                            </View>
-                          )}
-
-                          <AppText
-                            text={`${item.title} `}
-                            style={{flex: 1}}
-                            numberOfLines={2}
-                            // color={}
-                          />
-                          {item.showInput && (
+                            )}
+                          </TouchableOpacity>
+                          {selectedAddons.includes(item.key) &&
+                          item.key == 12 ? (
                             <TextInput
                               // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
                               placeholder={item.placeholderTxt}
                               keyboardType={'number-pad'}
                               value={item.value}
                               onChangeText={text => {
-                                handleIDV(text, index);
+                                handleAddons(text, index);
                               }}
                               // onTextChange={t => onRegTextChange(t)}
                               style={styles.input}
                             />
-                          )}
-                        </TouchableOpacity>
-                        {selectedAddons.includes(item.key) && item.key == 1 ? (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              flexWrap: 'wrap',
-                              marginVertical: 5,
-                            }}>
-                            <View>
-                              <AdditionalCoversDropdown
-                                data={[
-                                  {amount: 1, key: 1},
-                                  {amount: 2, key: 2},
-                                ]}
-                                onPress={setselectedPaidDriver}
-                                selectedItem={selectedPaidDriver}
-                              />
-                            </View>
-                          </View>
-                        ) : null}
+                          ) : null}
+                        </View>
+                      );
+                    })}
+                  </View>
 
-                        {selectedAddons.includes(item.key) && item.key == 3 ? (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              flexWrap: 'wrap',
-                              marginVertical: 5,
-                            }}>
-                            <View>
-                              <AdditionalCoversDropdown
-                                data={passengerArr}
-                                onPress={setselectedPassenger}
-                                selectedItem={selectedPassenger}
-                              />
-                            </View>
-                          </View>
-                        ) : null}
-                      </View>
-                    );
-                  })}
-                </View>
-              ) : null}
+                  {textKey == 'Addons' && (
+                    <View View style={styles.itemCont}>
+                      <AppText
+                        style={{marginHorizontal: 10, marginTop: 10}}
+                        text="Accessories"
+                        size={fontSize.medium}
+                      />
+                      {accLists.map((item, index) => {
+                        return (
+                          <View key={String(index)}>
+                            <TouchableOpacity
+                              key={String(index)}
+                              activeOpacity={0.8}
+                              style={[styles.item, {borderColor: colors.white}]}
+                              onPress={() => {
+                                if (textKey == 'IDV') {
+                                  onClose();
+                                } else {
+                                  if (!selectedAccessories.includes(item.key)) {
+                                    onAccSelect([
+                                      ...selectedAccessories,
+                                      item.key,
+                                    ]);
+                                  } else {
+                                    onAccSelect(
+                                      selectedAccessories.filter(
+                                        i => item.key != i,
+                                      ),
+                                    );
+                                  }
+                                }
+                              }}>
+                              <View style={styles.checkbox}>
+                                <Checkbox
+                                  value={selectedAccessories.includes(item.key)}
+                                  onPress={() => {
+                                    if (
+                                      !selectedAccessories.includes(item.key)
+                                    ) {
+                                      onAccSelect([
+                                        ...selectedAccessories,
+                                        item.key,
+                                      ]);
+                                    } else {
+                                      onAccSelect(
+                                        selectedAccessories.filter(
+                                          i => item.key != i,
+                                        ),
+                                      );
+                                    }
+                                  }}
+                                />
+                              </View>
 
-              <TouchableOpacity
-                style={styles.buyNowBtn}
-                onPress={() => {
-                  onClose();
-                }}>
-                <AppText text={'Submit'} color={colors.white} />
-              </TouchableOpacity>
-            </ScrollView>
-          )}
-        </View>
-      </View>
-    </Modal>
+                              <AppText
+                                text={item.title}
+                                style={{flex: 1}}
+                                numberOfLines={2}
+                                // color={}
+                              />
+                            </TouchableOpacity>
+                            {selectedAccessories.includes(item.key) && (
+                              <TextInput
+                                // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
+                                placeholder={item.placeholderTxt}
+                                keyboardType={'number-pad'}
+                                value={item.value}
+                                onChangeText={text => {
+                                  handleAccessoriesList(text, index);
+                                }}
+                                // onTextChange={t => onRegTextChange(t)}
+                                style={styles.input}
+                              />
+                            )}
+                          </View>
+                        );
+                      })}
+                    </View>
+                  )}
+
+                  {textKey == 'Addons' ? (
+                    <View style={styles.itemCont}>
+                      <AppText
+                        style={{marginHorizontal: 10, marginTop: 10}}
+                        text="Additional Covers"
+                        size={fontSize.medium}
+                      />
+                      {AdditionalCoversList.map((item, index) => {
+                        return (
+                          <View key={index}>
+                            <TouchableOpacity
+                              activeOpacity={0.8}
+                              style={[
+                                styles.item,
+                                {
+                                  borderColor: colors.grey,
+                                  marginVertical: textKey == 'Addons' ? 3 : 15,
+                                },
+                              ]}
+                              onPress={() => {
+                                // onAddonsSelect(item.title)
+                                if (textKey == 'IDV') {
+                                  setselectedIDV(item);
+                                  onClose();
+                                } else {
+                                  if (!selectedAddons.includes(item.key)) {
+                                    onAddonsSelect([
+                                      ...selectedAddons,
+                                      item.key,
+                                    ]);
+                                    ListUpAndDownAnimation();
+                                  } else {
+                                    onAddonsSelect(
+                                      selectedAddons.filter(i => item.key != i),
+                                    );
+                                  }
+                                }
+                              }}>
+                              {textKey == 'IDV' ? (
+                                <View style={styles.letterView}>
+                                  <HeadingText text={null} size={0} />
+                                </View>
+                              ) : (
+                                <View style={styles.checkbox}>
+                                  <Checkbox
+                                    value={selectedAddons.includes(item.key)}
+                                    onPress={() => {
+                                      if (!selectedAddons.includes(item.key)) {
+                                        ListUpAndDownAnimation();
+                                        onAddonsSelect([
+                                          ...selectedAddons,
+                                          item.key,
+                                        ]);
+                                      } else {
+                                        onAddonsSelect(
+                                          selectedAddons.filter(
+                                            i => item.key != i,
+                                          ),
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </View>
+                              )}
+
+                              <AppText
+                                text={`${item.title} `}
+                                style={{flex: 1}}
+                                numberOfLines={2}
+                                // color={}
+                              />
+                              {item.showInput && (
+                                <TextInput
+                                  // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
+                                  placeholder={item.placeholderTxt}
+                                  keyboardType={'number-pad'}
+                                  value={item.value}
+                                  onChangeText={text => {
+                                    handleIDV(text, index);
+                                  }}
+                                  // onTextChange={t => onRegTextChange(t)}
+                                  style={styles.input}
+                                />
+                              )}
+                            </TouchableOpacity>
+                            {selectedAddons.includes(item.key) &&
+                            item.key == 1 ? (
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  flexWrap: 'wrap',
+                                  marginVertical: 5,
+                                }}>
+                                <View>
+                                  <AdditionalCoversDropdown
+                                    data={[
+                                      {amount: 1, key: 1},
+                                      {amount: 2, key: 2},
+                                    ]}
+                                    onPress={setselectedPaidDriver}
+                                    selectedItem={selectedPaidDriver}
+                                  />
+                                </View>
+                              </View>
+                            ) : null}
+
+                            {selectedAddons.includes(item.key) &&
+                            item.key == 3 ? (
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  flexWrap: 'wrap',
+                                  marginVertical: 5,
+                                }}>
+                                <View>
+                                  <AdditionalCoversDropdown
+                                    data={passengerArr}
+                                    onPress={setselectedPassenger}
+                                    selectedItem={selectedPassenger}
+                                  />
+                                </View>
+                              </View>
+                            ) : null}
+                          </View>
+                        );
+                      })}
+                    </View>
+                  ) : null}
+
+                  <TouchableOpacity
+                    style={styles.buyNowBtn}
+                    onPress={() => {
+                      onClose();
+                    }}>
+                    <AppText text={'Submit'} color={colors.white} />
+                  </TouchableOpacity>
+                </ScrollView>
+              )}
+            </View>
+          </View>
+        </CustomKeyboardAvoidingView>
+      </Modal>
+    </SafeAreaView>
   );
 };
 

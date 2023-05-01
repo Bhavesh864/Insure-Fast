@@ -9,10 +9,17 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  TextInput,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Center, screenStyle} from '../../styles/CommonStyling';
-import {Button, InputField} from '../../components/CustomFields';
+import {
+  Button,
+  CustomKeyboardAvoidingView,
+  InputField,
+  Spacer,
+} from '../../components/CustomFields';
 import {AppText, HeadingText} from '../../Utility/TextUtility';
 import {colors} from '../../styles/colors';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -21,6 +28,7 @@ import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppToastMessage} from '../../components/custom/SnackBar';
 import {navigate} from '../../routes/RootNavigation';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const ClaimFormScreen = ({navigation}) => {
   // const details = useSelector(state => state.motor?.apiRequestQQ);
@@ -150,10 +158,8 @@ const ClaimFormScreen = ({navigation}) => {
 
   return (
     <View style={screenStyle}>
-      <KeyboardAvoidingView
-        style={screenStyle}
-        behavior={Platform.OS == 'ios' ? 'padding' : null}>
-        <ScrollView style={{flex: 1}}>
+      <CustomKeyboardAvoidingView>
+        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
           <InputField
             value={name}
             placeholder="Enter your name"
@@ -242,7 +248,7 @@ const ClaimFormScreen = ({navigation}) => {
             <Button title="Submit" onPress={() => onSubmitForm()} />
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </CustomKeyboardAvoidingView>
     </View>
   );
 };
