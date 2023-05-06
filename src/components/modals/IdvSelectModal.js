@@ -3,39 +3,22 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   UIManager,
   LayoutAnimation,
-  Animated,
   Platform,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TextInput
 } from 'react-native';
 import { colors } from '../../styles/colors';
-import {
-  Center,
-  flexRow,
-  flexSpaceBetween,
-  fontSize,
-  height,
-  width,
-} from '../../styles/CommonStyling';
-import {
-  InputField,
-  ModalTitleHeader,
-  YesNoButton,
-  Checkbox,
-  TouchableTextView,
-} from '../CustomFields';
+import { Center, flexRow, fontSize, height, } from '../../styles/CommonStyling';
+import { ModalTitleHeader, YesNoButton, Checkbox, } from '../CustomFields';
 import { AppText, HeadingText } from '../../Utility/TextUtility';
 import SelectNCBValue from '../insurance/motor/SelectNCBValue';
-import { TextInput } from 'react-native';
-import { AddOnsList, AdditionalCoversList } from '../../constants/OtherConst';
+import { AddOnsList, AdditionalCoversList, passengerArr } from '../../constants/OtherConst';
 import { shadows } from '../../styles/shadow';
 import AdditionalCoversDropdown from '../custom/AdditionalCoversDropdown';
-import { RightArrowIcon } from '../../assets/svg/appSvgs';
-import { passengerArr } from '../../constants/OtherConst';
 
 const IdvSelectModal = ({
   onClose,
@@ -48,20 +31,19 @@ const IdvSelectModal = ({
   selectedAccessories = [],
   selectedAddons = [],
   setselectedIDV,
-  selectedIDV,
   selectedNCB,
   setselectedNCB,
   idvOptions,
 }) => {
   const [previosClaimMade, setPreviousClaimMade] = useState(null);
   const [accLists, setAccList] = useState(accList);
-  const [addList, setAddList] = useState(AdditionalCoversList);
+  // const [addList, setAddList] = useState(AdditionalCoversList);
   const [addonsList, setAddonsList] = useState(AddOnsList);
   const [enteredIdv, setEnteredIdv] = useState(idvOptions);
   const [selectedPaidDriver, setselectedPaidDriver] = useState(null);
   const [selectedPassenger, setselectedPassenger] = useState(false);
+  // const details = useSelector(state => state.motor?.apiRequestQQ);
 
-  // const TogglePharmcyList = () => {
   const ListUpAndDownAnimation = () => {
     if (
       Platform.OS === 'android' &&
@@ -76,18 +58,11 @@ const IdvSelectModal = ({
       delete: { type: 'easeInEaseOut', property: 'opacity' },
     });
   };
-  // }
 
   const handleAccessoriesList = (text, i) => {
     let arr = [...accLists];
     arr[i].value = text;
     setAccList(arr);
-  };
-
-  const handleAddCov = (text, i) => {
-    let arr = [...addList];
-    arr[i].value = text;
-    setAddList(arr);
   };
 
   const handleAddons = (text, i) => {
@@ -102,7 +77,20 @@ const IdvSelectModal = ({
     setEnteredIdv(arr);
   };
 
-  const SelectedNCBValue = textKey => {
+  const addRemoveAddonsFromList = (item) => {
+    if (!selectedAddons.includes(item.key)) {
+      onAddonsSelect([...selectedAddons, item.key]);
+    } else {
+      onAddonsSelect(
+        selectedAddons.filter(i => item.key != i),
+      );
+    }
+  }
+
+  const SelectedNCBValue = () => {
+    if (previosClaimMade) {
+      setselectedNCB('0')
+    }
     return (
       <View style={{ marginHorizontal: 10 }}>
         <AppText
@@ -111,7 +99,7 @@ const IdvSelectModal = ({
         />
         <YesNoButton value={previosClaimMade} onPress={setPreviousClaimMade} />
 
-        {previosClaimMade == false && (
+        {!previosClaimMade && (
           <>
             <AppText
               style={{ marginTop: 35, fontSize: 20 }}
@@ -159,14 +147,14 @@ const IdvSelectModal = ({
             ) : (
               <ScrollView style={{ flexGrow: 1 }}>
                 <View style={styles.itemCont}>
-                  {textKey == 'Addons' && (
+                  {textKey == 'Addons' && list && (
                     <AppText
                       style={{ marginHorizontal: 10, marginTop: 10 }}
                       text="Addons"
                       size={fontSize.medium}
                     />
                   )}
-                  {list.map((item, index) => {
+                  {list?.map((item, index) => {
                     return (
                       <View key={String(index)}>
                         <TouchableOpacity
@@ -185,13 +173,7 @@ const IdvSelectModal = ({
                               setselectedIDV(item);
                               onClose();
                             } else {
-                              if (!selectedAddons.includes(item.key)) {
-                                onAddonsSelect([...selectedAddons, item.key]);
-                              } else {
-                                onAddonsSelect(
-                                  selectedAddons.filter(i => item.key != i),
-                                );
-                              }
+                              addRemoveAddonsFromList(item)
                             }
                           }}>
                           {textKey == 'IDV' ? (
@@ -203,13 +185,7 @@ const IdvSelectModal = ({
                               <Checkbox
                                 value={selectedAddons.includes(item.key)}
                                 onPress={() => {
-                                  if (!selectedAddons.includes(item.key)) {
-                                    onAddonsSelect([...selectedAddons, item.key]);
-                                  } else {
-                                    onAddonsSelect(
-                                      selectedAddons.filter(i => item.key != i),
-                                    );
-                                  }
+                                  addRemoveAddonsFromList(item);
                                 }}
                               />
                             </View>
@@ -253,14 +229,14 @@ const IdvSelectModal = ({
                   })}
                 </View>
 
-                {textKey == 'Addons' && (
+                {textKey == 'Addons' && accLists && (
                   <View View style={styles.itemCont}>
                     <AppText
                       style={{ marginHorizontal: 10, marginTop: 10 }}
                       text="Accessories"
                       size={fontSize.medium}
                     />
-                    {accLists.map((item, index) => {
+                    {accLists?.map((item, index) => {
                       return (
                         <View key={String(index)}>
                           <TouchableOpacity
@@ -396,14 +372,12 @@ const IdvSelectModal = ({
                             />
                             {item.showInput && (
                               <TextInput
-                                // label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}
                                 placeholder={item.placeholderTxt}
                                 keyboardType={'number-pad'}
                                 value={item.value}
                                 onChangeText={text => {
                                   handleIDV(text, index);
                                 }}
-                                // onTextChange={t => onRegTextChange(t)}
                                 style={styles.input}
                               />
                             )}
@@ -481,36 +455,34 @@ const styles = StyleSheet.create({
     borderColor: colors.grey,
     flexWrap: 'wrap',
   },
+
   modalCont: {
     flex: 1,
     backgroundColor: colors.transparent_black,
-    // justifyContent: "center"
   },
+
   cont: {
-    // flex: 1,
     maxHeight: height - 100,
     marginHorizontal: 20,
     paddingBottom: 10,
     borderRadius: 15,
     backgroundColor: colors.white,
-    // marginTop: AppConst.paddingTop,
   },
+
   item: {
-    // height: 30,
-    // width: (width - 80) / 2,
     backgroundColor: colors.white,
-    // borderWidth: 1,
     borderColor: colors.grey,
-    // ...Center,
     margin: 5,
     borderRadius: 10,
     borderBottomWidth: 1,
     ...flexRow,
     marginHorizontal: 10,
   },
+
   itemCont: {
     paddingVertical: 10,
   },
+
   letterView: {
     height: 20,
     width: 20,
@@ -519,6 +491,7 @@ const styles = StyleSheet.create({
     ...Center,
     marginRight: 10,
   },
+
   checkbox: {
     height: 30,
     width: 30,
@@ -526,6 +499,7 @@ const styles = StyleSheet.create({
     ...Center,
     marginRight: 10,
   },
+
   buyNowBtn: {
     height: 40,
     width: 120,
@@ -536,6 +510,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 10,
   },
+
   input: {
     borderWidth: 0.5,
     borderRadius: 5,
@@ -544,15 +519,15 @@ const styles = StyleSheet.create({
     marginLeft: 25,
     marginVertical: 5,
   },
+
   options: {
     height: 30,
     width: '25%',
     alignSelf: 'flex-start',
   },
+
   optContainer: {
     height: 100,
-    // flexDirection: 'row'
-    // flexGrow:2
   },
 });
 

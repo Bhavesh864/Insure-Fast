@@ -5,7 +5,7 @@ import { AppText } from '../../Utility/TextUtility';
 import { colors } from '../../styles/colors';
 import { Center, height, width } from '../../styles/CommonStyling';
 import { color } from 'react-native-reanimated';
-import { sendQuotation } from '../../store/actions/PolicyAction';
+import { sendQuatoationCopy, sendQuotation } from '../../store/actions/PolicyAction';
 import { AppToastMessage } from '../custom/SnackBar';
 
 const ShareQuotationEmailModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key" }) => {
@@ -48,6 +48,7 @@ const ShareQuotationEmailModal = ({ onClose, title = "Select", list = [], onItem
                         </View>
                         <TouchableOpacity onPress={() => {
                             if (selectedItem && selectedItem.includes('.com') && selectedItem.includes('@')) {
+                                // console.log(selectedItem)
                                 sendQuotation(selectedItem);
                                 onClose();
                                 onItemSelect('');

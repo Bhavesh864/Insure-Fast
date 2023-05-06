@@ -35,6 +35,9 @@ export const motorUrls = {
     getPunchedPoliciesData: "/motor/policies/",
     getAllocatedMentor: "/motor/allocated-mentor/",
     getRecentQuoteUrl: "/motor/recent-policies/",
+    getCountryDataWithCode: "/motor/pincode-search?",
     submitRating: "/auth/rate-us",
     submitQuotaionUrl: '/admin/send-quotation'
 }
+
+// https://api.insurefast.in/api/v1/motor/pincode-search?Pin_Code=110001

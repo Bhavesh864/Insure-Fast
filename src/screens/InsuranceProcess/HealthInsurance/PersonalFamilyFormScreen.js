@@ -17,6 +17,7 @@ const PersonalFamilyFormScreen = ({ route }) => {
     const { insuranceFor, sonNum, daughterNum } = route.params;
     const [insuranceMembers, setInsuranceMembers] = useState([]);
     const [modalConfig, setModalConfig] = useState(false);
+    // const [isAge, setIsAge] = useState(false);
 
     useEffect(() => {
         let arr = []
@@ -101,7 +102,20 @@ const PersonalFamilyFormScreen = ({ route }) => {
             return;
         }
         // return;
-        navigate("locationSelect")
+        console.log('insumem', insuranceMembers);
+        let isAge = false;
+        for (let i = 0; i < insuranceMembers.length; i++) {
+            if (insuranceMembers[i].value == null) {
+                isAge = false;
+            } else {
+                isAge = true;
+            }
+        }
+        if (isAge) {
+            navigate("locationSelect")
+        } else {
+            AppToastMessage('Age is required!')
+        }
     }
 
     const getItemArr = (key) => {

@@ -188,11 +188,27 @@ export const getAllocatedMentor = async () => {
         console.log(error);
     }
 }
+
+
 export const getRecentSearchedQuote = async () => {
     const customerId = await AsyncStorage.getItem("customerid");
     try {
         const res = await GetRequest({
             url: motorUrls.getRecentQuoteUrl + `${customerId}`,
+            loader: true
+        },
+        );
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getCountryWithCountryCode = async (countryCode = '') => {
+
+    try {
+        const res = await GetRequest({
+            url: motorUrls.getCountryDataWithCode + `Pin_Code=${countryCode}`,
             loader: true
         },
         );
@@ -225,14 +241,14 @@ export const sendQuotation = async (email = '') => {
         store.dispatch(ChangeLoadingSatus(true));
         const res = await fetch("https://api.insurefast.in/api/v1/admin/send-quotation", {
             method: 'POST',
-            header: {
-                'Accept': '*/*',
-                'Content-Type': 'text/plain',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${AppConst.accessToken}`
             },
-            body: {
-                email,
-            }
+            body: JSON.stringify({
+                email
+            })
         }).then((response) => response.text())
             .then((responseData) => {
                 // console.log(
@@ -243,11 +259,13 @@ export const sendQuotation = async (email = '') => {
             })
         store.dispatch(ChangeLoadingSatus(false));
         if (email != '') {
-            AppToastMessage('Your email shared successfully!')
+            AppToastMessage('Quotation send to your email successfully!')
         }
         // AppConst.showConsoleLog("res:", res);
         return res;
     } catch (error) {
+        store.dispatch(ChangeLoadingSatus(false));
+        AppToastMessage('Something went wrong!');
         console.log(error);
     }
 }

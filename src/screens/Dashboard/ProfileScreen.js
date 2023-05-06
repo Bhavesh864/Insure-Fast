@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Center, flexRow, screenStyle } from '../../styles/CommonStyling'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -8,13 +8,15 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { colors } from '../../styles/colors'
 import { userLogoutAction } from '../../store/actions/UserAction'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from '../../routes/RootNavigation';
 import RateUsModal from '../../components/modals/RateUsModal';
 
 
 const ProfileScreen = () => {
+    const userData = useSelector(state => state.motor?.apiRequestQQ);
     const dispatch = useDispatch();
+    const phone = useSelector(state => state.user?.user?.phone);
     const [rateModal, setrateModal] = useState(null);
 
     const arr = [
@@ -90,7 +92,7 @@ const ProfileScreen = () => {
                 </TouchableOpacity>
                 <View style={{ flex: 1, paddingLeft: 20 }}>
                     <HeadingText
-                        text={"Florence Jast"}
+                        text={userData?.FirstName ? userData?.FirstName + ' ' + userData?.LastName : 'Guest1022i93'}
                         // size={16}
                         style={{}}
                     />
@@ -98,7 +100,7 @@ const ProfileScreen = () => {
                         <View style={[flexRow]}>
                             <Ionicons name='call-outline' size={18} color={colors.darkGrey} />
                             <AppText
-                                text={"9876780987"}
+                                text={phone || ''}
                                 size={14}
                                 color={colors.darkGrey}
                                 style={{ paddingLeft: 10 }}
@@ -107,7 +109,7 @@ const ProfileScreen = () => {
                         <View style={[flexRow]}>
                             <FontAwesome name='birthday-cake' size={15} color={colors.darkGrey} />
                             <AppText
-                                text={"20 Aug, 1999"}
+                                text={userData?.Dob || 'Date of birth'}
                                 size={14}
                                 color={colors.darkGrey}
                                 style={{ paddingLeft: 10, paddingTop: 3 }}

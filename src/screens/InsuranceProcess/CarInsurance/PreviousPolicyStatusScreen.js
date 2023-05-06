@@ -42,7 +42,6 @@ const PreviousPolicyStatusScreen = () => {
 
 
     const checkVehicleODType = (reg = details?.RegistrationDate) => {
-        // AppConst.showConsoleLog("reg date: ", details?.ManufaturingDate);
         if (!reg) {
             return false
         }
@@ -74,7 +73,7 @@ const PreviousPolicyStatusScreen = () => {
 
 
     const createPolicy = () => {
-        if (previosClaimMade == null) {
+        if (previosClaimMade == null && !details?.onlyThirdPartyIns) {
             AppToastMessage("Please select claim made in last policy");
             return;
         }
@@ -114,7 +113,6 @@ const PreviousPolicyStatusScreen = () => {
         }
         // formData.append("posId", store.getState().root.userDetails.id);
         formData.append("customerId", AppConst.getCustomerId());
-        // console.log('customerid', AppConst.getCustomerId());
 
         fillPolicyDataAction(formData).then(res => {
             AppConst.showConsoleLog("fill policy res: ", res);
@@ -130,7 +128,7 @@ const PreviousPolicyStatusScreen = () => {
 
 
 
-    AppConst.showConsoleLog("vehicle: ", details?.VehicleType);
+    // AppConst.showConsoleLog("vehicle: ", details?.VehicleType);
 
 
 
@@ -158,7 +156,7 @@ const PreviousPolicyStatusScreen = () => {
                         )
                     })}
                 </View> */}
-                <View style={styles.dataCont}>
+                {!details?.onlyThirdPartyIns && <View style={styles.dataCont}>
                     <HeadingText
                         text={"Claim Made in last policy"}
                     />
@@ -166,7 +164,7 @@ const PreviousPolicyStatusScreen = () => {
                         value={previosClaimMade}
                         onPress={setPreviousClaimMade}
                     />
-                </View>
+                </View>}
                 {(!previosClaimMade) && <View style={styles.dataCont}>
                     <HeadingText
                         text={"Last Owner Changes"}

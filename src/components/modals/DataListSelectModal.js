@@ -2,14 +2,15 @@ import React, { useState } from 'react'
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { colors } from '../../styles/colors'
 import { Center, flexRow, height, width } from '../../styles/CommonStyling'
-import { InputField, ModalTitleHeader } from '../CustomFields'
+import { Checkbox, InputField, ModalTitleHeader } from '../CustomFields'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { AppConst } from '../../constants/AppConst'
 
 
-const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key" }) => {
+const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false }) => {
     const [search, setSearch] = useState("");
     const [dataList, setdataList] = useState(list);
+    const [selectedOptions, setselectedOptions] = useState([]);
 
     const searchAction = (text) => {
         setSearch(text);
@@ -23,6 +24,16 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
             return l;
         }
         return ""
+    }
+
+    const addRemoveItemFromList = (item) => {
+        if (!selectedOptions.includes(item.key)) {
+            setselectedOptions([...selectedOptions, item.key]);
+        } else {
+            setselectedOptions(
+                selectedOptions.filter(i => item.key != i),
+            );
+        }
     }
 
     return (
@@ -54,19 +65,33 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
                         <ScrollView style={{ flexGrow: 1 }}>
                             <View style={styles.itemCont}>
                                 {dataList.map((item, index) => {
+                                    console.log('object', selectedOptions);
                                     return (
                                         <TouchableOpacity
                                             key={String(index)}
                                             activeOpacity={0.8}
                                             style={[styles.item, { borderColor: colors.grey }]}
-                                            onPress={() => onItemSelect(item)}
+                                            onPress={() => {
+                                                !multipleSelect ?
+                                                    onItemSelect(item) : addRemoveItemFromList(item)
+                                            }
+                                            }
                                         >
-                                            <View style={styles.letterView}>
+                                            {!multipleSelect ? <View style={styles.letterView}>
                                                 <HeadingText
                                                     text={getFirstLetter(item[textKey])}
                                                     size={14}
                                                 />
-                                            </View>
+                                            </View> :
+                                                <View style={{ marginHorizontal: 10 }}>
+                                                    <Checkbox
+                                                        value={selectedOptions.includes(item.key)}
+                                                        onPress={() => {
+                                                            addRemoveItemFromList(item)
+                                                        }}
+                                                    />
+                                                </View>
+                                            }
                                             <AppText
                                                 text={item[textKey]}
                                                 style={{ flex: 1 }}

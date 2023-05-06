@@ -84,7 +84,6 @@ const WebviewQuatationScreen = ({ navigation }) => {
 
     useEffect(() => {
         sendQuotation().then(res => {
-            console.log('hello', res);
             setquotationHtml(res)
         });
         // generatePdf()

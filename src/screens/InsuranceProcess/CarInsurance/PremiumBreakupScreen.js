@@ -59,9 +59,15 @@ const PremiumBreakupScreen = ({ route }) => {
                     />
                 </TouchableOpacity>
             </View>
-            {showEmailModal && <ShareQuotationEmailModal title='Enter Your Email' onClose={() => setshowEmailModal(false)} selectedItem={email} onItemSelect={(text) => {
-                setEmail(text);
-            }} />}
+            {showEmailModal &&
+                <ShareQuotationEmailModal
+                    title='Enter Your Email'
+                    onClose={() => setshowEmailModal(false)}
+                    selectedItem={email}
+                    onItemSelect={(text) => {
+                        setEmail(text);
+                    }}
+                />}
 
         </View >
     )

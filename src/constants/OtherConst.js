@@ -441,16 +441,20 @@ export const healthInsuranceForArr = [
         key: "father"
     },
     {
-        title: "Other Members",
-        key: "other"
-    }
-]
-
-export const otherHealthInsuranceForArr = [
-    {
         title: "Mother",
         key: "mother"
     },
+    // {
+    //     title: "Other Members",
+    //     key: "other"
+    // }
+]
+
+export const otherHealthInsuranceForArr = [
+    // {
+    //     title: "Mother",
+    //     key: "mother"
+    // },
     {
         title: "Grand father",
         key: "grandFather"
@@ -470,37 +474,75 @@ export const otherHealthInsuranceForArr = [
 ]
 
 
+export const medicalHistoryArr = [
+    {
+        key: 1,
+        title: 'Existing illness',
+        subtitle: 'Blood Pressure, Diabetes, Heart conditions, Asthma, Thyroid, Cancer etc.'
+    },
+    {
+        key: 2,
+        title: 'Surgical Procedure',
+        subtitle: 'Appendix, Gall bladder, C-section etc.'
+    },
+    {
+        key: 3,
+        title: 'None of these',
+        subtitle: ''
+    }
+]
+
+
+export const diseasesArr = [
+    {
+        key: 1,
+        title: 'Diabetes'
+    },
+    {
+        key: 2,
+        title: 'BP / Hypertension'
+    },
+    {
+        key: 3,
+        title: 'Heart Ailments'
+    },
+    {
+        key: 4,
+        title: 'Other health issues'
+    },
+]
+
 
 export const staticCitiesArr = [
     {
-        name: "Delhi"
+        City: "Delhi"
     },
     {
-        name: "Bengaluru"
+        City: "Bengaluru"
     },
     {
-        name: "Pune"
+        City: "Pune"
     },
     {
-        name: "Mumbai"
+        City: "Mumbai"
     },
     {
-        name: "Hyderabad"
+        City: "Hyderabad"
     },
     {
-        name: "Gurgaon"
+        City: "Gurgaon"
     },
     {
-        name: "Thane"
+        City: "Thane"
     },
     {
-        name: "Ghaziabad"
+        City: "Ghaziabad"
     },
     {
-        name: "Lucknow"
+        City: "Lucknow"
     },
     {
-        name: "Jaipur"
+        City: "Jaipur"
     },
 ]
 
@@ -547,6 +589,17 @@ export const newPolicyTypes = [
         title: "StandAlone OD",
         key: "own_damage"
     }
+]
+
+export const commercialVehiclePolicyList = [
+    {
+        title: "Comprehensive",
+        key: "Comprehensive"
+    },
+    {
+        title: "Third Party",
+        key: "ThirdParty"
+    },
 ]
 
 export const pcvGcvPolicyTypes = [

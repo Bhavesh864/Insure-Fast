@@ -13,6 +13,7 @@ import BottomNumberAskModal from '../../../components/insurance/health/BottomNum
 import { navigate } from '../../../routes/RootNavigation'
 import { AppConst } from '../../../constants/AppConst'
 import { ScrollView } from 'react-native-gesture-handler';
+import { AppToastMessage } from '../../../components/custom/SnackBar';
 
 
 const HealthInsuranceForScreen = () => {
@@ -59,6 +60,10 @@ const HealthInsuranceForScreen = () => {
     }
 
     const onContinuePress = () => {
+        if (forArr.length == 0) {
+            AppToastMessage('Please select atleast one member');
+            return;
+        }
         navigate("personalAndFamilyForm", { insuranceFor: forArr, sonNum, daughterNum });
     }
 

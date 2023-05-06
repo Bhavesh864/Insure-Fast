@@ -10,9 +10,11 @@ import { AddonSvgIcon, FilterSvgIcon } from '../../../assets/svg/basicSvgs'
 import { navigate, popToTop } from '../../../routes/RootNavigation'
 import IdvSelectModal from '../../../components/modals/IdvSelectModal'
 import { useSelector } from 'react-redux'
-import { idvOptions, AccesoriesList, AddOnsList, AdditionalCoversList, policyExpiryArr, newPolicyTypes } from '../../../constants/OtherConst'
+import { idvOptions, AccesoriesList, AddOnsList, AdditionalCoversList, policyExpiryArr, newPolicyTypes, commercialVehiclePolicyList } from '../../../constants/OtherConst'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import DataListSelectModal from '../../../components/modals/DataListSelectModal'
+import { AppToastMessage } from '../../../components/custom/SnackBar'
+import { dispatchQuickQuote } from '../../../store/actions/PolicyAction'
 
 
 const QuotationSummaryScreen = ({ navigation, route }) => {
@@ -28,10 +30,18 @@ const QuotationSummaryScreen = ({ navigation, route }) => {
         // Honda, Monocrop CBZ X-treme
 
         if (recentQuote) {
+            dispatchQuickQuote("MakeName", recentQuote?.vehicle_make);
+            dispatchQuickQuote("ModelName", recentQuote?.vehicle_model);
+            dispatchQuickQuote("FuelType", recentQuote?.fuel_type);
+            dispatchQuickQuote("VariantName", recentQuote?.vehicle_variant);
+            dispatchQuickQuote("RegistrationNumber", recentQuote?.vehicle_no);
+            dispatchQuickQuote("RegistrationDate", recentQuote?.registration_date);
+            dispatchQuickQuote("ManufaturingDate", recentQuote?.vehicle_mfg_yr);
+
             navigation.setOptions({
                 headerTitle: `${recentQuote?.vehicle_make},  ${recentQuote?.vehicle_model} ${recentQuote?.vehicle_variant} -2 ${recentQuote?.vehicle_mfg_yr}`,
                 headerLeft: () => <CustomBackButton style={{ marginLeft: 20 }} onPress={() => popToTop()} />,
-                headerRight: () => !recentQuote ? <AntDesign name='edit' color={colors.white} size={22} style={{ marginRight: 20 }} onPress={() => navigate('editVehicleDetails', { recentQuote, fromRecent: true })} /> : '',
+                headerRight: () => <AntDesign name='edit' color={colors.white} size={22} style={{ marginRight: 20 }} onPress={() => navigate('editVehicleDetails', { recentQuote, fromRecent: true })} />,
             })
         } else {
             navigation.setOptions({
@@ -110,7 +120,7 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
     const [selectedIDV, setselectedIDV] = useState(null);
     const [selectedNCB, setselectedNCB] = useState(null);
     const [policyTypeModal, setpolicyTypeModal] = useState(null);
-    const [selectedPolicyType, setselectedPolicyType] = useState(details?.NewPolicyType || recentQuote?.policy_type);
+    const [selectedPolicyType, setselectedPolicyType] = useState(details?.VehicleType == 'Passenger Carrying' || details?.VehicleType == 'Goods Carrying' ? 'comprehensive' : details?.NewPolicyType || recentQuote?.policy_type);
 
     const vehicleData = useSelector(state => state.motor.apiRequestQQ);
 
@@ -157,8 +167,12 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                         style={{ marginBottom: 7 }}
                     />
                     <TouchableOpacity style={styles.touchableSelect} onPress={() => {
-                        setshowModal(true);
-                        setidvModal(true)
+                        if (!details?.onlyThirdPartyIns) {
+                            setshowModal(true);
+                            setidvModal(true)
+                        } else {
+                            AppToastMessage('IDV Not Available for third party insurance')
+                        }
                     }}>
                         <AppText
                             text={selectedIDV ? selectedIDV.key : "Select"}
@@ -176,14 +190,16 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                     />
                     <TouchableOpacity style={styles.touchableSelect}
                         onPress={() => {
-                            if (!prevClaimMade && !details?.IsVehicleNew) {
+                            if (!prevClaimMade && !details?.IsVehicleNew && !details?.onlyThirdPartyIns) {
                                 setNcbValueModal(true)
                                 setshowModal(true)
+                                return
                             }
+                            AppToastMessage('NCB Not Available ')
                         }}
                     >
                         <AppText
-                            text={!details?.IsVehicleNew ? !prevClaimMade ? selectedNCB ? selectedNCB + '%' : "Select" : '0%' : '0%'}
+                            text={details?.IsVehicleNew || details?.onlyThirdPartyIns || prevClaimMade ? '0%' : selectedNCB ? selectedNCB + '%' : 'Select'}
                             color={colors.grey}
                             style={{ flex: 1 }}
                         />
@@ -197,7 +213,12 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                         style={{ marginBottom: 7 }}
                     />
                     <TouchableOpacity style={styles.touchableSelect} onPress={() => {
-                        setpolicyTypeModal(true)
+                        // console.log(!details?.VehicleType == 'Passenger Carrying' || !details?.VehicleType == 'Goods Carrying');
+                        if ((details?.VehicleType != 'Passenger Carrying' || details?.VehicleType != 'Goods Carrying') && !details?.onlyThirdPartyIns) {
+                            setpolicyTypeModal(true)
+                            console.log(details?.onlyThirdPartyIns);
+
+                        }
                     }}>
                         <AppText
                             text={selectedPolicyType ? selectedPolicyType : 'Select'}
@@ -207,15 +228,15 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                     </TouchableOpacity>
 
                     {showModal && <IdvSelectModal
-                        list={idvModal ? idvOptions : AddOnsList}
-                        accList={AccesoriesList}
+                        list={idvModal ? idvOptions : !vehicleData?.onlyThirdPartyIns ? AddOnsList : null}
+                        accList={!vehicleData?.onlyThirdPartyIns ? AccesoriesList : null}
                         addCoversList={AdditionalCoversList}
                         textKey={idvModal ? 'IDV' : addonsModal ? 'Addons' : 'NCB'}
                         onClose={() => {
                             setidvModal(false)
                             setaddonsModal(false)
                             setNcbValueModal(false);
-                            setshowModal(false)
+                            setshowModal(false);
                         }}
                         title={idvModal ? 'Select Your IDV' : addonsModal ? 'Select Addons & Accessories' : 'Confirm NCB Value'}
                         selectedAddons={selectedAddons}
@@ -236,7 +257,12 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                     />}
 
                     {
-                        policyTypeModal && <DataListSelectModal list={newPolicyTypes} onItemSelect={(item) => {
+                        policyTypeModal && <DataListSelectModal list={details?.VehicleType != 'Passenger Carrying' && details?.VehicleType != 'Goods Carrying' ? newPolicyTypes : commercialVehiclePolicyList} onItemSelect={(item) => {
+                            if (item.key === 'ThirdParty') {
+                                dispatchQuickQuote("onlyThirdPartyIns", true);
+                            } else {
+                                dispatchQuickQuote("onlyThirdPartyIns", false);
+                            }
                             setselectedPolicyType(item.key)
                             setpolicyTypeModal(false)
                         }} onClose={() => {

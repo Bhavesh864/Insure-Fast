@@ -9,10 +9,13 @@ import { Center, flexRow, width } from '../../styles/CommonStyling'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { dispatchQuickQuote } from '../../store/actions/PolicyAction';
 import { AppConst } from '../../constants/AppConst';
+import { useSelector } from 'react-redux';
 
 
 
 export const HomeHeader = ({ screen }) => {
+    const userData = useSelector(state => state.motor?.apiRequestQQ);
+
     return (
         <View style={styles.header}>
             {/* <View style={styles.nameLetterView}>
@@ -22,7 +25,7 @@ export const HomeHeader = ({ screen }) => {
             </View> */}
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <HeadingText
-                    text={screen == 'policy' ? 'Policies Details' : `Hi, Florence Jast`}
+                    text={screen == 'policy' ? 'Policies Details' : `Hi,  ${userData?.FirstName ? userData?.FirstName + ' ' + userData?.LastName : 'Florence Jast'}`}
                     size={18}
                     color={colors.primary}
                 />
@@ -119,8 +122,8 @@ export const AvailableInsuranceComponent = () => {
         } else if (name == 'Two Wheeler Insurance') {
             dispatchQuickQuote('vehicleType', payloads.vehicleType);
             dispatchQuickQuote("onlyThirdPartyIns", false);
-            navigate(key, payloads);
-            // navigate('quotationSummary');
+            // navigate(key, payloads);
+            navigate('quotationSummary');
         } else {
             dispatchQuickQuote('vehicleType', payloads.vehicleType);
             dispatchQuickQuote("onlyThirdPartyIns", false);
