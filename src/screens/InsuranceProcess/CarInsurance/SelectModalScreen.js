@@ -47,10 +47,10 @@ const SelectModalScreen = ({ route }) => {
     }
 
     const onModelPress = (key) => {
-        setSelectedModel(key)
         dispatchQuickQuote("ModelName", key);
+        setSelectedModel(key)
         if (!isEdit) {
-            navigate("carVariantScreen", { make: carBrand, model: key, insuranceType });
+            // navigate("carVariantScreen", { make: carBrand, model: key, insuranceType });
         } else {
             pop();
             AppToastMessage('Model updated successfully!')
@@ -112,7 +112,7 @@ const SelectModalScreen = ({ route }) => {
                                     item={item}
                                     textKey={"Model"}
                                     onPress={(item) => onModelPress(item.Model)}
-                                    borderWidth={item.Model == selectedModel ? 1 : 0}
+                                    borderWidth={item.Model == selectedModel ? 2 : 0}
                                 />
                             )
                         })}

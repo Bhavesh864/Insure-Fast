@@ -43,7 +43,7 @@ const PoliciesDetailsComponent = ({ item }) => {
                             />
                         </View>
 
-                        <View style={{ flexDirection: 'row', marginTop: 3, flexWrap: 'wrap' }}>
+                        <View style={{ flexDirection: 'row', marginTop: 3 }}>
                             <Ionicons name='car-sport-outline' size={18} color={colors.darkGrey} />
                             <AppText text={`  ${item?.item?.customer?.motorInsurance?.vehicle_type}, ${item?.item?.customer?.motorInsurance?.vehicle_make},  ${item?.item?.customer?.motorInsurance?.vehicle_model},  ${item?.item?.customer?.motorInsurance?.vehicle_variant}, (${item?.item?.customer?.motorInsurance?.vehicle_no})`} color={colors.darkGrey} />
                         </View>

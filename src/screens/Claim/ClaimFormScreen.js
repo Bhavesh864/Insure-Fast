@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Image, TouchableOpacity, View, FlatList, Alert } from 'react-native'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Center, screenStyle } from '../../styles/CommonStyling'
-import { Button, InputField } from '../../components/CustomFields'
+import { Button, CustomBackButton, InputField } from '../../components/CustomFields'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { colors } from '../../styles/colors';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -71,23 +71,29 @@ const ClaimFormScreen = ({ navigation }) => {
     }
 
     const onPressImagePicker = async () => {
-        Alert.alert(
-            "Pick Image",
-            "What you want to open?",
-            [
-                {
-                    text: "Gallery",
-                    onPress: () => openImageGallery(),
-                    style: "cancel"
-                },
-                {
-                    text: "Camera",
-                    onPress: () => openCamera(),
-                    style: "destructive"
-                }
-            ]
-        );
-        return;
+        {
+            Alert.alert(
+                "Pick Image",
+                "What you want to open?",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    {
+                        text: "Gallery",
+                        onPress: () => openImageGallery(),
+                        style: "default"
+                    },
+                    {
+                        text: "Camera",
+                        onPress: () => openCamera(),
+                        style: "default"
+                    },
+                ]
+            )
+        }
     }
 
 

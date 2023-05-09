@@ -7,7 +7,7 @@ import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { AppConst } from '../../constants/AppConst'
 
 
-const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false }) => {
+const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false, onSubmit }) => {
     const [search, setSearch] = useState("");
     const [dataList, setdataList] = useState(list);
     const [selectedOptions, setselectedOptions] = useState([]);
@@ -29,6 +29,7 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
     const addRemoveItemFromList = (item) => {
         if (!selectedOptions.includes(item.key)) {
             setselectedOptions([...selectedOptions, item.key]);
+            selectedItem(item)
         } else {
             setselectedOptions(
                 selectedOptions.filter(i => item.key != i),
@@ -65,7 +66,6 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
                         <ScrollView style={{ flexGrow: 1 }}>
                             <View style={styles.itemCont}>
                                 {dataList.map((item, index) => {
-                                    console.log('object', selectedOptions);
                                     return (
                                         <TouchableOpacity
                                             key={String(index)}
@@ -102,6 +102,10 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
                                     )
                                 })}
                             </View>
+                            <TouchableOpacity onPress={() => { onSubmit() }}
+                                style={{ backgroundColor: colors.primary, ...Center, width: '50%', alignSelf: 'center', borderRadius: 10, marginBottom: 10 }}>
+                                <AppText text='Submit' color={colors.white} size={14} style={{ textAlign: 'right', padding: 15 }} />
+                            </TouchableOpacity>
                         </ScrollView>
                     </View>
 

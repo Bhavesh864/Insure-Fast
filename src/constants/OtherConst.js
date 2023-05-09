@@ -1,5 +1,8 @@
 import React from "react";
 import { BikeInsuranceSvgIcon, CarInsuranceSvgIcon, HealthInsuranceSvgIcon, LifeInsuranceSvgIcon, OtherMenuSvgIcon, TermInsuranceSvgIcon } from "../assets/svg/basicSvgs";
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { colors } from "../styles/colors";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 
 export const idvOptions = [
@@ -248,6 +251,39 @@ export const insuranceTypesArr = [
         image: require("../assets/images/types/umberella.png")
     },
 ]
+
+export const profileScreenArr = [
+    {
+        title: "Payments",
+        icon: <AntDesign name='creditcard' size={15} color={colors.primary} />,
+        key: "transactions"
+    },
+    {
+        title: "How we get you",
+        key: "about",
+        icon: <AntDesign name='question' size={15} color={colors.primary} />
+    },
+    {
+        title: "Allocated Mentor",
+        key: "allocate",
+        icon: <AntDesign name='user' size={15} color={colors.primary} />
+    },
+    {
+        title: "Rate us",
+        key: 'rate',
+        icon: <AntDesign name='staro' size={15} color={colors.primary} />
+    },
+    {
+        title: "Refer",
+        key: "refer",
+        icon: <FontAwesome5 name='coins' size={15} color={colors.primary} />
+    },
+    {
+        title: "Logout",
+        key: "logout",
+        icon: <AntDesign name='logout' size={15} color={colors.primary} />
+    },
+];
 
 
 export const insurancePlans = [
@@ -515,34 +551,53 @@ export const diseasesArr = [
 
 export const staticCitiesArr = [
     {
-        City: "Delhi"
+        City: "Delhi",
+        pinCode: 110001
     },
     {
-        City: "Bengaluru"
+        City: "Bengaluru",
+        pinCode: 560004
+
     },
     {
-        City: "Pune"
+        City: "Pune",
+        pinCode: 411005
+
     },
     {
-        City: "Mumbai"
+        City: "Mumbai",
+        pinCode: 400001
+
     },
     {
-        City: "Hyderabad"
+        City: "Hyderabad",
+        pinCode: 500001
+
     },
     {
-        City: "Gurgaon"
+        City: "Gurgaon",
+        pinCode: 122003
+
     },
     {
-        City: "Thane"
+        City: "Thane",
+        pinCode: 40604
+
     },
     {
-        City: "Ghaziabad"
+        City: "Ghaziabad",
+        pinCode: 201003
+
     },
     {
-        City: "Lucknow"
+        City: "Lucknow",
+        pinCode: 226001
+
     },
     {
-        City: "Jaipur"
+        City: "Jaipur",
+        pinCode: 332001
+
     },
 ]
 

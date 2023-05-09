@@ -116,7 +116,7 @@ const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceTyp
         setSelectedCode(item?.RTO_Code);
         dispatchQuickQuote("RtoCode", item.RTO_Code);
         dispatchQuickQuote("IsVehicleNew", true);
-        navigate("carBrandList", { insuranceType });
+        // navigate("carBrandList", { insuranceType });
     }
 
     const onNextPress = () => {

@@ -10,16 +10,30 @@ import { shadows } from '../../../styles/shadow'
 import { navigate } from '../../../routes/RootNavigation'
 import { getCountryWithCountryCode } from '../../../store/actions/PolicyAction'
 import { AppToastMessage } from '../../../components/custom/SnackBar'
+import { useSelector } from 'react-redux'
+import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction'
 
 
 const LocationFormScreen = () => {
     const [searchedCities, setSearchedCities] = useState(staticCitiesArr);
-    const [pinCode, setpinCode] = useState('');
+    const [pinCode, setpinCode] = useState(null);
     const [selectedCity, setselectedCity] = useState(null);
+    const user = useSelector(state => state.user?.user);
 
-    useEffect(() => {
 
-    }, [])
+    const onPressContinue = () => {
+        console.log(selectedCity);
+        if (selectedCity) {
+            dispatchHealthQuickQuote('Pincode', pinCode ? pinCode : selectedCity.pinCode);
+            if (user?.name || user?.first_name) {
+                navigate("medicalHistory");
+            } else {
+                navigate("personalDetailForm", { isHealthInsurance: true });
+            }
+        } else {
+            AppToastMessage('Please select city!')
+        }
+    }
 
 
     return (
@@ -36,10 +50,18 @@ const LocationFormScreen = () => {
                     <InputField
                         placeholder='Enter city or pincode'
                         onTextChange={(text) => {
-                            getCountryWithCountryCode(text).then(res => {
-                                setSearchedCities(res?.data)
-                                console.log('res', res);
-                            })
+                            setpinCode(text);
+                            setselectedCity(null);
+                            if (text == '') {
+                                setSearchedCities(staticCitiesArr);
+                            } else {
+                                getCountryWithCountryCode(text).then(res => {
+                                    if (res?.status) {
+                                        setSearchedCities(res?.data)
+                                        console.log('res', res);
+                                    }
+                                })
+                            }
                         }}
                         keyboardType='numeric'
                         maxLength={10}
@@ -49,11 +71,11 @@ const LocationFormScreen = () => {
                     {searchedCities.length != 0 ? searchedCities.map((item, index) => {
                         return (
                             <TouchableOpacity
-                                style={{ height: 50, width: (width - 60) / 2, backgroundColor: colors.white, margin: 10, borderRadius: 10, borderWidth: 1, borderColor: selectedCity == item.City ? colors.primary : colors.lightGrey, ...shadows[0], ...Center }}
+                                style={{ height: 50, width: (width - 60) / 2, backgroundColor: colors.white, margin: 10, borderRadius: 10, borderWidth: 1, borderColor: selectedCity?.City == item.City ? colors.primary : colors.lightGrey, ...shadows[0], ...Center }}
                                 key={index}
                                 onPress={() => {
                                     // navigate("medicalHistory");
-                                    setselectedCity(item.City);
+                                    setselectedCity(item);
                                 }}
                             >
                                 <AppText
@@ -74,12 +96,7 @@ const LocationFormScreen = () => {
                 <Button
                     title='Continue'
                     onPress={() => {
-                        if (selectedCity) {
-                            navigate("medicalHistory")
-                        } else {
-                            AppToastMessage('Please select city!')
-                        }
-
+                        onPressContinue();
                     }}
                 />
             </View>

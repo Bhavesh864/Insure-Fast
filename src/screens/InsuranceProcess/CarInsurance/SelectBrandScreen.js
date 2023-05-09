@@ -33,6 +33,7 @@ const SelectBrandScreen = ({ route }) => {
 
     const onNext = () => {
         if (!selectedBrand) {
+            AppToastMessage('Please select a brand name!')
             return;
         }
         dispatchQuickQuote("MakeName", selectedBrand);
@@ -48,7 +49,7 @@ const SelectBrandScreen = ({ route }) => {
     const onBrandPress = (key) => {
         if (!isEdit) {
             dispatchQuickQuote("VehicleType", insuranceType.vehicleType);
-            navigate("carModalScreen", { make: key, insuranceType });
+            // navigate("carModalScreen", { make: key, insuranceType });
         } else {
             pop();
             AppToastMessage('Brand Name Updated')
@@ -98,7 +99,7 @@ const SelectBrandScreen = ({ route }) => {
                                     item={item}
                                     textKey={"Make"}
                                     onPress={(item) => onBrandPress(item.Make)}
-                                    borderWidth={item.Make == selectedBrand ? 1 : 0}
+                                    borderWidth={item.Make == selectedBrand ? 2 : 0}
                                 />
                             )
                         })}

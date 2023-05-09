@@ -14,6 +14,7 @@ import { navigate } from '../../../routes/RootNavigation'
 import { AppConst } from '../../../constants/AppConst'
 import { ScrollView } from 'react-native-gesture-handler';
 import { AppToastMessage } from '../../../components/custom/SnackBar';
+import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction';
 
 
 const HealthInsuranceForScreen = () => {
@@ -24,12 +25,16 @@ const HealthInsuranceForScreen = () => {
     const [daughterNum, setDaughterNum] = useState(0);
     const [maxNum, setMaxNum] = useState(4);
 
+
     const onItemPress = (key) => {
         if (key == "other") {
             let arr = insurerArr.filter(i => i.key != "other");
             setInsurerArr([...arr, ...otherHealthInsuranceForArr]);
             return;
         }
+
+        console.log('for', forArr);
+
         if (forArr.includes(key)) {
             setForArr(forArr.filter(i => i != key));
             if (key == "son") {
@@ -43,20 +48,51 @@ const HealthInsuranceForScreen = () => {
                 setDaughterNum(0);
             }
         } else {
-            setForArr([...forArr, key]);
-            if (key == "son") {
-                // setSonNum(1);
-                let n = daughterNum ? 4 - daughterNum : 4;
-                setMaxNum(n)
-                setChildAskModal({ type: "son" });
+            if (forArr.includes('father') || forArr.includes('mother')) {
+                if (key != 'mother' && key != 'father') {
+                    AppToastMessage('Cannot select other members with mother/father !')
+
+                } else {
+                    setForArr([...forArr, key]);
+                    if (key == "son") {
+                        // setSonNum(1);
+                        let n = daughterNum ? 4 - daughterNum : 4;
+                        setMaxNum(n)
+                        setChildAskModal({ type: "son" });
+                    }
+                    if (key == "daughter") {
+                        // setDaughterNum(1);
+                        let n = sonNum ? 4 - sonNum : 4;
+                        setMaxNum(n);
+                        setChildAskModal({ type: "daughter" });
+                    }
+                }
             }
-            if (key == "daughter") {
-                // setDaughterNum(1);
-                let n = sonNum ? 4 - sonNum : 4;
-                setMaxNum(n);
-                setChildAskModal({ type: "daughter" });
+            if (forArr.includes('son') || forArr.includes('daughter') || forArr.includes('spouse') || forArr.includes('self')) {
+                if (key != 'son' && key != 'daughter' && key != 'spouse' && key != 'self') {
+                    AppToastMessage('Cannot select mother/father with other members!')
+
+                } else {
+                    setForArr([...forArr, key]);
+                    if (key == "son") {
+                        // setSonNum(1);
+                        let n = daughterNum ? 4 - daughterNum : 4;
+                        setMaxNum(n)
+                        setChildAskModal({ type: "son" });
+                    }
+                    if (key == "daughter") {
+                        // setDaughterNum(1);
+                        let n = sonNum ? 4 - sonNum : 4;
+                        setMaxNum(n);
+                        setChildAskModal({ type: "daughter" });
+                    }
+                }
+            }
+            if (forArr.length == 0) {
+                setForArr([...forArr, key]);
             }
         }
+
     }
 
     const onContinuePress = () => {
@@ -64,6 +100,18 @@ const HealthInsuranceForScreen = () => {
             AppToastMessage('Please select atleast one member');
             return;
         }
+        if (forArr.some(i => {
+            return i == 'spouse' || i == 'son' || i == 'daughter' || i == 'father' || i == 'mother'
+        })) {
+            dispatchHealthQuickQuote('CustomerType', 'Family')
+        } else {
+            dispatchHealthQuickQuote('CustomerType', 'Individual')
+        }
+
+        dispatchHealthQuickQuote('ChildCount', sonNum + daughterNum)
+        // dispatchHealthQuickQuote('InsuredMembers', sonNum)
+        dispatchHealthQuickQuote('SonCount', sonNum)
+        dispatchHealthQuickQuote('DaughterCount', daughterNum)
         navigate("personalAndFamilyForm", { insuranceFor: forArr, sonNum, daughterNum });
     }
 

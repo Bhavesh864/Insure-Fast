@@ -103,7 +103,7 @@ const SelectVariantScreen = ({ route }) => {
         if (!isEdit) {
             dispatchQuickQuote("CarryingCapacity", variant.Seating_Capacity);
             dispatchQuickQuote("CubicCapacity", variant.Cubic_Capacity);
-            navigate("registrationYear", { insuranceType });
+            // navigate("registrationYear", { insuranceType });
         } else {
             pop();
             AppToastMessage('Variant Updated successfully');
@@ -162,7 +162,7 @@ const SelectVariantScreen = ({ route }) => {
                                     item={item}
                                     textKey={"Variant"}
                                     onPress={(item) => variantPress(item)}
-                                    borderWidth={selectedVariant?.Variant == item.Variant ? 1 : 0}
+                                    borderWidth={selectedVariant?.Variant == item.Variant ? 2 : 0}
                                     itemWidth={"90%"}
                                     style={{}}
                                 />

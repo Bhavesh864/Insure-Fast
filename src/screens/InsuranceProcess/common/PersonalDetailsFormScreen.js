@@ -10,10 +10,12 @@ import { navigate } from '../../../routes/RootNavigation'
 import { SetUserData } from '../../../store/actions/UserAction'
 import { AppToastMessage } from '../../../components/custom/SnackBar'
 import DatePicker from 'react-native-date-picker'
+import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction'
 
 
 const PersonalDetailsFormScreen = ({ route }) => {
     const insuranceType = route?.params?.insuranceType;
+    const isHealthInsurance = route?.params?.isHealthInsurance;
     const data = useSelector(state => state.motor?.apiRequestQQ);
     const userProfile = useSelector(state => state.user?.user);
     const dispatch = useDispatch();
@@ -88,15 +90,23 @@ const PersonalDetailsFormScreen = ({ route }) => {
         createCustomerAction(formData).then(res => {
             AppConst.showConsoleLog("create customer res: ", res);
             if (res && res?.status) {
-                dispatchQuickQuote("FirstName", firstName);
-                dispatchQuickQuote("LastName", lastName);
-                dispatchQuickQuote("Email", email);
-                dispatchQuickQuote("MobileNumber", mobile);
-                dispatchQuickQuote("Dob", dob);
-                dispatchQuickQuote("customerId", res?.data?.id);
-                dispatch(SetUserData(res?.data));
-                navigate("vehiclePolicyForm", { insuranceType });
-                // AppToastMessage(res?.message);
+                if (isHealthInsurance) {
+                    dispatchHealthQuickQuote('FullName', firstName + ' ' + lastName)
+                    dispatchHealthQuickQuote('Email', email)
+                    dispatchHealthQuickQuote('MobileNo', mobile)
+                    dispatchHealthQuickQuote('Email', email)
+
+                    navigate('medicalHistory');
+                } else {
+                    dispatchQuickQuote("FirstName", firstName);
+                    dispatchQuickQuote("LastName", lastName);
+                    dispatchQuickQuote("Email", email);
+                    dispatchQuickQuote("MobileNumber", mobile);
+                    dispatchQuickQuote("Dob", dob);
+                    dispatchQuickQuote("customerId", res?.data?.id);
+                    dispatch(SetUserData(res?.data));
+                    navigate("vehiclePolicyForm", { insuranceType });
+                }
             } else
                 res ? AppToastMessage(res?.message) : AppToastMessage('Something went wrong')
 

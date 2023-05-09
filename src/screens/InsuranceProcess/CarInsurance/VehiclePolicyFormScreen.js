@@ -98,7 +98,6 @@ const VehiclePolicyFormScreen = () => {
             if (res?.status) {
                 navigate("quotationSummary");
             }
-
         })
     }
 

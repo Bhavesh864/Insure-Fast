@@ -11,6 +11,8 @@ import { userLogoutAction } from '../../store/actions/UserAction'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from '../../routes/RootNavigation';
 import RateUsModal from '../../components/modals/RateUsModal';
+import { profileScreenArr } from '../../constants/OtherConst';
+
 
 
 const ProfileScreen = () => {
@@ -19,38 +21,7 @@ const ProfileScreen = () => {
     const phone = useSelector(state => state.user?.user?.phone);
     const [rateModal, setrateModal] = useState(null);
 
-    const arr = [
-        {
-            title: "Payments",
-            icon: <AntDesign name='creditcard' size={15} color={colors.primary} />,
-            key: "transactions"
-        },
-        {
-            title: "How we get you",
-            key: "about",
-            icon: <AntDesign name='question' size={15} color={colors.primary} />
-        },
-        {
-            title: "Allocated Mentor",
-            key: "allocate",
-            icon: <AntDesign name='user' size={15} color={colors.primary} />
-        },
-        {
-            title: "Rate us",
-            key: 'rate',
-            icon: <AntDesign name='staro' size={15} color={colors.primary} />
-        },
-        {
-            title: "Refer",
-            key: "refer",
-            icon: <FontAwesome5 name='coins' size={15} color={colors.primary} />
-        },
-        {
-            title: "Logout",
-            key: "logout",
-            icon: <AntDesign name='logout' size={15} color={colors.primary} />
-        },
-    ];
+
 
     const onItemPress = (key) => {
         if (!key) {
@@ -132,7 +103,7 @@ const ProfileScreen = () => {
         <View style={screenStyle}>
             <SafeAreaView style={{ flex: 1 }}>
                 <FlatList
-                    data={arr}
+                    data={profileScreenArr}
                     key={(a, b) => String(b)}
                     showsVerticalScrollIndicator={false}
                     ListHeaderComponent={() => <ListHeader />}

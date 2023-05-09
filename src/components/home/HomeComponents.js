@@ -122,8 +122,8 @@ export const AvailableInsuranceComponent = () => {
         } else if (name == 'Two Wheeler Insurance') {
             dispatchQuickQuote('vehicleType', payloads.vehicleType);
             dispatchQuickQuote("onlyThirdPartyIns", false);
-            // navigate(key, payloads);
-            navigate('quotationSummary');
+            navigate(key, payloads);
+            // navigate('quotationSummary');
         } else {
             dispatchQuickQuote('vehicleType', payloads.vehicleType);
             dispatchQuickQuote("onlyThirdPartyIns", false);

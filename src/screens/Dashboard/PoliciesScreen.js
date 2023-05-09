@@ -1,15 +1,15 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {screenStyle} from '../../styles/CommonStyling';
-import {HomeHeader} from '../../components/home/HomeComponents';
-import {getPunchedPoliciesData} from '../../store/actions/PolicyAction';
-import {useEffect} from 'react';
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { screenStyle } from '../../styles/CommonStyling';
+import { HomeHeader } from '../../components/home/HomeComponents';
+import { getPunchedPoliciesData } from '../../store/actions/PolicyAction';
+import { useEffect } from 'react';
 import PoliciesDetailsComponent from '../../components/insurance/PoliciesDetailsComponent';
-import {useState} from 'react';
-import {AppText, HeadingText} from '../../Utility/TextUtility';
-import {colors} from '../../styles/colors';
+import { useState } from 'react';
+import { AppText, HeadingText } from '../../Utility/TextUtility';
+import { colors } from '../../styles/colors';
 
-const PoliciesScreen = ({navigation}) => {
+const PoliciesScreen = ({ navigation }) => {
   const [policiesList, setpoliciesList] = useState(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const PoliciesScreen = ({navigation}) => {
   if (policiesList && policiesList.length == 0) {
     return (
       <SafeAreaView style={screenStyle}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <HomeHeader screen={'policy'} />
           <View
             style={{
@@ -41,12 +41,12 @@ const PoliciesScreen = ({navigation}) => {
             <HeadingText
               text={'No policies yet'}
               size={24}
-              // color={colors.darkGrey}
+            // color={colors.darkGrey}
             />
             <AppText
               text={"Let's figure out how we can still help you"}
               color={colors.darkGrey}
-              style={{marginTop: 2}}
+              style={{ marginTop: 2 }}
             />
           </View>
         </View>
@@ -58,7 +58,8 @@ const PoliciesScreen = ({navigation}) => {
         <View style={screenStyle}>
           <HomeHeader />
           <FlatList
-            data={policiesList}
+            showsHorizontalScrollIndicator={false}
+            data={policiesList?.reverse()}
             keyExtractor={(item, index) => index}
             renderItem={(item, index) => {
               return <PoliciesDetailsComponent item={item} />;

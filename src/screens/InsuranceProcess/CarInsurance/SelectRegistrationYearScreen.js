@@ -42,7 +42,7 @@ const SelectRegistrationYearScreen = ({ route }) => {
     const onYearPress = (year) => {
         dispatchQuickQuote("RegistrationYear", year);
         setSelectedYear(year);
-        navFunc();
+        // navFunc();
     }
 
     const onNext = () => {
@@ -67,18 +67,18 @@ const SelectRegistrationYearScreen = ({ route }) => {
     }
     return (
         <View style={[screenStyle, { backgroundColor: colors.off_white }]}>
-
             <InputField
                 placeholder='Search year'
                 isSearch={true}
                 style={{ marginTop: 20 }}
+                onTextChange={() => { }}
             />
             <View style={{ flex: 1 }}>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={{ marginHorizontal: 10, flexDirection: "row", flexWrap: "wrap", marginHorizontal: 10 }}>
                         {yearsArr.map((item, index) => {
                             return (
-                                <TouchableOpacity onPress={() => onYearPress(item)} key={String(index)} style={[styles.item, { borderWidth: item == selectedYear ? 1 : 0 }]}>
+                                <TouchableOpacity onPress={() => onYearPress(item)} key={String(index)} style={[styles.item, { borderWidth: item == selectedYear ? 2 : 0 }]}>
                                     <AppText
                                         text={item}
                                     />

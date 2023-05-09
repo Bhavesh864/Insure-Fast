@@ -34,10 +34,14 @@ export const motorUrls = {
     getAllClaims: "/claim/all-claims/",
     getPunchedPoliciesData: "/motor/policies/",
     getAllocatedMentor: "/motor/allocated-mentor/",
-    getRecentQuoteUrl: "/motor/recent-policies/",
+    getRecentQuoteUrl: "/health/recent-policy/",
     getCountryDataWithCode: "/motor/pincode-search?",
     submitRating: "/auth/rate-us",
     submitQuotaionUrl: '/admin/send-quotation'
+}
+
+export const healthUrls = {
+    submitHealthPolicy: '/health/send-health-policy'
 }
 
 // https://api.insurefast.in/api/v1/motor/pincode-search?Pin_Code=110001

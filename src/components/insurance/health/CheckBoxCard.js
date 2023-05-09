@@ -4,34 +4,11 @@ import React from 'react'
 import { shadows } from '../../../styles/shadow'
 import { flexRow } from '../../../styles/CommonStyling'
 import { colors } from '../../../styles/colors'
-import { navigate } from '../../../routes/RootNavigation'
-import { Button, Checkbox } from '../../../components/CustomFields'
+import { Checkbox } from '../../../components/CustomFields'
 import { AppText, HeadingText } from '../../../Utility/TextUtility'
-import { useState } from 'react'
-import ListShowModal from '../../modals/ListShowModal'
-import DataListSelectModal from '../../modals/DataListSelectModal'
-import { diseasesArr } from '../../../constants/OtherConst'
+import { AppToastMessage } from '../../custom/SnackBar'
 
-const CheckBoxCard = ({ item, setshowModal, setselectedMedicalProcedure, selectedMedicalProcedure }) => {
-
-    const addRemoveItemFromList = (item) => {
-        console.log(selectedMedicalProcedure);
-        if (!selectedMedicalProcedure.includes(item.key)) {
-            if (item.key == 1) {
-                setshowModal(true);
-            }
-            if (item.key == 3) {
-                setselectedMedicalProcedure([3]);
-                navigate('healthQuotations')
-                return
-            }
-            setselectedMedicalProcedure([...selectedMedicalProcedure, item.key]);
-        } else {
-            setselectedMedicalProcedure(
-                selectedMedicalProcedure.filter(i => item.key != i),
-            );
-        }
-    }
+const CheckBoxCard = ({ item, selectedMedicalProcedure, addRemoveItemFromList }) => {
 
     return (
         <View>
@@ -39,7 +16,6 @@ const CheckBoxCard = ({ item, setshowModal, setselectedMedicalProcedure, selecte
                 activeOpacity={0.8}
                 onPress={() => {
                     addRemoveItemFromList(item)
-
                 }}
                 style={styles.claimReqCont}>
                 <View>
