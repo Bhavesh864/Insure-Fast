@@ -1,18 +1,14 @@
 import React from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {screenStyle, width} from '../../styles/CommonStyling';
-import {AppText, HeadingText} from '../../Utility/TextUtility';
-import {colors} from '../../styles/colors';
-import {HomeHeader} from '../../components/home/HomeComponents';
-import {ScrollView} from 'react-native-gesture-handler';
-import {shadows} from '../../styles/shadow';
-import {HelpSvgComponent} from '../../assets/svg/basicSvgs';
+import { Image, SafeAreaView, StyleSheet, View } from 'react-native';
+import { screenStyle, width } from '../../styles/CommonStyling';
+import { AppText, HeadingText } from '../../Utility/TextUtility';
+import { colors } from '../../styles/colors';
+import { HelpSvgComponent } from '../../assets/svg/basicSvgs';
 
 const HelpScreen = () => {
   return (
     <SafeAreaView style={screenStyle}>
       <View style={screenStyle}>
-        {/* <HomeHeader /> */}
         <Image
           source={require('../../assets/images/logo.png')}
           style={{
@@ -23,18 +19,18 @@ const HelpScreen = () => {
             margin: 10,
           }}
         />
-        <View style={{marginHorizontal: 10}}>
+        <View style={{ marginHorizontal: 10 }}>
           <HeadingText
             text={'Get Help'}
             size={20}
-            style={{paddingTop: 10}}
-            // color={colors.darkGrey}
+            style={{ paddingTop: 10 }}
+          // color={colors.darkGrey}
           />
           <AppText
             text={'We are here to help you'}
             color={colors.darkGrey}
             size={13}
-            style={{marginTop: 5}}
+            style={{ marginTop: 5 }}
           />
         </View>
         <View
@@ -55,13 +51,13 @@ const HelpScreen = () => {
             text={'No active policies found'}
             size={20}
             // color={colors.darkGrey}
-            style={{marginTop: 10}}
+            style={{ marginTop: 10 }}
           />
           <AppText
             text={'Once you buy a new policy, it will show up here'}
             color={colors.darkGrey}
             size={15}
-            style={{marginTop: 5, textAlign: 'center', marginHorizontal: 20}}
+            style={{ marginTop: 5, textAlign: 'center', marginHorizontal: 20 }}
           />
         </View>
       </View>

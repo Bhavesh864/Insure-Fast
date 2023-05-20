@@ -5,6 +5,7 @@ import { colors } from "../styles/colors";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 
+
 export const idvOptions = [
     {
         title: 'Lowest IDV',
@@ -551,51 +552,51 @@ export const diseasesArr = [
 
 export const staticCitiesArr = [
     {
-        City: "Delhi",
+        District: "Delhi",
         pinCode: 110001
     },
     {
-        City: "Bengaluru",
+        District: "Bengaluru",
         pinCode: 560004
 
     },
     {
-        City: "Pune",
+        District: "Pune",
         pinCode: 411005
 
     },
     {
-        City: "Mumbai",
+        District: "Mumbai",
         pinCode: 400001
 
     },
     {
-        City: "Hyderabad",
+        District: "Hyderabad",
         pinCode: 500001
 
     },
     {
-        City: "Gurgaon",
+        District: "Gurgaon",
         pinCode: 122003
 
     },
     {
-        City: "Thane",
+        District: "Thane",
         pinCode: 40604
 
     },
     {
-        City: "Ghaziabad",
+        District: "Ghaziabad",
         pinCode: 201003
 
     },
     {
-        City: "Lucknow",
+        District: "Lucknow",
         pinCode: 226001
 
     },
     {
-        City: "Jaipur",
+        District: "Jaipur",
         pinCode: 332001
 
     },

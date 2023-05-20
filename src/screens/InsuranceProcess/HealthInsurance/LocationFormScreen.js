@@ -48,7 +48,7 @@ const LocationFormScreen = () => {
                         style={{ marginHorizontal: 20, marginBottom: 10 }}
                     />
                     <InputField
-                        placeholder='Enter city or pincode'
+                        placeholder='Enter pincode'
                         onTextChange={(text) => {
                             setpinCode(text);
                             setselectedCity(null);
@@ -71,7 +71,7 @@ const LocationFormScreen = () => {
                     {searchedCities.length != 0 ? searchedCities.map((item, index) => {
                         return (
                             <TouchableOpacity
-                                style={{ height: 50, width: (width - 60) / 2, backgroundColor: colors.white, margin: 10, borderRadius: 10, borderWidth: 1, borderColor: selectedCity?.City == item.City ? colors.primary : colors.lightGrey, ...shadows[0], ...Center }}
+                                style={{ height: 50, width: (width - 60) / 2, backgroundColor: colors.white, margin: 10, borderRadius: 10, borderWidth: 1, borderColor: selectedCity?.District == item.District ? colors.primary : colors.lightGrey, ...shadows[0], ...Center }}
                                 key={index}
                                 onPress={() => {
                                     // navigate("medicalHistory");
@@ -79,7 +79,7 @@ const LocationFormScreen = () => {
                                 }}
                             >
                                 <AppText
-                                    text={item?.City}
+                                    text={item?.District}
                                 />
                             </TouchableOpacity>
                         )

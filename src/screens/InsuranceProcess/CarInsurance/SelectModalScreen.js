@@ -27,6 +27,7 @@ const SelectModalScreen = ({ route }) => {
 
 
     useEffect(() => {
+
         let body = {
             "make": isEdit ? vehicleData?.MakeName : carBrand,
             "Vehicle_Type": isEdit ? vehicleData?.vehicleType : insuranceType?.vehicleType
@@ -50,7 +51,7 @@ const SelectModalScreen = ({ route }) => {
         dispatchQuickQuote("ModelName", key);
         setSelectedModel(key)
         if (!isEdit) {
-            // navigate("carVariantScreen", { make: carBrand, model: key, insuranceType });
+            navigate("carVariantScreen", { make: carBrand, model: key, insuranceType });
         } else {
             pop();
             AppToastMessage('Model updated successfully!')

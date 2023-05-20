@@ -49,13 +49,12 @@ const SelectBrandScreen = ({ route }) => {
     const onBrandPress = (key) => {
         if (!isEdit) {
             dispatchQuickQuote("VehicleType", insuranceType.vehicleType);
-            // navigate("carModalScreen", { make: key, insuranceType });
+            navigate("carModalScreen", { make: key, insuranceType });
         } else {
             pop();
             AppToastMessage('Brand Name Updated')
         }
         dispatchQuickQuote("MakeName", key);
-        setSelectedBrand(key);
     }
 
     const onSearch = (text) => {

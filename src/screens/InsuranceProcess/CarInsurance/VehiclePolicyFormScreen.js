@@ -45,22 +45,28 @@ const VehiclePolicyFormScreen = () => {
                 if (checkVehicleODType(rgDate)) {
                     let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
                     setSelectedPolicyType(obj)
+                    dispatchQuickQuote('NewPolicyType', 'Comprehensive');
                 }
             }
             else {
                 if (checkVehicleODType(rgDate) && details?.VehicleType != 'Passenger Carrying' && details?.VehicleType != 'Goods Carrying') {
                     let obj = newPolicyTypes.find(i => i.key == "own_damage");
                     setSelectedPolicyType(obj)
-
+                    dispatchQuickQuote('NewPolicyType', 'StandAlone OD')
                 } else {
                     let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
                     setSelectedPolicyType(obj)
+                    dispatchQuickQuote('NewPolicyType', 'Comprehensive')
                 }
             }
         }
     }, []);
 
     const onAction = () => {
+        if (!ownershipType) {
+            AppToastMessage('Please provide vehicle owned!');
+            return;
+        }
         dispatchQuickQuote("RegistrationDate", regDate);
         dispatchQuickQuote("ManufaturingDate", mfgDate);
         if (details?.IsVehicleNew) {
@@ -69,12 +75,15 @@ const VehiclePolicyFormScreen = () => {
             if (selectedPolicyType.key == 'ThirdParty') {
                 dispatchQuickQuote("onlyThirdPartyIns", true);
             }
-
             navigate("previousPolicy");
         }
     }
 
     const createPolicy = () => {
+        if (!ownershipType) {
+            AppToastMessage('Please provide vehicle owned!');
+            return;
+        }
         // dispatchQuickQuote("ManufaturingDate", mfgDate);
         // dispatchQuickQuote("RegistrationDate", regDate);
         // dispatchQuickQuote("NewPolicyType", selectedPolicyType);
@@ -91,7 +100,6 @@ const VehiclePolicyFormScreen = () => {
             formData.append(key, obj[key]);
         }
         formData.append("customerId", AppConst.getCustomerId());
-        console.log("customerId", AppConst.getCustomerId());
 
         fillPolicyDataAction(formData).then(res => {
             AppConst.showConsoleLog("fill policy res: ", res);

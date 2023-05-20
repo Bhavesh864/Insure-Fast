@@ -13,7 +13,6 @@ const PoliciesScreen = ({ navigation }) => {
   const [policiesList, setpoliciesList] = useState(null);
 
   useEffect(() => {
-    // console.log('hello');
     navigation.addListener('focus', () => {
       getPunchedPoliciesData().then(res => {
         console.log('object', JSON.stringify(res));
@@ -41,7 +40,6 @@ const PoliciesScreen = ({ navigation }) => {
             <HeadingText
               text={'No policies yet'}
               size={24}
-            // color={colors.darkGrey}
             />
             <AppText
               text={"Let's figure out how we can still help you"}
@@ -60,8 +58,8 @@ const PoliciesScreen = ({ navigation }) => {
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={policiesList?.reverse()}
-            keyExtractor={(item, index) => index}
-            renderItem={(item, index) => {
+            keyExtractor={(_, index) => index}
+            renderItem={(item) => {
               return <PoliciesDetailsComponent item={item} />;
             }}
           />

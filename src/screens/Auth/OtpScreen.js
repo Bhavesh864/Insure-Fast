@@ -1,7 +1,6 @@
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, NativeEventEmitter, NativeModules, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { screenStyle } from '../../styles/CommonStyling'
-import { WelcomeInsureComponent } from '../../components/auth/AppReUsableComponents'
 import { Button, CustomBackButton, InputField } from '../../components/CustomFields'
 import { navigate } from '../../routes/RootNavigation'
 import { ChangeAppStatus } from '../../store/actions/AppAction'
@@ -13,8 +12,6 @@ import { verifyOtpAction } from '../../store/actions/UserAction'
 import { AppConst } from '../../constants/AppConst'
 import { AppToastMessage } from '../../components/custom/SnackBar'
 
-
-
 const OtpScreen = ({ route }) => {
     const mobile = route.params?.mobile;
     const responseData = route.params?.response;
@@ -24,29 +21,53 @@ const OtpScreen = ({ route }) => {
         second: '',
         third: '',
         four: '',
+        five: ''
     });
+    const [message, setmessage] = useState('Trying to auto detect otp sent to ')
 
     useEffect(() => {
-        if (responseData?.verification_code) {
-            let rOtp = String(responseData?.verification_code)
-            setotp({
-                first: rOtp?.charAt(0),
-                second: rOtp?.charAt(1),
-                third: rOtp?.charAt(2),
-                four: rOtp?.charAt(3)
+        let smslistenerSubs = null;
+        if (Platform.OS == 'android') {
+            const eventEmitter = new NativeEventEmitter();
+            smslistenerSubs = eventEmitter.addListener('SMSEventListener', (events) => {
+                AppConst.showConsoleLog('otp event:', events);
+                if (events) {
+                    let fetchedOtp = events.OTP;
+                    setotp({
+                        first: fetchedOtp?.charAt(0),
+                        second: fetchedOtp?.charAt(1),
+                        third: fetchedOtp?.charAt(2),
+                        four: fetchedOtp?.charAt(3),
+                        five: fetchedOtp?.charAt(4),
+                    })
+                }
             })
+        } else {
+            setmessage('Please enter OTP sent to ')
         }
+
+        return () => {
+            if (Platform.OS == 'android') {
+                NativeModules.SMSListener.unregisterReceiver();
+                if (smslistenerSubs) {
+                    smslistenerSubs.remove();
+                }
+            }
+        }
+
     }, []);
+
+
+
+
     const onVerify = () => {
-        // dispatch(ChangeAppStatus(3))
-        // return;
-        // navigate("login", { type: "employee" })
-        if (otp?.first && otp?.second && otp?.third && otp?.four) {
+        navigate("login", { type: "employee" })
+        if (otp?.first && otp?.second && otp?.third && otp?.four && otp?.five) {
             const body = {
-                "otp": otp?.first + otp?.second + otp?.third + otp?.four,
+                "otp": otp?.first + otp?.second + otp?.third + otp?.four + otp?.five,
                 "fcm_token": "",
                 "id": responseData?.id,
-                "phone": responseData?.phone
+                "phone": mobile
             }
             verifyOtpAction(body).then(res => {
                 AppConst.showConsoleLog("otp verify res: ", res);
@@ -57,7 +78,7 @@ const OtpScreen = ({ route }) => {
                 }
             })
         }
-        // dispatch(ChangeAppStatus(3))
+        dispatch(ChangeAppStatus(3))
     }
 
     return (
@@ -76,7 +97,7 @@ const OtpScreen = ({ route }) => {
                                 />
                                 <Text style={{ marginTop: 10 }}>
                                     <AppText
-                                        text={`Please enter OTP sent to `}
+                                        text={`${message}`}
                                         color={colors.darkGrey}
                                     />
                                     <AppText

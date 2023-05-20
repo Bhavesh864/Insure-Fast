@@ -2,39 +2,32 @@ import React, { useState } from 'react'
 import { ScrollView, StyleSheet, Image, TouchableOpacity, View, FlatList, Alert } from 'react-native'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Center, screenStyle } from '../../styles/CommonStyling'
-import { Button, CustomBackButton, InputField } from '../../components/CustomFields'
-import { AppText, HeadingText } from '../../Utility/TextUtility'
+import { Button, InputField } from '../../components/CustomFields'
+import { HeadingText } from '../../Utility/TextUtility'
 import { colors } from '../../styles/colors';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { claimRequest } from '../../store/actions/PolicyAction';
-import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppToastMessage } from '../../components/custom/SnackBar';
 import { navigate } from '../../routes/RootNavigation';
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
-const ClaimFormScreen = ({ navigation }) => {
-    // const details = useSelector(state => state.motor?.apiRequestQQ);
+const ClaimFormScreen = () => {
     const formData = new FormData();
     const [name, setname] = useState('');
     const [email, setemail] = useState('');
-    const [number, setnumber] = useState('');
+    const [mobile, setmobile] = useState('');
     const [employeeCode, setemployeeCode] = useState('');
     const [productType, setproductType] = useState('');
     const [queryType, setqueryType] = useState('');
     const [description, setdescription] = useState('');
-    const [uriString, seturiString] = useState('');
-    const [imageName, setimageName] = useState('');
     const [imageList, setimageList] = useState([]);
-    const [pathList, setpathList] = useState([]);
 
     const openImageGallery = async () => {
         const res = await launchImageLibrary();
         if (res.didCancel) {
             return;
         }
-        // uri: res.assets[0].uri,
 
         let data = {
             uri: res.assets[0].uri,
@@ -42,12 +35,7 @@ const ClaimFormScreen = ({ navigation }) => {
             type: res.assets[0].type,
         }
         setimageList([...imageList, data]);
-        setpathList(data)
-
-
-        // console.log('data', data);
-        // console.log('imagelist', imageList)
-
+        // setpathList(data)
     }
 
     const openCamera = async () => {
@@ -55,7 +43,6 @@ const ClaimFormScreen = ({ navigation }) => {
         if (res.didCancel) {
             return;
         }
-        // uri: res.assets[0].uri,
 
         let data = {
             uri: res.assets[0].uri,
@@ -64,10 +51,6 @@ const ClaimFormScreen = ({ navigation }) => {
         }
         setimageList([...imageList, data]);
         setpathList(data)
-
-
-        // console.log('data', data);
-        // console.log('imagelist', imageList)
     }
 
     const onPressImagePicker = async () => {
@@ -99,7 +82,7 @@ const ClaimFormScreen = ({ navigation }) => {
 
     const onSubmitForm = async () => {
         const customerId = await AsyncStorage.getItem("customerid");
-        if (!name || !number || !employeeCode || !productType || !queryType || !description || !customerId) {
+        if (!name || !mobile || !employeeCode || !productType || !queryType || !description || !customerId) {
             AppToastMessage('Please provide all input fields!')
             return;
         }
@@ -113,16 +96,14 @@ const ClaimFormScreen = ({ navigation }) => {
             return;
         }
 
-
         formData.append("customer_name", name);
         formData.append("customer_email", email);
-        formData.append("mobile_number", number);
-        formData.append("employe_code", employeeCode);
+        formData.append("mobile_number", mobile);
+        // formData.append("employe_code", employeeCode);
         formData.append("product_type", productType);
         formData.append("query_type", queryType);
         formData.append("description", description);
         formData.append("customerId", customerId);
-        // formData.append("image", pathList);
 
         if (imageList?.length > 0) {
             imageList.forEach((item, i) => {
@@ -133,12 +114,6 @@ const ClaimFormScreen = ({ navigation }) => {
                 })
             })
         }
-
-
-        console.log('imagelist', imageList);
-
-        console.log('formData', JSON.stringify(formData));
-        // return;
         claimRequest(formData).then(res => {
             console.log('claim res', res);
             if (res?.status) {
@@ -150,9 +125,12 @@ const ClaimFormScreen = ({ navigation }) => {
     }
 
 
+
+
     return (
         <View style={screenStyle}>
             <ScrollView style={{ flex: 1 }}>
+
                 <InputField
                     value={name}
                     placeholder='Enter your name'
@@ -171,21 +149,21 @@ const ClaimFormScreen = ({ navigation }) => {
                     }}
                 />
                 <InputField
-                    value={number}
+                    value={mobile}
                     placeholder='Mobile Number'
                     onTextChange={(text) => {
-                        setnumber(text);
+                        setmobile(text);
                     }}
                     keyboardType='numeric'
                     maxLength={10}
                 />
-                <InputField
+                {/* <InputField
                     value={employeeCode}
                     placeholder='Employee code'
                     onTextChange={(text) => {
                         setemployeeCode(text);
                     }}
-                />
+                /> */}
                 <InputField
                     autoCapitalize='words'
                     value={productType}

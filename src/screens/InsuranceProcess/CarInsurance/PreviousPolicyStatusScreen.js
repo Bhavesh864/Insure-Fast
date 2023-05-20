@@ -258,6 +258,7 @@ const PreviousPolicyStatusScreen = () => {
             {policyModal &&
                 <DataListSelectModal
                     isSearch={true}
+                    showSubmitBtn={false}
                     list={previousPolicies}
                     textKey='Name'
                     onClose={() => setPolicyModal(false)}

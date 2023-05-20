@@ -12,7 +12,8 @@ export const baseUrl = liveUrl + dnsUrl;
 export const authUrls = {
     login: "/auth/login",
     otpVerify: "/auth/otp-verification",
-    cutomerLogin: "/auth/customer-login",
+    // cutomerLogin: "/auth/customer-login",
+    cutomerLogin: "/auth/customer-OTP-verification?",
     customerOtpVerify: "/auth/verify-otp", //"/auth/otp-verification-customer",
     customerProfile: "/auth/customer-data"
 }

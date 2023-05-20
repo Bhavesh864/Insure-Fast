@@ -15,6 +15,7 @@ const ListShowModal = ({ onClose, title = "Select", list = [], onItemSelect, sel
         setSearch(text);
         onSearch && onSearch(text);
     }
+
     AppConst.showConsoleLog("selected: ", selectedItem, selectedKey)
     AppConst.showConsoleLog("selected: ", list, selectedKey)
     return (
@@ -62,7 +63,6 @@ const ListShowModal = ({ onClose, title = "Select", list = [], onItemSelect, sel
                         </ScrollView>
                     </View>
                 </TouchableWithoutFeedback>
-
             </TouchableOpacity>
         </Modal>
     )

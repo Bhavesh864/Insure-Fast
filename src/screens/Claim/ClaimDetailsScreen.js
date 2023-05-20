@@ -7,29 +7,6 @@ const ClaimDetailsScreen = ({ route }) => {
     const list = route?.params?.item;
     const [claimDetailList, setclaimDetailList] = useState(list);
 
-    // useEffect(() => {
-    //     getDetailsOfRequestedClaim().then(res => {
-    //         console.log('object', res)
-    //         if (res?.status) {
-    //             setclaimDetailList(res?.data);
-    //         }
-    //     })
-    // }, [])
-    // {/* <FlatList
-    //     data={claimDetailList}
-    //     keyExtractor={(items, index) => index}
-    //     renderItem={(item, index) => {
-    //         return <TouchableTextView
-    //             label={"Name"}
-    //             placeholder={item.customer_name}
-    //             value={`${index}`}
-    //             onPress={() => { }}
-    //         />
-    //     }}
-    // /> */}
-
-    console.log('list', list)
-
     return (
         <View style={{ marginTop: 20 }}>
             <TouchableTextView

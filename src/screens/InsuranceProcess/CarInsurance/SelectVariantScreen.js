@@ -30,9 +30,11 @@ const SelectVariantScreen = ({ route }) => {
 
 
     useEffect(() => {
-        if (insuranceType?.vehicleType != vehicleTypesObj.bike) {
-            setFuelModal(true)
-        }
+        // if (insuranceType?.vehicleType != vehicleTypesObj.bike) {
+        //     setFuelModal(true)
+        // }
+
+        setFuelModal(true);
 
 
         const body = {
@@ -103,7 +105,7 @@ const SelectVariantScreen = ({ route }) => {
         if (!isEdit) {
             dispatchQuickQuote("CarryingCapacity", variant.Seating_Capacity);
             dispatchQuickQuote("CubicCapacity", variant.Cubic_Capacity);
-            // navigate("registrationYear", { insuranceType });
+            navigate("registrationYear", { insuranceType });
         } else {
             pop();
             AppToastMessage('Variant Updated successfully');

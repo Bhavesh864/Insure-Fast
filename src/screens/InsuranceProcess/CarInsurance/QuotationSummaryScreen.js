@@ -24,11 +24,7 @@ const QuotationSummaryScreen = ({ navigation, route }) => {
     const [addonsModal, setaddonsModal] = useState(null);
     const [showModal, setshowModal] = useState(null);
 
-    // console.log('route', recentQuote);
     useEffect(() => {
-        // console.log('VehicleData?', vehicleData?.ModelName);
-        // Honda, Monocrop CBZ X-treme
-
         if (recentQuote) {
             dispatchQuickQuote("MakeName", recentQuote?.vehicle_make);
             dispatchQuickQuote("ModelName", recentQuote?.vehicle_model);
@@ -213,12 +209,19 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                         style={{ marginBottom: 7 }}
                     />
                     <TouchableOpacity style={styles.touchableSelect} onPress={() => {
-                        // console.log(!details?.VehicleType == 'Passenger Carrying' || !details?.VehicleType == 'Goods Carrying');
-                        if ((details?.VehicleType != 'Passenger Carrying' || details?.VehicleType != 'Goods Carrying') && !details?.onlyThirdPartyIns) {
-                            setpolicyTypeModal(true)
-                            console.log(details?.onlyThirdPartyIns);
-
+                        if (details?.NewPolicyType == 'StandAlone OD') {
+                            return;
                         }
+                        if ((details?.VehicleType != 'Passenger Carrying' || details?.VehicleType != 'Goods Carrying') && !details?.onlyThirdPartyIns) {
+                            let obj = newPolicyTypes.filter(i => i.key != "own_damage");
+                            setpolicyTypeModal(obj);
+                            return;
+                        } else {
+                            setpolicyTypeModal(commercialVehiclePolicyList);
+                            return;
+                        }
+
+                        setpolicyTypeModal(newPolicyTypes);
                     }}>
                         <AppText
                             text={selectedPolicyType ? selectedPolicyType : 'Select'}
@@ -226,6 +229,7 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                             style={{ flex: 1 }}
                         />
                     </TouchableOpacity>
+
 
                     {showModal && <IdvSelectModal
                         list={idvModal ? idvOptions : !vehicleData?.onlyThirdPartyIns ? AddOnsList : null}
@@ -257,17 +261,22 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                     />}
 
                     {
-                        policyTypeModal && <DataListSelectModal list={details?.VehicleType != 'Passenger Carrying' && details?.VehicleType != 'Goods Carrying' ? newPolicyTypes : commercialVehiclePolicyList} onItemSelect={(item) => {
-                            if (item.key === 'ThirdParty') {
-                                dispatchQuickQuote("onlyThirdPartyIns", true);
-                            } else {
-                                dispatchQuickQuote("onlyThirdPartyIns", false);
-                            }
-                            setselectedPolicyType(item.key)
-                            setpolicyTypeModal(false)
-                        }} onClose={() => {
-                            setpolicyTypeModal(false)
-                        }} />
+                        policyTypeModal && <DataListSelectModal
+                            list={policyTypeModal}
+                            onItemSelect={(item) => {
+                                if (item.key === 'ThirdParty') {
+                                    dispatchQuickQuote("onlyThirdPartyIns", true);
+                                } else {
+                                    dispatchQuickQuote("onlyThirdPartyIns", false);
+                                }
+                                setselectedPolicyType(item.key)
+                                setpolicyTypeModal(false)
+
+                            }}
+                            onClose={() => {
+                                setpolicyTypeModal(false)
+                            }}
+                        />
                     }
 
                 </View>

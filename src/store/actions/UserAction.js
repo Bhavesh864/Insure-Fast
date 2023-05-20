@@ -36,9 +36,8 @@ export const userLoginAction = async (body) => {
 
 export const customerLoginAction = async (body) => {
     try {
-        const res = await PostRequest({
-            url: authUrls.cutomerLogin,
-            body,
+        const res = await GetRequest({
+            url: authUrls.cutomerLogin + `number=${body.phone}`,
             loader: true
         });
 

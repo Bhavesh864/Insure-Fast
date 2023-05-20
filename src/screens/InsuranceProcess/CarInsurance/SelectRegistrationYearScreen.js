@@ -42,7 +42,7 @@ const SelectRegistrationYearScreen = ({ route }) => {
     const onYearPress = (year) => {
         dispatchQuickQuote("RegistrationYear", year);
         setSelectedYear(year);
-        // navFunc();
+        navFunc();
     }
 
     const onNext = () => {

@@ -49,7 +49,9 @@ const ShareQuotationEmailModal = ({ onClose, title = "Select", list = [], onItem
                         <TouchableOpacity onPress={() => {
                             if (selectedItem && selectedItem.includes('.com') && selectedItem.includes('@')) {
                                 // console.log(selectedItem)
-                                sendQuotation(selectedItem);
+                                sendQuotation(selectedItem).then(res => {
+                                    console.log(res);
+                                });
                                 onClose();
                                 onItemSelect('');
                             } else {

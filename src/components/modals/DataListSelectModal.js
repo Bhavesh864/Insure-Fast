@@ -7,7 +7,7 @@ import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { AppConst } from '../../constants/AppConst'
 
 
-const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false, onSubmit }) => {
+const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false, onSubmit, showSubmitBtn = true }) => {
     const [search, setSearch] = useState("");
     const [dataList, setdataList] = useState(list);
     const [selectedOptions, setselectedOptions] = useState([]);
@@ -102,10 +102,10 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
                                     )
                                 })}
                             </View>
-                            <TouchableOpacity onPress={() => { onSubmit() }}
+                            {showSubmitBtn && <TouchableOpacity onPress={() => { onSubmit() }}
                                 style={{ backgroundColor: colors.primary, ...Center, width: '50%', alignSelf: 'center', borderRadius: 10, marginBottom: 10 }}>
                                 <AppText text='Submit' color={colors.white} size={14} style={{ textAlign: 'right', padding: 15 }} />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
                         </ScrollView>
                     </View>
 

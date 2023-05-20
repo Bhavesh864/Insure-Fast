@@ -37,12 +37,10 @@ const IdvSelectModal = ({
 }) => {
   const [previosClaimMade, setPreviousClaimMade] = useState(null);
   const [accLists, setAccList] = useState(accList);
-  // const [addList, setAddList] = useState(AdditionalCoversList);
   const [addonsList, setAddonsList] = useState(AddOnsList);
   const [enteredIdv, setEnteredIdv] = useState(idvOptions);
   const [selectedPaidDriver, setselectedPaidDriver] = useState(null);
   const [selectedPassenger, setselectedPassenger] = useState(false);
-  // const details = useSelector(state => state.motor?.apiRequestQQ);
 
   const ListUpAndDownAnimation = () => {
     if (
