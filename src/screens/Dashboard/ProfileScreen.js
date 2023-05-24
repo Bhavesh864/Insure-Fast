@@ -15,7 +15,7 @@ import UserProfileComponent from '../../components/dashboard/profilescreen/UserP
 const ProfileScreen = () => {
     const userData = useSelector(state => state.motor?.apiRequestQQ);
     const dispatch = useDispatch();
-    const phone = useSelector(state => state.user?.user?.phone);
+    const phone = useSelector(state => state.motor?.apiRequestQQ?.MobileNumber);
     const [rateModal, setrateModal] = useState(null);
 
 

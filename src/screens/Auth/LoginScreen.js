@@ -20,36 +20,36 @@ const LoginScreen = ({ route, navigation }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        navigation.addListener('focus', () => {
+        navigation.addListener('focus', async () => {
             if (Platform.OS == 'android') {
-                setTimeout(async () => {
-                    try {
-                        const granted = await PermissionsAndroid.request(
-                            PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
-                        );
-                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                            AppConst.showConsoleLog('Permission Approved!');
-                            NativeModules.SMSListener.startListen();
-                        } else {
-                            AppConst.showConsoleLog('Permission Denied')
-                        }
-                    } catch (error) {
-                        AppConst.showConsoleLog('Permission err', error)
+                // setTimeout(async () => {
+                try {
+                    const granted = await PermissionsAndroid.request(
+                        PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+                    );
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        AppConst.showConsoleLog('Permission Approved!');
+                        NativeModules.SMSListener.startListen();
+                    } else {
+                        AppConst.showConsoleLog('Permission Denied')
                     }
-                }, 200);
+                } catch (error) {
+                    AppConst.showConsoleLog('Permission err', error)
+                }
+                // }, 200);
             }
         });
-
     }, []);
 
     const onAction = (body) => {
+        if (mobile.length < 10) {
+            AppToastMessage('Please enter a valid number!');
+            return;
+        }
         customerLoginAction(body).then(res => {
-            if (mobile.length < 10) {
-                AppToastMessage('Please enter a valid number!');
-                return;
-            }
-            if (res?.data?.ErrorMessage == 'Done' && res?.customer != null) {
-                navigate("otpScreen", { mobile, response: res.data });
+            console.log(JSON.stringify(res));
+            if (res?.data?.ErrorMessage == 'Done') {
+                navigate("otpScreen", { mobile, response: res?.customer });
             } else {
                 AppToastMessage(res?.data?.ErrorMessage);
             }

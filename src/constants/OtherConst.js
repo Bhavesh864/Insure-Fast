@@ -198,55 +198,55 @@ export const AddOnsList = [
 
 export const insuranceTypesArr = [
     {
-        name: "Health Insurance",
+        name: "HEALTH",
         key: "healthInsuranceFor",
         icon: <HealthInsuranceSvgIcon />,
         image: require("../assets/images/types/healthcare.png")
     },
     {
-        name: "Car Insurance",
+        name: "CAR",
         key: "carRegistration",
         icon: <CarInsuranceSvgIcon />,
         image: require("../assets/images/types/car.png"),
         payloads: { vehicleType: "Pvt Car", title: "Car Insurance" }
     },
     {
-        name: "Two Wheeler Insurance",
+        name: "BIKE",
         key: "carRegistration", //"twoWheelerRegNumber",
         icon: <BikeInsuranceSvgIcon />,
         image: require("../assets/images/types/scooter.png"),
         payloads: { vehicleType: "MotorBike", title: "Two Wheeler Insurance" }
     },
     {
-        name: "Taxi Insurance",
+        name: "TAXI",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/pcv.jpeg"),
         payloads: { vehicleType: "Passenger Carrying", title: "PCV Insurance" }
     },
     {
-        name: "Goods Carrying Vehicle (GCV)",
+        name: "GCV",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/commercialVehicle.png"),
         payloads: { vehicleType: "Goods Carrying", title: "GCV Insurance" }
     },
     {
-        name: "Private Car TP",
+        name: "Car TP",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/sport-car.png"),
         payloads: { vehicleType: "Pvt Car", title: "Car Insurance", isThirdParty: true }
     },
     {
-        name: "Private Two Wheeler TP",
+        name: "BIKE TP",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/motorbike.png"),
         payloads: { vehicleType: "MotorBike", title: "Two Wheeler Insurance", isThirdParty: true }
     },
     {
-        name: "Life Insurance\n(Coming Soon)",
+        name: "Life \n(Coming Soon)",
         key: "",
         icon: <LifeInsuranceSvgIcon />,
         image: require("../assets/images/types/umberella.png")

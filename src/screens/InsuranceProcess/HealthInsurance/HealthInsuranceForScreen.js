@@ -15,6 +15,7 @@ import { AppConst } from '../../../constants/AppConst'
 import { ScrollView } from 'react-native-gesture-handler';
 import { AppToastMessage } from '../../../components/custom/SnackBar';
 import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction';
+import { useSelector } from 'react-redux';
 
 
 const HealthInsuranceForScreen = () => {
@@ -24,7 +25,7 @@ const HealthInsuranceForScreen = () => {
     const [sonNum, setSonNum] = useState(0);
     const [daughterNum, setDaughterNum] = useState(0);
     const [maxNum, setMaxNum] = useState(4);
-
+    const userData = useSelector(state => state.motor?.apiRequestQQ);
 
     const onItemPress = (key) => {
         if (key == "other") {
@@ -123,7 +124,7 @@ const HealthInsuranceForScreen = () => {
                 <View style={{ padding: 20 }}>
                     <PersonSvgIcon />
                     <AppText
-                        text={"Hey, Venkatesh\nLet's find the right \nHealth insurance for you"}
+                        text={`Hey, ${userData?.FirstName || ''}\nLet's find the right \nHealth insurance for you`}
                         style={{ marginTop: 20, lineHeight: 22 }}
                         size={18}
                     />

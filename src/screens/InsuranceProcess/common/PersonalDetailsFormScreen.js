@@ -96,6 +96,13 @@ const PersonalDetailsFormScreen = ({ route }) => {
                     dispatchHealthQuickQuote('MobileNo', mobile)
                     dispatchHealthQuickQuote('Email', email)
 
+                    dispatchQuickQuote("FirstName", firstName);
+                    dispatchQuickQuote("LastName", lastName);
+                    dispatchQuickQuote("Email", email);
+                    dispatchQuickQuote("MobileNumber", mobile);
+                    dispatch(SetUserData(res?.data));
+                    dispatchQuickQuote("customerId", res?.data?.id);
+
                     navigate('medicalHistory');
                 } else {
                     dispatchQuickQuote("FirstName", firstName);

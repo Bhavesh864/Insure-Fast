@@ -61,7 +61,7 @@ export const userLogoutAction = () => {
             dispatch(ChangeAppStatus(2));
 
             await AsyncStorage.removeItem("accessToken");
-            AppConst.accessToken = null;
+            // AppConst.accessToken = null;
             // return res;
             store.dispatch(ChangeLoadingSatus(false))
 
@@ -84,10 +84,18 @@ export const verifyOtpAction = async (body, type = "customer") => {
             await AsyncStorage.setItem("customerid", JSON.stringify(res.data?.id));
             AppConst.setAccessToken(res.data?.access_token);
             AppConst.setCustomerId(res.data?.id);
+            // console.log('result', res?.data);
+            dispatchQuickQuote("FirstName", res?.data?.first_name);
+            dispatchQuickQuote("LastName", res?.data?.last_name);
+            dispatchQuickQuote("Email", res?.data?.email);
+            dispatchQuickQuote("Dob", res?.data?.dob);
+            dispatchQuickQuote("MobileNumber", res?.data?.phone);
+            AppConst.setAccessToken(res?.data?.access_token);
         }
+        console.log('ressssssssssssss', res);
         return res;
     } catch (error) {
-
+        console.log('err', error);
     }
 }
 

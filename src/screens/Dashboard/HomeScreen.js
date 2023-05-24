@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
               <View>
                 <HeadingText
                   text="Continue with your last search"
-                  style={{ paddingHorizontal: 20, paddingTop: 20 }}
+                  style={{ paddingHorizontal: 20, paddingTop: 10 }}
                 />
                 <RecentInsuranceList
                   data={recentQuoteList}

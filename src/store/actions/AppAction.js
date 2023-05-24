@@ -51,8 +51,10 @@ export const AsyncLogin = () => {
             AppConst.accessToken = accessToken //JSON.parse(accessToken);
             AppConst.customerId = JSON.parse(customerId);
             dispatch(ChangeAppStatus(3));
-        } else {
+        } else if (!customerId) {
             dispatch(ChangeAppStatus(1));
+        } else {
+            dispatch(ChangeAppStatus(2));
         }
     }
 }

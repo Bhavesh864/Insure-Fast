@@ -21,7 +21,6 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
     const [counter, setCounter] = useState(45);
 
     useEffect(() => {
-        console.log(otp.first);
         firstRef.current.focus();
     }, []);
 
@@ -45,6 +44,7 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
             <View style={{ flexDirection: 'row', width: "100%", justifyContent: "space-evenly" }}>
                 {/* <View style={{ ...styles.otp, alignItems: "center", justifyContent: "center" }}> */}
                 <TextInput
+                    autoFocus={true}
                     placeholder="-"
                     style={{ ...styles.otp, color: theme == "light" ? colors.black : colors.white }}
                     maxLength={1}

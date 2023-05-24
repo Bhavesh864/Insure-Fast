@@ -25,7 +25,7 @@ export const HomeHeader = ({ screen }) => {
             </View> */}
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <HeadingText
-                    text={screen == 'policy' ? 'Policies Details' : `Hi,  ${userData?.FirstName ? userData?.FirstName + ' ' + userData?.LastName : 'Florence Jast'}`}
+                    text={screen == 'policy' ? 'Policies Details' : `Hi,  ${userData?.FirstName ? userData?.FirstName + ' ' + userData?.LastName : ''}`}
                     size={18}
                     color={colors.primary}
                 />

@@ -148,6 +148,7 @@ const EditProfileScreen = () => {
                 editable={false}
                 style={{ marginBottom: 0 }}
                 onPress={() => {
+                    console.log(showDateModal);
                     setshowDateModal(true);
                 }}
             />
@@ -201,6 +202,7 @@ const EditProfileScreen = () => {
                     // dispatchQuickQuote("ManufaturingDate", date.getFullYear());
                     // dispatchQuickQuote("RegistrationDate", rgDate);
                     setdob(d);
+                    setshowDateModal(false);
                 }}
                 onCancel={() => {
                     setshowDateModal(false)

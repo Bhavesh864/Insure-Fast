@@ -1,7 +1,7 @@
-import { KeyboardAvoidingView, NativeEventEmitter, NativeModules, PermissionsAndroid, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, NativeEventEmitter, NativeModules, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { screenStyle } from '../../styles/CommonStyling'
-import { Button, CustomBackButton, InputField } from '../../components/CustomFields'
+import { Button, CustomBackButton } from '../../components/CustomFields'
 import { navigate } from '../../routes/RootNavigation'
 import { ChangeAppStatus } from '../../store/actions/AppAction'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
@@ -23,7 +23,6 @@ const OtpScreen = ({ route }) => {
         four: '',
         five: ''
     });
-    const [message, setmessage] = useState('Trying to auto detect otp sent to ')
 
     useEffect(() => {
         let smslistenerSubs = null;
@@ -42,8 +41,6 @@ const OtpScreen = ({ route }) => {
                     })
                 }
             })
-        } else {
-            setmessage('Please enter OTP sent to ')
         }
 
         return () => {
@@ -61,7 +58,8 @@ const OtpScreen = ({ route }) => {
 
 
     const onVerify = () => {
-        navigate("login", { type: "employee" })
+        // navigate("login", { type: "employee" })
+
         if (otp?.first && otp?.second && otp?.third && otp?.four && otp?.five) {
             const body = {
                 "otp": otp?.first + otp?.second + otp?.third + otp?.four + otp?.five,
@@ -76,9 +74,12 @@ const OtpScreen = ({ route }) => {
                 } else {
                     AppToastMessage(res?.message)
                 }
+            }).catch(err => {
+                console.log(err);
             })
+        } else {
+            AppToastMessage('Please enter 5 digit otp!')
         }
-        dispatch(ChangeAppStatus(3))
     }
 
     return (
@@ -97,7 +98,7 @@ const OtpScreen = ({ route }) => {
                                 />
                                 <Text style={{ marginTop: 10 }}>
                                     <AppText
-                                        text={`${message}`}
+                                        text={`Please enter OTP sent to `}
                                         color={colors.darkGrey}
                                     />
                                     <AppText
