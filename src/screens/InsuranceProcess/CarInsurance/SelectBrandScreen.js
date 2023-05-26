@@ -58,10 +58,9 @@ const SelectBrandScreen = ({ route }) => {
     }
 
     const onSearch = (text) => {
-        console.log('object', text)
         setSearch(text)
         if (text?.length > 1) {
-            getMotorMakeSearchAction(text, insuranceType?.vehicleType).then(res => {
+            getMotorMakeSearchAction(text, insuranceType?.vehicleType, false).then(res => {
                 AppConst.showConsoleLog("search res: ", res)
                 if (res?.status) {
                     setSearchResult(res?.data);

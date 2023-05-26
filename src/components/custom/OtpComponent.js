@@ -196,6 +196,9 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                             setotp({ ...otp, five: '' });
                         }
                     }}
+                // onTextInput={() => {
+                //     onVerify();
+                // }}
                 />
                 {/* <TextInput
                     placeholder="-"

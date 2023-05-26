@@ -157,7 +157,7 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
             <View style={{ ...flexRow, position: "absolute", bottom: -20, marginHorizontal: 10, zIndex: 1 }}>
                 <View style={{ marginHorizontal: 10 }}>
                     <AppText
-                        text={"Car IDV"}
+                        text={"IDV"}
                         color={colors.white}
                         size={14}
                         style={{ marginBottom: 7 }}
@@ -191,7 +191,7 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
                                 setshowModal(true)
                                 return
                             }
-                            AppToastMessage('NCB Not Available ')
+                            AppToastMessage('NCB Not Available');
                         }}
                     >
                         <AppText
@@ -281,7 +281,7 @@ const CarDetails = ({ addonsModal, setaddonsModal, showModal, setshowModal, prev
 
                 </View>
             </View>
-        </View>
+        </View >
     )
 }
 

@@ -27,12 +27,12 @@ const ClaimDetailsScreen = ({ route }) => {
                 value={list?.mobile_number}
                 onPress={() => { }}
             />
-            <TouchableTextView
+            {/* <TouchableTextView
                 label={"Employee code"}
                 placeholder={"Select Manufacturer date"}
                 value={list?.employe_code}
                 onPress={() => { }}
-            />
+            /> */}
             <TouchableTextView
                 label={"Product Type"}
                 placeholder={"Select Manufacturer date"}

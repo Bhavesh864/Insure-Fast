@@ -20,25 +20,11 @@ const LoginScreen = ({ route, navigation }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        navigation.addListener('focus', async () => {
-            if (Platform.OS == 'android') {
-                // setTimeout(async () => {
-                try {
-                    const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
-                    );
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        AppConst.showConsoleLog('Permission Approved!');
-                        NativeModules.SMSListener.startListen();
-                    } else {
-                        AppConst.showConsoleLog('Permission Denied')
-                    }
-                } catch (error) {
-                    AppConst.showConsoleLog('Permission err', error)
-                }
-                // }, 200);
-            }
-        });
+        // navigation.addListener('focus', async () => {
+        //     if (Platform.OS == 'android') {
+
+        //     }
+        // });
     }, []);
 
     const onAction = (body) => {

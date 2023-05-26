@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Center, flexRow, screenStyle } from '../../../styles/CommonStyling'
 import { colors } from '../../../styles/colors'
-import { policyExpiryArr, previousPolicyStatusesArr } from '../../../constants/OtherConst'
+import { policyExpiryArr, previousPolicyStatusesArr, previousPolicyStatusesArrCommercial, previousPolicyTypes } from '../../../constants/OtherConst'
 import { AppText, HeadingText } from '../../../Utility/TextUtility'
 import { Button, Checkbox, TouchableTextView, YesNoButton } from '../../../components/CustomFields'
 import { navigate } from '../../../routes/RootNavigation'
@@ -28,9 +28,10 @@ const PreviousPolicyStatusScreen = () => {
     const [previousPolicies, setPreviousPolicies] = useState([]);
     const [selectedpreviousPol, setSelectedPreviousPol] = useState(null);
     const [odType, setOdType] = useState(false)
-    // AppConst.showConsoleLog("red: ", details);
+    const [prevPolicyTypeArr, setprevPolicyTypeArr] = useState(details?.VehicleType == "Pvt Car" || details?.VehicleType == "MotorBike" ? previousPolicyStatusesArr : previousPolicyStatusesArrCommercial);
 
     useEffect(() => {
+        console.log('vehicletype', details?.VehicleType);
         setOdType(checkVehicleODType());
         getPreviousPolicyCompanies().then(res => {
             AppConst.showConsoleLog("previous policy res: ", res);
@@ -48,8 +49,11 @@ const PreviousPolicyStatusScreen = () => {
         const threeYr = moment().subtract(3, "years").format("YYYY-MM-DD");
         const fiveYr = moment().subtract(5, "years").format("YYYY-MM-DD");
         const checkDate = details?.VehicleType == "Pvt Car" ? threeYr : fiveYr
-        AppConst.showConsoleLog("-- ", threeYr, reg, moment(reg).isAfter(checkDate))
-        if (moment(reg).isAfter(checkDate)) {
+        AppConst.showConsoleLog("----- ", threeYr, fiveYr, reg, moment(reg).isAfter(checkDate))
+        AppConst.showConsoleLog("reg ", reg)
+        AppConst.showConsoleLog("checkDate ", checkDate)
+
+        if (moment(reg).isAfter(checkDate) && (details?.VehicleType == "Pvt Car" || details?.VehicleType == "MotorBike")) {
             return true
         } else {
             return false
@@ -215,7 +219,7 @@ const PreviousPolicyStatusScreen = () => {
                             />
                         </TouchableOpacity>
                     </View> */}
-                    {!odType && previousPolicyStatusesArr.map((item, index) => {
+                    {!odType && prevPolicyTypeArr.map((item, index) => {
                         return (
                             <TouchableOpacity
                                 key={String(index)}
@@ -226,7 +230,7 @@ const PreviousPolicyStatusScreen = () => {
                                 <Checkbox
                                     value={item.key == selectedPolicyStatus}
                                     onPress={() => {
-                                        setSelectedPolicyStatus(item.key)
+                                        setSelectedPolicyStatus(item.key);
                                     }}
                                 />
                                 <AppText

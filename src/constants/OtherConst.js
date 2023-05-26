@@ -433,6 +433,17 @@ export const previousPolicyStatusesArr = [
     // }
 ]
 
+export const previousPolicyStatusesArrCommercial = [
+    {
+        title: "Just third party insurance only",
+        key: "thirdParty"
+    },
+    {
+        title: "Comprehansive policy",
+        key: "comprehensive"
+    },
+]
+
 
 
 export const policyExpiryArr = [

@@ -46,7 +46,7 @@ export const getMotorMakeAction = async (Vehicle_Type = "Pvt Car") => {
     }
 }
 
-export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt Car") => {
+export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt Car", loader) => {
     try {
         const res = await PostRequest({
             url: motorUrls.makeSearch,
@@ -54,7 +54,7 @@ export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt 
                 Vehicle_Type,
                 make: search
             },
-            loader: true
+            loader: loader
         });
         // AppConst.showConsoleLog("res:", res);
         return res
@@ -64,12 +64,12 @@ export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt 
 }
 
 
-export const getMotorModelAction = async (body, isSearch = false) => {
+export const getMotorModelAction = async (body, isSearch = false, loader) => {
     try {
         const res = await PostRequest({
             url: isSearch ? motorUrls.modelSearch : motorUrls.model,
             body: body,
-            loader: true
+            loader: loader
         });
         return res
     } catch (error) {
@@ -78,12 +78,12 @@ export const getMotorModelAction = async (body, isSearch = false) => {
 }
 
 
-export const getMotorVariantAction = async (body, isSearch = false) => {
+export const getMotorVariantAction = async (body, isSearch = false, loader) => {
     try {
         const res = await PostRequest({
             url: isSearch ? motorUrls.variantSearch : motorUrls.variant,
             body: body,
-            loader: true
+            loader: loader
         });
         return res
     } catch (error) {
@@ -209,7 +209,7 @@ export const getCountryWithCountryCode = async (countryCode = '') => {
     try {
         const res = await GetRequest({
             url: motorUrls.getCountryDataWithCode + `Pin_Code=${countryCode}`,
-            loader: true
+            loader: false
         },
         );
         return res;

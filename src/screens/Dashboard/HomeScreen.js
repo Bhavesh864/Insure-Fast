@@ -6,8 +6,9 @@ import { HeadingText } from '../../Utility/TextUtility';
 import { useDispatch } from 'react-redux';
 import { getUserProfileData } from '../../store/actions/UserAction';
 import { CustomSafeAreaView } from '../../styles/SafeAreaCustomView';
-import { getRecentSearchedQuote, } from '../../store/actions/PolicyAction';
+import { dispatchQuickQuote, getRecentSearchedQuote, } from '../../store/actions/PolicyAction';
 import RecentInsuranceList from '../../components/home/RecentInsuranceList';
+import { navigate } from '../../routes/RootNavigation';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -28,6 +29,32 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
 
+  const onOptionPress = (key, payloads = {}, name) => {
+    if (!key) {
+      return
+    }
+    if (name == " Car TP" || name == "BIKE TP") {
+      dispatchQuickQuote("NewPolicyType", "ThirdParty");
+      dispatchQuickQuote("onlyThirdPartyIns", true);
+      navigate(key, payloads);
+    } else if (name == 'Car') {
+      dispatchQuickQuote('vehicleType', payloads.vehicleType);
+      dispatchQuickQuote("onlyThirdPartyIns", false);
+      navigate(key, payloads);
+      // navigate('quotationSummary');
+    } else if (name == 'BIKE') {
+      dispatchQuickQuote('vehicleType', payloads.vehicleType);
+      dispatchQuickQuote("onlyThirdPartyIns", false);
+      navigate(key, payloads);
+      // navigate('quotationSummary');
+    } else {
+      dispatchQuickQuote('vehicleType', payloads.vehicleType);
+      dispatchQuickQuote("onlyThirdPartyIns", false);
+      navigate(key, payloads);
+    }
+  }
+
+
 
   return (
     <View style={screenStyle}>
@@ -35,8 +62,8 @@ const HomeScreen = ({ navigation }) => {
         <HomeHeader />
         <View style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-            <HomeScreenBanner />
-            <AvailableInsuranceComponent />
+            <HomeScreenBanner onOptionPress={onOptionPress} />
+            <AvailableInsuranceComponent onOptionPress={onOptionPress} />
             {recentQuote && (
               <View>
                 <HeadingText
@@ -48,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
                 />
               </View>
             )}
-            <HowInsuranceWorkComponent />
+            <HowInsuranceWorkComponent onOptionPress={onOptionPress} />
 
           </ScrollView>
         </View>

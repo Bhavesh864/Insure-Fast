@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, NativeEventEmitter, NativeModules, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, NativeEventEmitter, NativeModules, Platform, SafeAreaView, ScrollView, StyleSheet, PermissionsAndroid, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { screenStyle } from '../../styles/CommonStyling'
 import { Button, CustomBackButton } from '../../components/CustomFields'
@@ -27,20 +27,36 @@ const OtpScreen = ({ route }) => {
     useEffect(() => {
         let smslistenerSubs = null;
         if (Platform.OS == 'android') {
-            const eventEmitter = new NativeEventEmitter();
-            smslistenerSubs = eventEmitter.addListener('SMSEventListener', (events) => {
-                AppConst.showConsoleLog('otp event:', events);
-                if (events) {
-                    let fetchedOtp = events.OTP;
-                    setotp({
-                        first: fetchedOtp?.charAt(0),
-                        second: fetchedOtp?.charAt(1),
-                        third: fetchedOtp?.charAt(2),
-                        four: fetchedOtp?.charAt(3),
-                        five: fetchedOtp?.charAt(4),
-                    })
+            setTimeout(async () => {
+                try {
+                    const granted = await PermissionsAndroid.request(
+                        PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+                    );
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        AppConst.showConsoleLog('Permission Approved!');
+                        NativeModules.SMSListener.startListen();
+
+                        const eventEmitter = new NativeEventEmitter();
+                        smslistenerSubs = eventEmitter.addListener('SMSEventListener', (events) => {
+                            AppConst.showConsoleLog('otp event:', events);
+                            if (events) {
+                                let fetchedOtp = events.OTP;
+                                setotp({
+                                    first: fetchedOtp?.charAt(0),
+                                    second: fetchedOtp?.charAt(1),
+                                    third: fetchedOtp?.charAt(2),
+                                    four: fetchedOtp?.charAt(3),
+                                    five: fetchedOtp?.charAt(4),
+                                });
+                            }
+                        })
+                    } else {
+                        AppToastMessage('Permission Denied!');
+                    }
+                } catch (error) {
+                    AppConst.showConsoleLog('Permission err', error)
                 }
-            })
+            }, 200);
         }
 
         return () => {
@@ -55,7 +71,11 @@ const OtpScreen = ({ route }) => {
     }, []);
 
 
-
+    useEffect(() => {
+        if (otp?.first && otp?.second && otp?.third && otp?.four && otp?.five) {
+            onVerify();
+        }
+    }, [otp]);
 
     const onVerify = () => {
         // navigate("login", { type: "employee" })

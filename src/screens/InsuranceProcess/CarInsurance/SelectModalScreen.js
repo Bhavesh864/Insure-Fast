@@ -32,7 +32,7 @@ const SelectModalScreen = ({ route }) => {
             "make": isEdit ? vehicleData?.MakeName : carBrand,
             "Vehicle_Type": isEdit ? vehicleData?.vehicleType : insuranceType?.vehicleType
         }
-        getMotorModelAction(body).then(res => {
+        getMotorModelAction(body, false, true).then(res => {
             if (res?.status) {
                 setAllModels(res?.data);
             }
@@ -66,7 +66,7 @@ const SelectModalScreen = ({ route }) => {
                 "Vehicle_Type": insuranceType?.vehicleType,
                 "model": text
             }
-            getMotorModelAction(body, true).then(res => {
+            getMotorModelAction(body, true, false).then(res => {
                 // AppConst.showConsoleLog("search res: ", res)
                 if (res?.status) {
                     setSearchResult(res?.data);

@@ -66,7 +66,10 @@ const MedicalHistoryScreen = () => {
                 }
                 setselectedMedicalProcedure([...selectedMedicalProcedure, item.key]);
             } else {
-                AppToastMessage('Please select options in correct format!')
+                setselectedMedicalProcedure([item.key]);
+                if (item.key == 1) {
+                    setshowModal(true)
+                }
             }
         } else {
             setselectedMedicalProcedure(

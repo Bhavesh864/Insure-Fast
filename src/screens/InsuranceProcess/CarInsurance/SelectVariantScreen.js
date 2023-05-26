@@ -50,7 +50,7 @@ const SelectVariantScreen = ({ route }) => {
         // }
 
 
-        getMotorVariantAction(body).then(res => {
+        getMotorVariantAction(body, false, true).then(res => {
             if (res?.status) {
                 AppConst.showConsoleLog("variant res: ", res?.data?.length);
                 setAllVariants(res?.data);
@@ -121,7 +121,7 @@ const SelectVariantScreen = ({ route }) => {
                 "Vehicle_Type": insuranceType?.vehicleType,
                 "variant": text
             }
-            getMotorVariantAction(body, true).then(res => {
+            getMotorVariantAction(body, true, false).then(res => {
                 AppConst.showConsoleLog("search res: ", res)
                 if (res?.status) {
                     setSearchResult(res?.data);

@@ -4,6 +4,7 @@ import { AppText, HeadingText } from '../../../Utility/TextUtility';
 import { FlatList } from 'react-native-gesture-handler';
 import { colors } from '../../../styles/colors';
 import { flexRow } from '../../../styles/CommonStyling';
+import { navigate } from '../../../routes/RootNavigation';
 
 const TrackClaimComponent = ({ claimData }) => {
     return (

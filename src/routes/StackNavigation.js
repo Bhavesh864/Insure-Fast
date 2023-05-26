@@ -38,9 +38,6 @@ import WebviewQuatationScreen from "../screens/other/WebviewQuatationScreen";
 import MedicalHistoryScreen from "../screens/InsuranceProcess/HealthInsurance/MedicalHistoryScreen";
 
 
-
-
-
 const Stack = createStackNavigator();
 export const cardStyle = { cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, }
 export const hideHeader = { headerShown: false };

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import { HamburgerSvgIcon } from '../../assets/svg/basicSvgs'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { insuranceTypesArr } from '../../constants/OtherConst'
@@ -74,9 +74,13 @@ export const YourPolicies = () => {
 }
 
 
-export const HomeScreenBanner = () => {
+export const HomeScreenBanner = ({ onOptionPress }) => {
     return (
-        <View style={styles.bannerCont}>
+        <TouchableOpacity
+            activeOpacity={0.4}
+            onPress={() => {
+                onOptionPress('healthInsuranceFor', {}, 'HEALTH')
+            }} style={styles.bannerCont}>
             <View style={{ flex: 1, }}>
                 <HeadingText
                     text="Family Life Insurance"
@@ -87,7 +91,11 @@ export const HomeScreenBanner = () => {
                     style={{ paddingVertical: 5 }}
                     color={colors.darkGrey}
                 />
-                <TouchableOpacity style={styles.smallBtn}>
+                <TouchableOpacity
+                    onPress={() => {
+                        onOptionPress('healthInsuranceFor', {}, 'HEALTH')
+                    }}
+                    style={styles.smallBtn}>
                     <AppText
                         text='View Plans'
                         color={colors.white}
@@ -97,39 +105,15 @@ export const HomeScreenBanner = () => {
             <View style={{ flex: 1 }}>
                 <Image source={require("../../assets/images/banners/banner1.png")} style={styles.bannerContImg} />
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 
-export const AvailableInsuranceComponent = () => {
+export const AvailableInsuranceComponent = ({ onOptionPress }) => {
     const cardWidth = ((width - 80) / 4);
     const cardImageViewHeight = 80
 
-    const onOptionPress = (key, payloads = {}, name) => {
-        if (!key) {
-            return
-        }
-        if (name == "Private Car TP" || name == "Private Two Wheeler TP") {
-            dispatchQuickQuote("NewPolicyType", "ThirdParty");
-            dispatchQuickQuote("onlyThirdPartyIns", true);
-            navigate(key, payloads);
-        } else if (name == 'Car Insurance') {
-            dispatchQuickQuote('vehicleType', payloads.vehicleType);
-            dispatchQuickQuote("onlyThirdPartyIns", false);
-            navigate(key, payloads);
-            // navigate('quotationSummary');
-        } else if (name == 'Two Wheeler Insurance') {
-            dispatchQuickQuote('vehicleType', payloads.vehicleType);
-            dispatchQuickQuote("onlyThirdPartyIns", false);
-            navigate(key, payloads);
-            // navigate('quotationSummary');
-        } else {
-            dispatchQuickQuote('vehicleType', payloads.vehicleType);
-            dispatchQuickQuote("onlyThirdPartyIns", false);
-            navigate(key, payloads);
-        }
-    }
     return (
         <View>
             <HeadingText
@@ -159,7 +143,7 @@ export const AvailableInsuranceComponent = () => {
 }
 
 
-export const HowInsuranceWorkComponent = () => {
+export const HowInsuranceWorkComponent = ({ onOptionPress }) => {
     let arr = [
         {
             title: "Are your parents nearing 60?",
@@ -191,7 +175,10 @@ export const HowInsuranceWorkComponent = () => {
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => {
                     return (
-                        <View style={{ height: 170, width: 280, padding: 20, ...flexRow, marginHorizontal: 10, borderRadius: 10, backgroundColor: item.backgroundColor }}>
+                        <TouchableOpacity
+                            activeOpacity={0.4}
+                            onPress={() => { onOptionPress('healthInsuranceFor', item.payloads, 'HEALTH') }}
+                            style={{ height: 170, width: 280, padding: 20, ...flexRow, marginHorizontal: 10, borderRadius: 10, backgroundColor: item.backgroundColor }}>
                             <View style={{ flex: 1 }}>
                                 <HeadingText
                                     text={item.title}
@@ -202,7 +189,9 @@ export const HowInsuranceWorkComponent = () => {
                                     text={item.text}
                                     style={{ marginVertical: 5 }}
                                 />
-                                <TouchableOpacity style={[styles.smallBtn, { backgroundColor: colors.white }]}>
+                                <TouchableOpacity
+                                    onPress={() => { onOptionPress('healthInsuranceFor', item.payloads, 'HEALTH') }}
+                                    style={[styles.smallBtn, { backgroundColor: colors.white }]}>
                                     <AppText
                                         text='Explore Now'
                                         color={colors.primary}
@@ -212,7 +201,7 @@ export const HowInsuranceWorkComponent = () => {
                             <View>
                                 <Image source={item.image} style={{ height: 90, width: 100, resizeMode: "contain" }} />
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     )
                 }}
             />

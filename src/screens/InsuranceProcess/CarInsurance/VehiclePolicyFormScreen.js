@@ -26,6 +26,7 @@ const VehiclePolicyFormScreen = () => {
 
 
     useEffect(() => {
+        console.log('object', details?.onlyThirdPartyIns);
         if (details?.NewPolicyType) {
             let obj = newPolicyTypes.find(i => i.key == details.NewPolicyType);
             setSelectedPolicyType(obj);
