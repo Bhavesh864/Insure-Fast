@@ -16,8 +16,8 @@ export const SnackBar = () => {
   return <ShowMessage ref={ref => (Ref = ref)} />;
 };
 
-export const AppToastMessage = msg => {
-  Ref && Ref?.showMessage(msg);
+export const AppToastMessage = (msg, color = colors.secondary) => {
+  Ref && Ref?.showMessage(msg, color);
 };
 
 class ShowMessage extends React.Component {
@@ -28,10 +28,11 @@ class ShowMessage extends React.Component {
 
   componentDidMount() { }
 
-  showMessage = message => {
+  showMessage = (message, color) => {
     this.setState(
       {
         msg: message,
+        color: color,
       },
       () => {
         this.timeId && clearTimeout(this.timeId);
@@ -83,7 +84,7 @@ class ShowMessage extends React.Component {
           transform: [{ translateX: translateY }],
           opacity: this.animHeight,
         }}>
-        <View style={styles.sideLine} />
+        <View style={[styles.sideLine, { backgroundColor: this.state.color, }]} />
         <Text style={{ ...styles.msg }}>{this.state.msg}</Text>
       </Animated.View>
     );
@@ -119,6 +120,6 @@ const styles = StyleSheet.create({
     ...shadows[0]
   },
   sideLine: {
-    width: 5, height: '100%', backgroundColor: colors.secondary, borderRadius: 3
+    width: 5, height: '100%', borderRadius: 3
   }
 });

@@ -26,6 +26,7 @@ const VehiclePolicyFormScreen = () => {
 
 
     useEffect(() => {
+        console.log('object', details?.onlyThirdPartyIns);
         if (details?.NewPolicyType) {
             let obj = newPolicyTypes.find(i => i.key == details.NewPolicyType);
             setSelectedPolicyType(obj);
@@ -40,38 +41,58 @@ const VehiclePolicyFormScreen = () => {
             setMfgDate(regYear);
 
             setRegDate(rgDate);
-            // if (details?.IsVehicleNew || details?.VehicleType == 'Passenger Carrying' || details?.VehicleType == 'Goods Carrying') {
-            //     let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
-            //     setSelectedPolicyType(obj)
-            // } else {
-            if (details?.VehicleType != 'Passenger Carrying' && details?.VehicleType != 'Goods Carrying') {
+
+            if (details?.IsVehicleNew) {
                 if (checkVehicleODType(rgDate)) {
+                    let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
+                    setSelectedPolicyType(obj)
+                    dispatchQuickQuote('NewPolicyType', 'Comprehensive');
+                }
+            }
+            else {
+                if (checkVehicleODType(rgDate) && details?.VehicleType != 'Passenger Carrying' && details?.VehicleType != 'Goods Carrying') {
                     let obj = newPolicyTypes.find(i => i.key == "own_damage");
                     setSelectedPolicyType(obj)
+                    dispatchQuickQuote('NewPolicyType', 'StandAlone OD')
+                } else {
+                    let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
+                    setSelectedPolicyType(obj)
+                    dispatchQuickQuote('NewPolicyType', 'Comprehensive')
                 }
-            } else {
-                let obj = newPolicyTypes.find(i => i.key == "Comprehensive");
-                setSelectedPolicyType(obj)
             }
-
         }
     }, []);
 
     const onAction = () => {
+        if (!ownershipType) {
+            AppToastMessage('Please provide vehicle owned!');
+            return;
+        }
         dispatchQuickQuote("RegistrationDate", regDate);
         dispatchQuickQuote("ManufaturingDate", mfgDate);
         if (details?.IsVehicleNew) {
             createPolicy();
         } else {
+            if (selectedPolicyType.key == 'ThirdParty') {
+                dispatchQuickQuote("onlyThirdPartyIns", true);
+            }
             navigate("previousPolicy");
         }
     }
 
     const createPolicy = () => {
+        if (!ownershipType) {
+            AppToastMessage('Please provide vehicle owned!');
+            return;
+        }
         // dispatchQuickQuote("ManufaturingDate", mfgDate);
         // dispatchQuickQuote("RegistrationDate", regDate);
         // dispatchQuickQuote("NewPolicyType", selectedPolicyType);
-        AppConst.showConsoleLog("vehicle type: ", details.VehicleType);
+        // AppConst.showConsoleLog("vehicle type: ", selectedPolicyType.key == 'ThirdParty');
+        if (selectedPolicyType.key == 'ThirdParty') {
+            dispatchQuickQuote("onlyThirdPartyIns", true);
+        }
+
         let obj = createOnlinePolicyObj(details);
         AppConst.showConsoleLog("obj: ", obj);
         // return;
@@ -79,14 +100,13 @@ const VehiclePolicyFormScreen = () => {
         for (let key in obj) {
             formData.append(key, obj[key]);
         }
-        formData.append("customerId", details.customerId);
+        formData.append("customerId", AppConst.getCustomerId());
 
         fillPolicyDataAction(formData).then(res => {
             AppConst.showConsoleLog("fill policy res: ", res);
             if (res?.status) {
                 navigate("quotationSummary");
             }
-
         })
     }
 
@@ -103,6 +123,7 @@ const VehiclePolicyFormScreen = () => {
     }
 
     const policySelectPress = () => {
+
         if (details.onlyThirdPartyIns) {
             return;
         }
@@ -115,10 +136,11 @@ const VehiclePolicyFormScreen = () => {
                 return;
             }
         }
-        if (details?.IsVehicleNew && details?.VehicleType == 'Passenger Carrying' || details?.VehicleType == 'Goods Carrying') {
+
+        if (details?.IsVehicleNew && (details?.VehicleType == 'Passenger Carrying' || details?.VehicleType == 'Goods Carrying')) {
             return;
         }
-        // console.log('hello', checkVehicleODType(regDate));
+
         if (details?.VehicleType == 'Passenger Carrying' || details?.VehicleType == 'Goods Carrying' || !checkVehicleODType(regDate)) {
             setLModal({ type: "policyType", title: "Select Policy Type", list: pcvGcvPolicyTypes, selected: selectedPolicyType?.key })
         } else {

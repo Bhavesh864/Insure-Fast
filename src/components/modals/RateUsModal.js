@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { colors } from '../../styles/colors'
 import { Center, height, width } from '../../styles/CommonStyling'
 import { InputField, ModalTitleHeader } from '../CustomFields'
@@ -29,52 +29,59 @@ const RateUsModal = ({ onClose, title = "Select", list = [], onItemSelect, selec
             onRequestClose={onClose}
             animationType='slide'
         >
-            <View style={styles.modalCont}>
-                <View style={[styles.cont]}>
-                    <ModalTitleHeader
-                        title={title}
-                        onPress={onClose}
-                    />
-                    <View style={{
-                        flexGrow: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flex: 1
-                    }}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                padding: 20
-                            }}>
-                            {rating.map((item, key) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={item}
-                                        activeOpacity={0.8}
-                                        onPress={() => setDefaultRating(item)}>
-                                        <Octicons
-                                            name={item <= defaultRating ? 'star-fill' : 'star'}
-                                            size={32}
-                                            color={item <= defaultRating ? colors.yellow : colors.grey}
-                                            style={{
-                                                marginRight: 5
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                );
-                            })}
+            <TouchableOpacity style={styles.modalCont} onPressOut={() => onClose()} activeOpacity={1}>
+                <TouchableWithoutFeedback>
+                    {/* <View style={styles.modalCont}> */}
+                    <View style={[styles.cont]}>
+                        <ModalTitleHeader
+                            title={title}
+                            onPress={onClose}
+                        />
+                        <View style={{
+                            flexGrow: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flex: 1
+                        }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    padding: 20
+                                }}>
+                                {rating.map((item, key) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={item}
+                                            activeOpacity={0.8}
+                                            onPress={() => setDefaultRating(item)}>
+                                            <Octicons
+                                                name={item <= defaultRating ? 'star-fill' : 'star'}
+                                                size={32}
+                                                color={item <= defaultRating ? colors.yellow : colors.grey}
+                                                style={{
+                                                    marginRight: 5
+                                                }}
+                                            />
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+                            <AppText text='Enjoying the InsureFast?' />
                         </View>
-                        <AppText text='Enjoying the InsureFast?' />
-
+                        <TouchableOpacity
+                            style={{ width: 100, alignSelf: 'flex-end', }}
+                            onPress={() => {
+                                submitRating(defaultRating);
+                                onClose()
+                            }}>
+                            <AppText text='Rate Now' color={colors.primary} size={14} style={{ textAlign: 'right', padding: 15 }} />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => {
-                        submitRating(defaultRating);
-                        onClose()
-                    }}>
-                        <AppText text='Rate Now' color={colors.primary} size={14} style={{ textAlign: 'right', padding: 15 }} />
-                    </TouchableOpacity>
-                </View>
-            </View>
+                    {/* </View> */}
+                </TouchableWithoutFeedback>
+
+            </TouchableOpacity>
+
         </Modal>
     )
 }
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
     modalCont: {
         flex: 1,
         backgroundColor: colors.transparent_black,
-        justifyContent: "center"
+        justifyContent: "center",
     },
     cont: {
         // maxHeight: height,

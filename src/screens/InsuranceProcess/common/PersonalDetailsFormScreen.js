@@ -9,10 +9,13 @@ import { AppConst } from '../../../constants/AppConst'
 import { navigate } from '../../../routes/RootNavigation'
 import { SetUserData } from '../../../store/actions/UserAction'
 import { AppToastMessage } from '../../../components/custom/SnackBar'
+import DatePicker from 'react-native-date-picker'
+import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction'
 
 
 const PersonalDetailsFormScreen = ({ route }) => {
     const insuranceType = route?.params?.insuranceType;
+    const isHealthInsurance = route?.params?.isHealthInsurance;
     const data = useSelector(state => state.motor?.apiRequestQQ);
     const userProfile = useSelector(state => state.user?.user);
     const dispatch = useDispatch();
@@ -20,7 +23,8 @@ const PersonalDetailsFormScreen = ({ route }) => {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
-
+    const [dob, setdob] = useState(null);
+    const [showDateModal, setshowDateModal] = useState(null);
 
 
     useEffect(() => {
@@ -51,12 +55,6 @@ const PersonalDetailsFormScreen = ({ route }) => {
     }, [])
 
     const onContinuePress = () => {
-        // if (data?.IsVehicleNew) {
-        //     navigate("vehiclePolicyForm");
-        //     return;
-        // }
-        // navigate("previousPolicy");
-        // return;
         if (!firstName) {
             AppToastMessage("Enter first name");
             return
@@ -81,19 +79,6 @@ const PersonalDetailsFormScreen = ({ route }) => {
         }
         AppConst.showConsoleLog("body: ", body);
 
-        // creatCustomers(firstName + ' ' + lastName, email, mobile).then(res => {
-        //     console.log('result', res);
-        //     if (res?.status) {
-        //         dispatchQuickQuote("FirstName", firstName);
-        //         dispatchQuickQuote("LastName", lastName);
-        //         dispatchQuickQuote("Email", email);
-        //         dispatchQuickQuote("MobileNumber", mobile);
-        //         dispatchQuickQuote("customerId", res?.data?.id);
-        //         dispatch(SetUserData(res?.data));
-        //         navigate("vehiclePolicyForm", { insuranceType });
-        //     }
-        // })
-
         console.log(AppConst.customerId);
 
         const formData = new FormData();
@@ -105,14 +90,30 @@ const PersonalDetailsFormScreen = ({ route }) => {
         createCustomerAction(formData).then(res => {
             AppConst.showConsoleLog("create customer res: ", res);
             if (res && res?.status) {
-                dispatchQuickQuote("FirstName", firstName);
-                dispatchQuickQuote("LastName", lastName);
-                dispatchQuickQuote("Email", email);
-                dispatchQuickQuote("MobileNumber", mobile);
-                dispatchQuickQuote("customerId", res?.data?.id);
-                dispatch(SetUserData(res?.data));
-                navigate("vehiclePolicyForm", { insuranceType });
-                // AppToastMessage(res?.message);
+                if (isHealthInsurance) {
+                    dispatchHealthQuickQuote('FullName', firstName + ' ' + lastName)
+                    dispatchHealthQuickQuote('Email', email)
+                    dispatchHealthQuickQuote('MobileNo', mobile)
+                    dispatchHealthQuickQuote('Email', email)
+
+                    dispatchQuickQuote("FirstName", firstName);
+                    dispatchQuickQuote("LastName", lastName);
+                    dispatchQuickQuote("Email", email);
+                    dispatchQuickQuote("MobileNumber", mobile);
+                    dispatch(SetUserData(res?.data));
+                    dispatchQuickQuote("customerId", res?.data?.id);
+
+                    navigate('medicalHistory');
+                } else {
+                    dispatchQuickQuote("FirstName", firstName);
+                    dispatchQuickQuote("LastName", lastName);
+                    dispatchQuickQuote("Email", email);
+                    dispatchQuickQuote("MobileNumber", mobile);
+                    dispatchQuickQuote("Dob", dob);
+                    dispatchQuickQuote("customerId", res?.data?.id);
+                    dispatch(SetUserData(res?.data));
+                    navigate("vehiclePolicyForm", { insuranceType });
+                }
             } else
                 res ? AppToastMessage(res?.message) : AppToastMessage('Something went wrong')
 
@@ -171,6 +172,25 @@ const PersonalDetailsFormScreen = ({ route }) => {
                         onPress={() => onContinuePress()}
                     />
                 </View>
+                {showDateModal && <DatePicker
+                    modal
+                    mode="date"
+                    open={true}
+                    date={new Date()}
+                    // androidVariant="iosClone"
+                    maximumDate={new Date()}
+                    theme='light'
+                    onConfirm={(date) => {
+                        // setDate(date)
+                        let d = moment(date).format("DD-MM-YYYY") //getAge(date);
+                        // dispatchQuickQuote("ManufaturingDate", date.getFullYear());
+                        // dispatchQuickQuote("RegistrationDate", rgDate);
+                        setdob(d);
+                    }}
+                    onCancel={() => {
+                        setshowDateModal(false)
+                    }}
+                />}
             </KeyboardAvoidingView>
         </View>
     )

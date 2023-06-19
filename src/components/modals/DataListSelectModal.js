@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
-import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, TouchableWithoutFeedback } from 'react-native'
 import { colors } from '../../styles/colors'
 import { Center, flexRow, height, width } from '../../styles/CommonStyling'
-import { InputField, ModalTitleHeader } from '../CustomFields'
+import { Checkbox, InputField, ModalTitleHeader } from '../CustomFields'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { AppConst } from '../../constants/AppConst'
 
 
-const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key" }) => {
+const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelect, selectedItem, textKey = "title", isSearch = false, onSearch, contStyle = {}, selectedKey = "key", multipleSelect = false, onSubmit, showSubmitBtn = true }) => {
     const [search, setSearch] = useState("");
     const [dataList, setdataList] = useState(list);
+    const [selectedOptions, setselectedOptions] = useState([]);
 
     const searchAction = (text) => {
         setSearch(text);
@@ -25,6 +26,17 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
         return ""
     }
 
+    const addRemoveItemFromList = (item) => {
+        if (!selectedOptions.includes(item.key)) {
+            setselectedOptions([...selectedOptions, item.key]);
+            selectedItem(item)
+        } else {
+            setselectedOptions(
+                selectedOptions.filter(i => item.key != i),
+            );
+        }
+    }
+
     return (
         <Modal
             visible
@@ -32,54 +44,74 @@ const DataListSelectModal = ({ onClose, title = "Select", list = [], onItemSelec
             onRequestClose={onClose}
             animationType='slide'
         >
-            <View style={styles.modalCont}>
-                <View style={[styles.cont, contStyle]}>
-                    <ModalTitleHeader
-                        title={title}
-                        onPress={onClose}
-                        style={{ backgroundColor: colors.primary }}
-                        color={colors.white}
-                    />
-                    {isSearch &&
-                        <View style={{ marginTop: 15 }}>
-                            <InputField
-                                placeholder='Search'
-                                value={search}
-                                onTextChange={txt => searchAction(txt)}
-                                style={{ marginBottom: 0 }}
-                            />
-                        </View>
-                    }
-                    <ScrollView style={{ flexGrow: 1 }}>
-                        <View style={styles.itemCont}>
-                            {dataList.map((item, index) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={String(index)}
-                                        activeOpacity={0.8}
-                                        style={[styles.item, { borderColor: colors.grey }]}
-                                        onPress={() => onItemSelect(item)}
-                                    >
-                                        <View style={styles.letterView}>
-                                            <HeadingText
-                                                text={getFirstLetter(item[textKey])}
-                                                size={14}
+            <TouchableOpacity activeOpacity={1} style={styles.modalCont} onPressOut={() => onClose()}>
+                <TouchableWithoutFeedback>
+                    <View style={[styles.cont, contStyle]}>
+                        <ModalTitleHeader
+                            title={title}
+                            onPress={onClose}
+                            style={{ backgroundColor: colors.primary }}
+                            color={colors.white}
+                        />
+                        {isSearch &&
+                            <View style={{ marginTop: 15 }}>
+                                <InputField
+                                    placeholder='Search'
+                                    value={search}
+                                    onTextChange={txt => searchAction(txt)}
+                                    style={{ marginBottom: 0 }}
+                                />
+                            </View>
+                        }
+                        <ScrollView style={{ flexGrow: 1 }}>
+                            <View style={styles.itemCont}>
+                                {dataList.map((item, index) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={String(index)}
+                                            activeOpacity={0.8}
+                                            style={[styles.item, { borderColor: colors.grey }]}
+                                            onPress={() => {
+                                                !multipleSelect ?
+                                                    onItemSelect(item) : addRemoveItemFromList(item)
+                                            }
+                                            }
+                                        >
+                                            {!multipleSelect ? <View style={styles.letterView}>
+                                                <HeadingText
+                                                    text={getFirstLetter(item[textKey])}
+                                                    size={14}
+                                                />
+                                            </View> :
+                                                <View style={{ marginHorizontal: 10 }}>
+                                                    <Checkbox
+                                                        value={selectedOptions.includes(item.key)}
+                                                        onPress={() => {
+                                                            addRemoveItemFromList(item)
+                                                        }}
+                                                    />
+                                                </View>
+                                            }
+                                            <AppText
+                                                text={item[textKey]}
+                                                style={{ flex: 1 }}
+                                                numberOfLines={2}
+                                            // color={}
                                             />
-                                        </View>
-                                        <AppText
-                                            text={item[textKey]}
-                                            style={{ flex: 1 }}
-                                            numberOfLines={2}
-                                        // color={}
-                                        />
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
-                    </ScrollView>
-                </View>
-            </View>
-        </Modal>
+                                        </TouchableOpacity>
+                                    )
+                                })}
+                            </View>
+                            {showSubmitBtn && <TouchableOpacity onPress={() => { onSubmit() }}
+                                style={{ backgroundColor: colors.primary, ...Center, width: '50%', alignSelf: 'center', borderRadius: 10, marginBottom: 10 }}>
+                                <AppText text='Submit' color={colors.white} size={14} style={{ textAlign: 'right', padding: 15 }} />
+                            </TouchableOpacity>}
+                        </ScrollView>
+                    </View>
+
+                </TouchableWithoutFeedback>
+            </TouchableOpacity>
+        </Modal >
     )
 }
 

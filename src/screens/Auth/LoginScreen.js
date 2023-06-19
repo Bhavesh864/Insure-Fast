@@ -1,55 +1,68 @@
-import React, { useState } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { NativeModules, PermissionsAndroid, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { WelcomeInsureComponent } from '../../components/auth/AppReUsableComponents'
 import { Button, InputField } from '../../components/CustomFields'
 import { navigate } from '../../routes/RootNavigation'
 import { ChangeAppStatus } from '../../store/actions/AppAction'
 import { colors } from '../../styles/colors'
 import { flexRow, screenStyle } from '../../styles/CommonStyling'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
-import { PhoneSvgIcon, WhatsAppSvgIcon } from '../../assets/svg/basicSvgs';
-import { customerLoginAction, userLoginAction } from '../../store/actions/UserAction';
+import { WhatsAppSvgIcon } from '../../assets/svg/basicSvgs';
+import { customerLoginAction } from '../../store/actions/UserAction';
 import { AppConst } from '../../constants/AppConst';
 import { AppToastMessage } from '../../components/custom/SnackBar';
 
-
-const LoginScreen = ({ route }) => {
-    const loginType = route.params?.type ? route.params?.type : "user";
+const LoginScreen = ({ route, navigation }) => {
+    // const loginType = route.params?.type ? route.params?.type : "user";
     const [mobile, setMobile] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [selectedCode, setSelectedCode] = useState("+91");
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        // navigation.addListener('focus', async () => {
+        //     if (Platform.OS == 'android') {
 
+        //     }
+        // });
+    }, []);
 
-    const onAction = () => {
-        // navigate("otpScreen", { mobile, response: {} });
-        // return;
-        try {
-            let phone = mobile
-            if (!phone) {
-                AppToastMessage("Please enter valid mobile number");
-                return;
-            }
-            // if (mobile.trim() && mobile?.length > 9) {
-            let body = {
-                "phone_number": phone,
-                "country_code": "91"
-            }
-            userLoginAction(body).then(res => {
-                AppConst.showConsoleLog("login res: ", res);
-                if (res?.status) {
-                    navigate("otpScreen", { mobile, response: res.data });
-                } else {
-                    AppToastMessage(res?.message);
-                }
-            })
-        } catch (error) {
-
+    const onAction = (body) => {
+        if (mobile.length < 10) {
+            AppToastMessage('Please enter a valid number!');
+            return;
         }
+        customerLoginAction(body).then(res => {
+            console.log(JSON.stringify(res));
+            if (res?.data?.ErrorMessage == 'Done') {
+                navigate("otpScreen", { mobile, response: res?.customer });
+            } else {
+                AppToastMessage(res?.data?.ErrorMessage);
+            }
+        });
+
+        // try {
+        //     let phone = mobile
+        //     if (!phone) {
+        //         AppToastMessage("Please enter valid mobile number");
+        //         return;
+        //     }
+        //     // if (mobile.trim() && mobile?.length > 9) {
+        //     let body = {
+        //         "phone_number": phone,
+        //         "country_code": "91"
+        //     }
+        //     userLoginAction(body).then(res => {
+        //         AppConst.showConsoleLog("login res: ", res);
+        //         if (res?.status) {
+        //             navigate("otpScreen", { mobile, response: res?.data });
+        //         } else {
+        //             AppToastMessage(res?.message);
+        //         }
+        //     })
+        // } catch (error) {
+
+        // }
         // }
     }
 
@@ -107,14 +120,7 @@ const LoginScreen = ({ route }) => {
                                         "phone": phone,
                                         // "country_code": "91"
                                     }
-                                    customerLoginAction(body).then(res => {
-                                        AppConst.showConsoleLog("login res: ", res);
-                                        if (res?.status) {
-                                            navigate("otpScreen", { mobile, response: res.data });
-                                        } else {
-                                            AppToastMessage(res?.message);
-                                        }
-                                    })
+                                    onAction(body);
                                 } catch (error) {
 
                                 }
@@ -138,7 +144,7 @@ const LoginScreen = ({ route }) => {
                 <View style={{ padding: 20 }}>
                     <Text style={{ textAlign: "center", maxWidth: "80%", alignSelf: "center" }}>
                         <AppText
-                            text={"By continuing you confirm that you agree with our "}
+                            text={"By continuing you confirm that you agree with our"}
                             color={colors.darkGrey}
                         />
                         <AppText

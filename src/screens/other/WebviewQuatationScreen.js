@@ -11,9 +11,29 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { Center } from '../../styles/CommonStyling';
 
 const WebviewQuatationScreen = ({ navigation }) => {
-    const [quotationHtml, setquotationHtml] = useState(null);
+    const [quotationHtml, setquotationHtml] = useState();
+
+    useEffect(() => {
+        sendQuotation().then(res => {
+            // console.log(res);
+            console.log('hellooooooooo');
+            setquotationHtml(res)
+        });
+        // generatePdf()
+
+    }, [])
+
+    navigation.setOptions({
+        // headerTitle: `${vehicleData?.MakeName},  ${vehicleData?.ModelName} ${vehicleData?.VariantName} -2 ${vehicleData?.RegistrationYear}`,
+        // headerLeft: () => <CustomBackButton style={{ marginLeft: 20 }} onPress={() => popToTop()} />,
+        headerRight: () =>
+            <TouchableOpacity onPress={() => generatePdf(quotationHtml)} style={{ height: 50, width: 60, ...Center }}>
+                <AntDesign name='download' color={colors.white} size={24} style={{ marginRight: 20 }} onPress={() => generatePdf(quotationHtml)} />
+            </TouchableOpacity>,
+    })
 
     const isPermitted = async () => {
+
         if (Platform.OS === 'android') {
             try {
                 const granted = await PermissionsAndroid.request(
@@ -33,10 +53,11 @@ const WebviewQuatationScreen = ({ navigation }) => {
         }
     };
 
-    const generatePdf = async () => {
+    const generatePdf = async (quotationHtml) => {
+        console.log(quotationHtml);
         if (await isPermitted()) {
             const options = {
-                html: quotationHtml ? quotationHtml : '<h1>Heading</h1>',
+                html: quotationHtml,
                 fileName: "test",
                 directory: './data/',
                 base64: true
@@ -82,23 +103,7 @@ const WebviewQuatationScreen = ({ navigation }) => {
         }
     }
 
-    useEffect(() => {
-        sendQuotation().then(res => {
-            console.log('hello', res);
-            setquotationHtml(res)
-        });
-        // generatePdf()
-        navigation.setOptions({
-            // headerTitle: `${vehicleData?.MakeName},  ${vehicleData?.ModelName} ${vehicleData?.VariantName} -2 ${vehicleData?.RegistrationYear}`,
-            // headerLeft: () => <CustomBackButton style={{ marginLeft: 20 }} onPress={() => popToTop()} />,
-            headerRight: () =>
-                <TouchableOpacity onPress={() => generatePdf()} style={{ height: 50, width: 60, ...Center }}>
-                    <AntDesign name='download' color={colors.white} size={24} style={{ marginRight: 20 }} onPress={() => generatePdf()} />
-                </TouchableOpacity>
-            ,
-        })
 
-    }, [])
 
     return (
         <View style={{ flex: 1, padding: 10 }}>

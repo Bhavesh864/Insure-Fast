@@ -1,4 +1,4 @@
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { height, screenStyle, width } from '../../styles/CommonStyling'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
@@ -26,23 +26,24 @@ const AdvertisementScreen = () => {
         {
             id: 1,
             title: "Your Insurance Simplified",
-            backgroundSvg: <MarketingBackgroundSvg style={{ bottom: -40, zIndex: -1 }} />,
+            backgroundSvg: <MarketingBackgroundSvg style={{ bottom: -40, zIndex: -1, top: 80 }} />,
             adSvg: <MarketingAd1Svg />,
-            content: `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.`,
+            content: `- Compare policies from different insurers. \n - Simple and user-friendly interface for easy navigation.
+            `,
         },
         {
             id: 2,
             title: "Your Policies on your Figertips",
             backgroundSvg: <Marketing2BackgroundSvg style={{ top: -10 }} />,
             adSvg: <MarketingAd2Svg />,
-            content: `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.`,
+            content: `- 24/7 customer support for assistance. \n - Customized insurance solutions based on individual needs. \n`,
         },
         {
             id: 3,
             title: "Your Claim, Our Concern",
-            backgroundSvg: <MarketingBackgroundSvg style={{ bottom: -40, zIndex: -1 }} />,
+            backgroundSvg: <MarketingBackgroundSvg style={{ bottom: -40, zIndex: -1, top: 80 }} />,
             adSvg: <MarketingAd3Svg />,
-            content: `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.`,
+            content: `- Easy and quick claims process.\n - Hassle-free experience for claim settlement.`,
         },
     ];
 
@@ -61,7 +62,7 @@ const AdvertisementScreen = () => {
 
     const GetComponent2 = ({ item, index }) => {
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }}>
                 <View style={{}}>
                     <View>
                         {item.backgroundSvg}
@@ -70,7 +71,7 @@ const AdvertisementScreen = () => {
                         </View>
                     </View>
                 </View>
-                <View style={{ padding: 20, flex: 1 }}>
+                <View style={{ padding: 20, flex: 1, zIndex: 2 }}>
                     <HeadingText
                         text={item.title}
                         size={20}
@@ -88,7 +89,7 @@ const AdvertisementScreen = () => {
                         onPress={() => onNextPress()}
                     />
                 </View>
-            </View>
+            </ScrollView>
         )
         // }
     }
@@ -123,7 +124,7 @@ const AdvertisementScreen = () => {
                                     <GetComponent2 item={item} index={index} />
                                     :
                                     <View style={{ flex: 1 }}>
-                                        <View style={{ padding: 20, marginBottom: 20 }}>
+                                        <View style={{ padding: 20, marginBottom: 20, zIndex: 2 }}>
                                             <HeadingText
                                                 text={item.title}
                                                 size={20}
@@ -137,7 +138,7 @@ const AdvertisementScreen = () => {
                                         </View>
                                         <View style={{ flex: 1, justifyContent: "flex-end" }}>
                                             <View style={{ position: "absolute", zIndex: 1, bottom: bottomHeight }}>
-                                                <View style={{ zIndex: -1 }}>
+                                                <View style={{ zIndex: -1, height: '40%' }}>
                                                     {item.backgroundSvg}
                                                 </View>
                                             </View>

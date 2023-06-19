@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Button, CustomBackButton, InputField, Selectbox } from '../../../components/CustomFields'
+import { Button, Checkbox, CustomBackButton, InputField, Selectbox } from '../../../components/CustomFields'
 import { pop, navigate } from '../../../routes/RootNavigation'
 import { colors } from '../../../styles/colors'
 import { Center, flexRow, screenStyle, width } from '../../../styles/CommonStyling'
@@ -20,6 +20,7 @@ const CarRegistrationNumberScreen = ({ route, navigation }) => {
     const [activeType, setActiveType] = useState("renew")
     const [allRtoCode, setAllRtoCode] = useState([]);
     const [limitRtoCodes, setLimitRtoCode] = useState([]);
+    const [isBharatNum, setisBharatNum] = useState(null);
 
     useEffect(() => {
         console.log('object', route?.params?.vehicleType)
@@ -30,7 +31,7 @@ const CarRegistrationNumberScreen = ({ route, navigation }) => {
 
     useEffect(() => {
         getAllRtoCodesAction().then(res => {
-            AppConst.showConsoleLog("res:", res);
+            // AppConst.showConsoleLog("res:", res);
             if (res?.status) {
                 const filtered = res?.data?.filter(function (item) {
                     if (this.count < 10 && item) {
@@ -83,11 +84,15 @@ const CarRegistrationNumberScreen = ({ route, navigation }) => {
                                     allList={allRtoCode}
                                     setList={setLimitRtoCode}
                                     insuranceType={{ vehicleType, screenTitle }}
+                                    isBharatNum={isBharatNum}
+                                    setisBharatNum={setisBharatNum}
                                 />
                                 :
                                 <RenewComponent
                                     insuranceType={{ vehicleType, screenTitle }}
                                     isThirdParty={isThirdParty}
+                                    isBharatNum={isBharatNum}
+                                    setisBharatNum={setisBharatNum}
                                 />
                             }
                         </View>
@@ -98,8 +103,9 @@ const CarRegistrationNumberScreen = ({ route, navigation }) => {
     )
 }
 
-const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceType }) => {
+const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceType, isBharatNum, setisBharatNum, vehicleType }) => {
     const [selectedCode, setSelectedCode] = useState(null);
+    console.log('vehicleType', insuranceType.vehicleType);
 
     const searchRtoCodes = (text) => {
         let arr = allList?.filter(function (item) {
@@ -116,7 +122,7 @@ const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceTyp
         setSelectedCode(item?.RTO_Code);
         dispatchQuickQuote("RtoCode", item.RTO_Code);
         dispatchQuickQuote("IsVehicleNew", true);
-        navigate("carBrandList", { insuranceType });
+        // navigate("carBrandList", { insuranceType });
     }
 
     const onNextPress = () => {
@@ -132,6 +138,12 @@ const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceTyp
 
     return (
         <View style={{ flex: 1 }}>
+            {/* {insuranceType.vehicleType == vehicleTypesObj.car && <View style={{ ...flexRow, alignItems: 'center', }}>
+                <HeadingText size={14} text='Bharat Series Vehicle' style={{ margin: 15, }} />
+                <Checkbox value={isBharatNum} onPress={() => {
+                    setisBharatNum(!isBharatNum);
+                }} />
+            </View>} */}
             <AppText
                 text={"Select RTO Code"}
                 size={16}
@@ -173,10 +185,11 @@ const SelectRtoCodeComponent = ({ list = [], allList = [], setList, insuranceTyp
     )
 }
 
-const RenewComponent = ({ insuranceType, isThirdParty, isEdit }) => {
+const RenewComponent = ({ insuranceType, isThirdParty, isEdit, isBharatNum, setisBharatNum }) => {
     const vehicleData = useSelector(state => state.motor.apiRequestQQ);
     const [regNumber, setRegNumber] = useState(isEdit ? vehicleData?.RegistrationNumber : '');
     const [quoatationNumber, setQuotationNumber] = useState("");
+
 
     const onDetailPress = () => {
         console.log(vehicleData?.vehicleType);
@@ -205,34 +218,66 @@ const RenewComponent = ({ insuranceType, isThirdParty, isEdit }) => {
     }
 
     const onRegTextChange = (value) => {
-        if ([2, 5, 8].includes(value.length)) {
-            setRegNumber((prev) => {
-                // this is only the case when we try to delete empty space
-                if (prev.endsWith("-")) {
-                    return value.slice(0, -1);
-                } else {
-                    return value + "-";
-                }
-            });
+        if (!isBharatNum) {
+            if ([2, 5, 8].includes(value.length)) {
+                setRegNumber((prev) => {
+                    // this is only the case when we try to delete empty space
+                    if (prev.endsWith("-")) {
+                        return value.slice(0, -1);
+                    } else {
+                        return value + "-";
+                    }
+                });
+            } else {
+                setRegNumber(value);
+            }
         } else {
-            setRegNumber(value);
+            if ([2, 5, 10].includes(value.length)) {
+                setRegNumber((prev) => {
+                    // this is only the case when we try to delete empty space
+                    if (prev.endsWith("-")) {
+                        return value.slice(0, -1);
+                    } else {
+                        return value + "-";
+                    }
+                });
+            } else {
+                setRegNumber(value);
+            }
         }
     }
 
     const getKeyBoardType = () => {
         const len = regNumber?.length
-        if (len > 2 && len <= 5) {
-            return "number-pad"
+        if (!isBharatNum) {
+            if (len > 2 && len <= 5) {
+                return "number-pad"
+            }
+            else if (len > 8) {
+                return "number-pad"
+            }
+            return 'default';
+        } else {
+            if (len > 2 && len <= 5) {
+                return "default"
+            }
+            else if (len > 10) {
+                return "default"
+            }
+            return 'number-pad'
         }
-        else if (len > 8) {
-            return "number-pad"
-        }
-        return "default"
     }
+
     return (
         <View>
             <View style={{ marginVertical: 10 }}>
-                {/* <AppText /> */}
+                {/* {insuranceType.vehicleType == vehicleTypesObj.car && <View style={{ ...flexRow, alignItems: 'center', }}>
+                    <HeadingText size={14} text='Bharat Series Vehicle' style={{ margin: 15, }} />
+                    <Checkbox value={isBharatNum} onPress={() => {
+                        setisBharatNum(!isBharatNum);
+                        setRegNumber('')
+                    }} />
+                </View>} */}
                 <InputField
                     value={regNumber}
                     label={isThirdParty ? "Vehicle Registration Number" : "Stay home & renew in 2 minutes"}

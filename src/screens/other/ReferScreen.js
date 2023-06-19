@@ -16,7 +16,7 @@ const ReferScreen = () => {
         Share.share({
             message: `https://www.insurefast.in/?q=basic+insurance+app+refer+screen&sxsrf=APwXEdfgiixuoGO8671q1UTuekKs7Eos6g:1682433611348&source=lnms&tbm=isch&sa=X&ved=2ahUKEwi7wozOocX- `,
             url: 'https://www.insurefast.com/?q=basic+insurance+app+refer+screen&sxsrf=APwXEdfgiixuoGO8671q1UTuekKs7Eos6g:1682433611348&source=lnms&tbm=isch&sa=X&ved=2ahUKEwi7wozOocX-',
-            title: "Refer Earn"
+            title: "Refer Earn",
         });
 
     }

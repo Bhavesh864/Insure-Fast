@@ -33,6 +33,7 @@ const SelectBrandScreen = ({ route }) => {
 
     const onNext = () => {
         if (!selectedBrand) {
+            AppToastMessage('Please select a brand name!')
             return;
         }
         dispatchQuickQuote("MakeName", selectedBrand);
@@ -54,14 +55,12 @@ const SelectBrandScreen = ({ route }) => {
             AppToastMessage('Brand Name Updated')
         }
         dispatchQuickQuote("MakeName", key);
-        setSelectedBrand(key);
     }
 
     const onSearch = (text) => {
-        console.log('object', text)
         setSearch(text)
         if (text?.length > 1) {
-            getMotorMakeSearchAction(text, insuranceType?.vehicleType).then(res => {
+            getMotorMakeSearchAction(text, insuranceType?.vehicleType, false).then(res => {
                 AppConst.showConsoleLog("search res: ", res)
                 if (res?.status) {
                     setSearchResult(res?.data);
@@ -98,7 +97,7 @@ const SelectBrandScreen = ({ route }) => {
                                     item={item}
                                     textKey={"Make"}
                                     onPress={(item) => onBrandPress(item.Make)}
-                                    borderWidth={item.Make == selectedBrand ? 1 : 0}
+                                    borderWidth={item.Make == selectedBrand ? 2 : 0}
                                 />
                             )
                         })}

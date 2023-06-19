@@ -11,12 +11,14 @@ import NumberListPositionModal from '../../../components/modals/NumberListPositi
 import { getAdultAgeArr, getChildAgeArr } from '../../../constants/OtherConst'
 import { colors } from '../../../styles/colors';
 import { AppToastMessage } from '../../../components/custom/SnackBar';
+import { dispatchHealthQuickQuote } from '../../../store/actions/HealthPolicyAction';
 
 
 const PersonalFamilyFormScreen = ({ route }) => {
     const { insuranceFor, sonNum, daughterNum } = route.params;
     const [insuranceMembers, setInsuranceMembers] = useState([]);
     const [modalConfig, setModalConfig] = useState(false);
+
 
     useEffect(() => {
         let arr = []
@@ -49,6 +51,9 @@ const PersonalFamilyFormScreen = ({ route }) => {
         }
         setInsuranceMembers(arr);
     }, []);
+
+
+
 
     const getLabel = (key) => {
         switch (key) {
@@ -90,18 +95,50 @@ const PersonalFamilyFormScreen = ({ route }) => {
         const sonAges = insuranceFor.includes("son") ? insuranceMembers.filter(i => i.key?.includes("son")) : [];
         const daughterAges = insuranceFor.includes("daughter") ? insuranceMembers.filter(i => i.key?.includes("daughter")) : [];
         const checkValidSonAge = sonAges.filter((i) => ((selfAge?.value - i?.value) < 18));
-        AppConst.showConsoleLog("self: ", selfAge);
-        AppConst.showConsoleLog("spouseAge: ", spouseAge);
-        AppConst.showConsoleLog("sonAges: ", sonAges);
-        AppConst.showConsoleLog("daughterAges: ", daughterAges);
-        AppConst.showConsoleLog("checkValidSonAge: ", checkValidSonAge);
+        const checkValidDaughterAge = daughterAges.filter((i) => ((selfAge?.value && spouseAge?.value - i?.value) < 18));
+
+        // AppConst.showConsoleLog("self: ", selfAge);
+        // AppConst.showConsoleLog("spouseAge: ", spouseAge);
+        // AppConst.showConsoleLog("sonAges: ", sonAges);
+        // AppConst.showConsoleLog("daughterAges: ", daughterAges);
+        // AppConst.showConsoleLog("checkValidSonAge: ", checkValidSonAge);
+
 
         if (sonAges?.length > 0 && checkValidSonAge?.length > 0) {
-            AppToastMessage("Self and Son age gap should be 18 years or above");
+            AppToastMessage("Self/Spouse and Son age gap should be 18 years or above");
             return;
         }
-        // return;
-        navigate("locationSelect")
+        if (daughterAges?.length > 0 && checkValidDaughterAge?.length > 0) {
+            AppToastMessage("Self/Spouse and Daughter age gap should be 18 years or above");
+            return;
+        }
+
+
+
+        let isAge = false;
+        for (let i = 0; i < insuranceMembers.length; i++) {
+            if (insuranceMembers[i].value == null) {
+                isAge = false;
+            } else {
+                isAge = true;
+            }
+        }
+
+        let insuredMemberDetail = [];
+        if (isAge) {
+            for (let i = 0; i < insuranceMembers.length; i++) {
+                insuredMemberDetail = [...insuredMemberDetail, {
+                    'insurer_relation': insuranceFor[i],
+                    'insured_age': insuranceMembers[i].value,
+                    'customerId': AppConst.customerId,
+                }]
+            }
+
+            dispatchHealthQuickQuote('Family', insuredMemberDetail);
+            navigate("locationSelect")
+        } else {
+            AppToastMessage('Age is required!')
+        }
     }
 
     const getItemArr = (key) => {

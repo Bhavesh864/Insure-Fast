@@ -112,3 +112,53 @@ export const PostRequest = async ({
         }
     }
 };
+
+export const textPostReq = async ({
+    url,
+    body,
+    header = { ...AuthorizeApiHeader, 'Authorization': `Bearer ${AppConst.accessToken}` },
+    fileupload = false,
+    method = "POST",
+    loader = false
+}) => {
+    try {
+        if (loader) {
+            store.dispatch(ChangeLoadingSatus(true));
+        }
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), timeout);
+        const config = {
+            method: method,
+            headers: fileupload ? { ...FormDataAuthApiHeader, 'Authorization': `Bearer ${AppConst.accessToken}` } : header,
+            body: body,
+            signal: controller.signal
+        };
+        const apiUrl = baseUrl + url
+        AppConst.showConsoleLog('url:', apiUrl);
+        AppConst.showConsoleLog('body:', body);
+        AppConst.showConsoleLog('config:', config);
+        // AppConst.showConsoleLog('is Access Token:', config.headers?.Authorization == AppConst.accessToken);
+        // if (DeviceConstant.isNetworkConnected) {
+        const response = await fetch(apiUrl, config);
+        const result = await response.text();
+        if (loader) {
+            store.dispatch(ChangeLoadingSatus(false));
+        }
+        return result
+        // }
+        // else {
+        //     ShowNetworkMessage();
+        //     return undefined
+        // }
+    } catch (e) {
+        AppConst.showConsoleLog('error:', e);
+        if (loader) {
+            store.dispatch(ChangeLoadingSatus(false));
+        }
+        // spinner && setSpinner(false)
+        if (e.message == 'Aborted') {
+            // alert('Service Time Out 5 sec');
+            return false;
+        }
+    }
+};

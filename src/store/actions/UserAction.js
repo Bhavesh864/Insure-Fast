@@ -2,8 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authUrls, motorUrls } from "../../services/baseUrls";
 import { GetRequest, PostRequest } from "../../services/request"
 import { AppConst } from "../../constants/AppConst";
-import { ChangeAppStatus } from "./AppAction";
+import { ChangeAppStatus, ChangeLoadingSatus } from "./AppAction";
 import { SET_USER_DATA } from "../types";
+import { dispatchQuickQuote } from "./PolicyAction";
+import store from "..";
 
 
 
@@ -34,9 +36,8 @@ export const userLoginAction = async (body) => {
 
 export const customerLoginAction = async (body) => {
     try {
-        const res = await PostRequest({
-            url: authUrls.cutomerLogin,
-            body,
+        const res = await GetRequest({
+            url: authUrls.cutomerLogin + `number=${body.phone}`,
             loader: true
         });
 
@@ -49,6 +50,7 @@ export const customerLoginAction = async (body) => {
 
 export const userLogoutAction = () => {
     return async dispatch => {
+        store.dispatch(ChangeLoadingSatus(true))
         try {
             // const res = await PostRequest({
             //     url: authUrls.logout,
@@ -57,9 +59,12 @@ export const userLogoutAction = () => {
             // });
             AppConst.showConsoleLog("logout action")
             dispatch(ChangeAppStatus(2));
+
             await AsyncStorage.removeItem("accessToken");
-            AppConst.accessToken = null;
+            // AppConst.accessToken = null;
             // return res;
+            store.dispatch(ChangeLoadingSatus(false))
+
         } catch (error) {
             AppConst.showConsoleLog("err: ", error)
         }
@@ -79,10 +84,18 @@ export const verifyOtpAction = async (body, type = "customer") => {
             await AsyncStorage.setItem("customerid", JSON.stringify(res.data?.id));
             AppConst.setAccessToken(res.data?.access_token);
             AppConst.setCustomerId(res.data?.id);
+            // console.log('result', res?.data);
+            dispatchQuickQuote("FirstName", res?.data?.first_name);
+            dispatchQuickQuote("LastName", res?.data?.last_name);
+            dispatchQuickQuote("Email", res?.data?.email);
+            dispatchQuickQuote("Dob", res?.data?.dob);
+            dispatchQuickQuote("MobileNumber", res?.data?.phone);
+            AppConst.setAccessToken(res?.data?.access_token);
         }
+        console.log('ressssssssssssss', res);
         return res;
     } catch (error) {
-
+        console.log('err', error);
     }
 }
 
@@ -100,6 +113,11 @@ export const getUserProfileData = () => {
             AppConst.showConsoleLog("profile data: ", res)
             if (res?.status) {
                 // console.log('result', res?.data);
+                dispatchQuickQuote("FirstName", res?.data?.first_name);
+                dispatchQuickQuote("LastName", res?.data?.last_name);
+                dispatchQuickQuote("Email", res?.data?.email);
+                dispatchQuickQuote("Dob", res?.data?.dob);
+                dispatchQuickQuote("MobileNumber", res?.data?.phone);
                 AppConst.setAccessToken(res?.data?.access_token);
                 dispatch(SetUserData(res?.data));
             }

@@ -44,6 +44,7 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
             <View style={{ flexDirection: 'row', width: "100%", justifyContent: "space-evenly" }}>
                 {/* <View style={{ ...styles.otp, alignItems: "center", justifyContent: "center" }}> */}
                 <TextInput
+                    autoFocus={true}
                     placeholder="-"
                     style={{ ...styles.otp, color: theme == "light" ? colors.black : colors.white }}
                     maxLength={1}
@@ -52,6 +53,8 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                     onKeyPress={e => {
                         if (e.nativeEvent.key == 'Backspace') {
                             firstRef.current.focus();
+                        } else {
+                            secondRef.current.focus();
                         }
                     }}
                     keyboardType={'numeric'}
@@ -74,19 +77,24 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                     value={otp.second}
                     onKeyPress={e => {
                         if (e.nativeEvent.key == 'Backspace') {
-                            if (otp.second !== '') {
-                                secondRef.current.focus();
-                            } else if (e.nativeEvent.key == 'Backspace') {
-                                if (otp.second == '') {
-                                    firstRef.current.focus();
-                                }
-                            }
+
+                            firstRef.current.focus();
+                        } else {
+                            thirdRef.current.focus();
                         }
+                        //     if (otp.second !== '') {
+                        //         secondRef.current.focus();
+                        //     } else if (e.nativeEvent.key == 'Backspace') {
+                        //         if (otp.second == '') {
+                        //             firstRef.current.focus();
+                        //         }
+                        //     }
+                        // }
                     }}
                     ref={secondRef}
                     keyboardType={'number-pad'}
                     onChangeText={text => {
-                        console.log(otp);
+
                         if (re.test(text)) {
                             setotp({ ...otp, second: text });
                             text && thirdRef.current.focus();
@@ -101,14 +109,19 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                     value={otp.third}
                     onKeyPress={e => {
                         if (e.nativeEvent.key == 'Backspace') {
-                            if (otp.third !== '') {
-                                thirdRef.current.focus();
-                            } else if (e.nativeEvent.key == 'Backspace') {
-                                if (otp.third == '') {
-                                    secondRef.current.focus();
-                                }
-                            }
+                            secondRef.current.focus();
+                        } else {
+                            fourRef.current.focus();
                         }
+                        // if (e.nativeEvent.key == 'Backspace') {
+                        //     if (otp.third !== '') {
+                        //         thirdRef.current.focus();
+                        //     } else if (e.nativeEvent.key == 'Backspace') {
+                        //         if (otp.third == '') {
+                        //             secondRef.current.focus();
+                        //         }
+                        //     }
+                        // }
                     }}
                     maxLength={1}
                     ref={thirdRef}
@@ -130,14 +143,19 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                     ref={fourRef}
                     onKeyPress={e => {
                         if (e.nativeEvent.key == 'Backspace') {
-                            if (otp.four != '') {
-                                fourRef.current.focus();
-                            } else if (e.nativeEvent.key == 'Backspace') {
-                                if (otp.four == '') {
-                                    thirdRef.current.focus();
-                                }
-                            }
+                            thirdRef.current.focus();
+                        } else {
+                            fiveRef.current.focus();
                         }
+                        // if (e.nativeEvent.key == 'Backspace') {
+                        //     if (otp.four != '') {
+                        //         fourRef.current.focus();
+                        //     } else if (e.nativeEvent.key == 'Backspace') {
+                        //         if (otp.four == '') {
+                        //             thirdRef.current.focus();
+                        //         }
+                        //     }
+                        // }
                     }}
                     keyboardType={'number-pad'}
                     onChangeText={text => {
@@ -150,7 +168,7 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                         }
                     }}
                 />
-                {/* <TextInput
+                <TextInput
                     placeholder="-"
                     style={{ ...styles.otp, color: theme == "light" ? colors.black : colors.white }}
                     value={otp.five}
@@ -158,13 +176,14 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                     ref={fiveRef}
                     onKeyPress={e => {
                         if (e.nativeEvent.key == 'Backspace') {
-                            if (otp.five != '') {
-                                fiveRef.current.focus();
-                            } else if (e.nativeEvent.key == 'Backspace') {
-                                if (otp.five == '') {
-                                    fourRef.current.focus();
-                                }
-                            }
+                            fourRef.current.focus();
+                            // if (otp.five != '') {
+                            //     fiveRef.current.focus();
+                            // } else if (e.nativeEvent.key == 'Backspace') {
+                            //     if (otp.five == '') {
+                            // fourRef.current.focus();
+                            //     }
+                            // }
                         }
                     }}
                     keyboardType={'number-pad'}
@@ -177,7 +196,10 @@ const OtpComponent = ({ setotp, otp, text, resendPress = () => { }, theme = "lig
                             setotp({ ...otp, five: '' });
                         }
                     }}
-                /> */}
+                // onTextInput={() => {
+                //     onVerify();
+                // }}
+                />
                 {/* <TextInput
                     placeholder="-"
                     style={{ ...styles.otp, color: theme == "light" ? colors.black : colors.white }}

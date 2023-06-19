@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Center, flexRow, screenStyle } from '../../../styles/CommonStyling'
 import { colors } from '../../../styles/colors'
-import { policyExpiryArr, previousPolicyStatusesArr } from '../../../constants/OtherConst'
+import { policyExpiryArr, previousPolicyStatusesArr, previousPolicyStatusesArrCommercial, previousPolicyTypes } from '../../../constants/OtherConst'
 import { AppText, HeadingText } from '../../../Utility/TextUtility'
 import { Button, Checkbox, TouchableTextView, YesNoButton } from '../../../components/CustomFields'
 import { navigate } from '../../../routes/RootNavigation'
@@ -28,9 +28,10 @@ const PreviousPolicyStatusScreen = () => {
     const [previousPolicies, setPreviousPolicies] = useState([]);
     const [selectedpreviousPol, setSelectedPreviousPol] = useState(null);
     const [odType, setOdType] = useState(false)
-    // AppConst.showConsoleLog("red: ", details);
+    const [prevPolicyTypeArr, setprevPolicyTypeArr] = useState(details?.VehicleType == "Pvt Car" || details?.VehicleType == "MotorBike" ? previousPolicyStatusesArr : previousPolicyStatusesArrCommercial);
 
     useEffect(() => {
+        console.log('vehicletype', details?.VehicleType);
         setOdType(checkVehicleODType());
         getPreviousPolicyCompanies().then(res => {
             AppConst.showConsoleLog("previous policy res: ", res);
@@ -42,15 +43,17 @@ const PreviousPolicyStatusScreen = () => {
 
 
     const checkVehicleODType = (reg = details?.RegistrationDate) => {
-        // AppConst.showConsoleLog("reg date: ", details?.ManufaturingDate);
         if (!reg) {
             return false
         }
         const threeYr = moment().subtract(3, "years").format("YYYY-MM-DD");
         const fiveYr = moment().subtract(5, "years").format("YYYY-MM-DD");
         const checkDate = details?.VehicleType == "Pvt Car" ? threeYr : fiveYr
-        AppConst.showConsoleLog("-- ", threeYr, reg, moment(reg).isAfter(checkDate))
-        if (moment(reg).isAfter(checkDate)) {
+        AppConst.showConsoleLog("----- ", threeYr, fiveYr, reg, moment(reg).isAfter(checkDate))
+        AppConst.showConsoleLog("reg ", reg)
+        AppConst.showConsoleLog("checkDate ", checkDate)
+
+        if (moment(reg).isAfter(checkDate) && (details?.VehicleType == "Pvt Car" || details?.VehicleType == "MotorBike")) {
             return true
         } else {
             return false
@@ -74,7 +77,7 @@ const PreviousPolicyStatusScreen = () => {
 
 
     const createPolicy = () => {
-        if (previosClaimMade == null) {
+        if (previosClaimMade == null && !details?.onlyThirdPartyIns) {
             AppToastMessage("Please select claim made in last policy");
             return;
         }
@@ -87,14 +90,14 @@ const PreviousPolicyStatusScreen = () => {
             AppToastMessage("Please provide previous policy status");
             return;
         }
-        if (!odType && !selectedPolicyStatus) {
-            AppToastMessage("Please provide your previous policy type");
-            return;
-        }
-        if (!selectedpreviousPol) {
-            AppToastMessage("Please provide your previous policy insurer");
-            return;
-        }
+        // if (!odType && !selectedPolicyStatus && policyExpire != 'none') {
+        //     AppToastMessage("Please provide your previous policy type");
+        //     return;
+        // }-
+        // if (!selectedpreviousPol && policyExpire != 'none') {
+        //     AppToastMessage("Please provide your previous policy insurer");
+        //     return;
+        // }
         dispatchQuickQuote('PrePolicyEndDate', prevPolEndDate);
         dispatchQuickQuote('PolicyStatus', policyExpire);
         dispatchQuickQuote('PreviousPolicyType', selectedPolicyStatus);
@@ -108,14 +111,12 @@ const PreviousPolicyStatusScreen = () => {
             'PreviousPolicyType': selectedPolicyStatus,
         }
 
-        console.log('obj2 ==> ', obj2)
         let formData = new FormData();
         for (let key in obj2) {
             formData.append(key, obj2[key]);
         }
         // formData.append("posId", store.getState().root.userDetails.id);
         formData.append("customerId", AppConst.getCustomerId());
-        // console.log('customerid', AppConst.getCustomerId());
 
         fillPolicyDataAction(formData).then(res => {
             AppConst.showConsoleLog("fill policy res: ", res);
@@ -131,7 +132,7 @@ const PreviousPolicyStatusScreen = () => {
 
 
 
-    AppConst.showConsoleLog("vehicle: ", details?.VehicleType);
+    // AppConst.showConsoleLog("vehicle: ", details?.VehicleType);
 
 
 
@@ -159,7 +160,7 @@ const PreviousPolicyStatusScreen = () => {
                         )
                     })}
                 </View> */}
-                <View style={styles.dataCont}>
+                {!details?.onlyThirdPartyIns && <View style={styles.dataCont}>
                     <HeadingText
                         text={"Claim Made in last policy"}
                     />
@@ -167,7 +168,7 @@ const PreviousPolicyStatusScreen = () => {
                         value={previosClaimMade}
                         onPress={setPreviousClaimMade}
                     />
-                </View>
+                </View>}
                 {(!previosClaimMade) && <View style={styles.dataCont}>
                     <HeadingText
                         text={"Last Owner Changes"}
@@ -201,7 +202,7 @@ const PreviousPolicyStatusScreen = () => {
                         )
                     })}
                 </View>
-                <View style={styles.dataCont}>
+                {policyExpire != 'none' && <View style={styles.dataCont}>
                     <HeadingText
                         text={!odType ? "What is your previous policy type?" : "Your previous policy insurer"}
                         style={{ marginBottom: 10 }}
@@ -218,7 +219,7 @@ const PreviousPolicyStatusScreen = () => {
                             />
                         </TouchableOpacity>
                     </View> */}
-                    {!odType && previousPolicyStatusesArr.map((item, index) => {
+                    {!odType && prevPolicyTypeArr.map((item, index) => {
                         return (
                             <TouchableOpacity
                                 key={String(index)}
@@ -229,7 +230,7 @@ const PreviousPolicyStatusScreen = () => {
                                 <Checkbox
                                     value={item.key == selectedPolicyStatus}
                                     onPress={() => {
-                                        setSelectedPolicyStatus(item.key)
+                                        setSelectedPolicyStatus(item.key);
                                     }}
                                 />
                                 <AppText
@@ -248,7 +249,7 @@ const PreviousPolicyStatusScreen = () => {
                             marginHorizontal={0}
                         />
                     </View>
-                </View>
+                </View>}
                 <View style={{ margin: 20, marginTop: 0 }}>
                     <Button
                         title='Continue'
@@ -261,6 +262,7 @@ const PreviousPolicyStatusScreen = () => {
             {policyModal &&
                 <DataListSelectModal
                     isSearch={true}
+                    showSubmitBtn={false}
                     list={previousPolicies}
                     textKey='Name'
                     onClose={() => setPolicyModal(false)}

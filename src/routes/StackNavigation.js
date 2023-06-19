@@ -35,9 +35,7 @@ import AllocatedMentorScreen from "../screens/other/AllocatedMentorScreen";
 import ReferScreen from "../screens/other/ReferScreen";
 import ClaimDetailsScreen from "../screens/Claim/ClaimDetailsScreen";
 import WebviewQuatationScreen from "../screens/other/WebviewQuatationScreen";
-
-
-
+import MedicalHistoryScreen from "../screens/InsuranceProcess/HealthInsurance/MedicalHistoryScreen";
 
 
 const Stack = createStackNavigator();
@@ -91,6 +89,7 @@ export const StackNavigation = () => (
     <Stack.Screen name="allocate" component={AllocatedMentorScreen} options={{ headerTitle: "Know Your Mentor" }} />
     <Stack.Screen name="refer" component={ReferScreen} options={{ headerTitle: "Refer Your Friends" }} />
     <Stack.Screen name="webview" component={WebviewQuatationScreen} options={{ headerTitle: "Refer Your Friends" }} />
+    <Stack.Screen name="medicalHistory" component={MedicalHistoryScreen} options={{ headerTitle: "Medical History" }} />
     <Stack.Screen name="transactions" component={TransactionsScreen} options={{ headerTitle: "All Transactions" }} />
   </Stack.Navigator>
 )

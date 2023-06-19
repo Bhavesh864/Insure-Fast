@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Center, flexRow, screenStyle } from '../../../styles/CommonStyling'
 import { colors } from '../../../styles/colors'
 import { AppText, HeadingText } from '../../../Utility/TextUtility'
 import { healthInsurancePlansArr } from '../../../constants/OtherConst'
 import { returnPrice } from '../../../constants/AppConst'
-import { Button } from '../../../components/CustomFields'
+import { Button, CustomBackButton } from '../../../components/CustomFields'
+import { popToTop } from '../../../routes/RootNavigation'
 
 
-const HealthQuotationsScreen = () => {
+const HealthQuotationsScreen = ({ navigation }) => {
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: `Health Insurance`,
+            headerLeft: () => <CustomBackButton style={{ marginLeft: 20 }} onPress={() => popToTop()} />,
+        })
+    }, [])
+
 
     return (
         <View style={screenStyle}>
@@ -90,6 +99,7 @@ const PlansList = () => {
                             <Button
                                 title={`${returnPrice(item.price)}/month`}
                                 style={{ width: "47%" }}
+                                onPress={() => popToTop()}
                             />
                         </View>
 

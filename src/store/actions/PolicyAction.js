@@ -46,7 +46,7 @@ export const getMotorMakeAction = async (Vehicle_Type = "Pvt Car") => {
     }
 }
 
-export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt Car") => {
+export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt Car", loader) => {
     try {
         const res = await PostRequest({
             url: motorUrls.makeSearch,
@@ -54,7 +54,7 @@ export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt 
                 Vehicle_Type,
                 make: search
             },
-            loader: true
+            loader: loader
         });
         // AppConst.showConsoleLog("res:", res);
         return res
@@ -64,12 +64,12 @@ export const getMotorMakeSearchAction = async (search = "", Vehicle_Type = "Pvt 
 }
 
 
-export const getMotorModelAction = async (body, isSearch = false) => {
+export const getMotorModelAction = async (body, isSearch = false, loader) => {
     try {
         const res = await PostRequest({
             url: isSearch ? motorUrls.modelSearch : motorUrls.model,
             body: body,
-            loader: true
+            loader: loader
         });
         return res
     } catch (error) {
@@ -78,12 +78,12 @@ export const getMotorModelAction = async (body, isSearch = false) => {
 }
 
 
-export const getMotorVariantAction = async (body, isSearch = false) => {
+export const getMotorVariantAction = async (body, isSearch = false, loader) => {
     try {
         const res = await PostRequest({
             url: isSearch ? motorUrls.variantSearch : motorUrls.variant,
             body: body,
-            loader: true
+            loader: loader
         });
         return res
     } catch (error) {
@@ -188,12 +188,28 @@ export const getAllocatedMentor = async () => {
         console.log(error);
     }
 }
+
+
 export const getRecentSearchedQuote = async () => {
     const customerId = await AsyncStorage.getItem("customerid");
     try {
         const res = await GetRequest({
             url: motorUrls.getRecentQuoteUrl + `${customerId}`,
             loader: true
+        },
+        );
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getCountryWithCountryCode = async (countryCode = '') => {
+
+    try {
+        const res = await GetRequest({
+            url: motorUrls.getCountryDataWithCode + `Pin_Code=${countryCode}`,
+            loader: false
         },
         );
         return res;
@@ -225,14 +241,14 @@ export const sendQuotation = async (email = '') => {
         store.dispatch(ChangeLoadingSatus(true));
         const res = await fetch("https://api.insurefast.in/api/v1/admin/send-quotation", {
             method: 'POST',
-            header: {
-                'Accept': '*/*',
-                'Content-Type': 'text/plain',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${AppConst.accessToken}`
             },
-            body: {
-                email,
-            }
+            body: JSON.stringify({
+                email
+            })
         }).then((response) => response.text())
             .then((responseData) => {
                 // console.log(
@@ -243,11 +259,13 @@ export const sendQuotation = async (email = '') => {
             })
         store.dispatch(ChangeLoadingSatus(false));
         if (email != '') {
-            AppToastMessage('Your email shared successfully!')
+            AppToastMessage('Quotation send to your email successfully!')
         }
         // AppConst.showConsoleLog("res:", res);
         return res;
     } catch (error) {
+        store.dispatch(ChangeLoadingSatus(false));
+        AppToastMessage('Something went wrong!');
         console.log(error);
     }
 }

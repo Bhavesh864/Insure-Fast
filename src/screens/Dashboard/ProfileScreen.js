@@ -1,54 +1,23 @@
 import React, { useState } from 'react'
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Center, flexRow, screenStyle } from '../../styles/CommonStyling'
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import { AppText, HeadingText } from '../../Utility/TextUtility'
+import { AppText } from '../../Utility/TextUtility'
 import { colors } from '../../styles/colors'
 import { userLogoutAction } from '../../store/actions/UserAction'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from '../../routes/RootNavigation';
 import RateUsModal from '../../components/modals/RateUsModal';
+import { profileScreenArr } from '../../constants/OtherConst';
+import UserProfileComponent from '../../components/dashboard/profilescreen/UserProfileComponent';
+
 
 
 const ProfileScreen = () => {
+    const userData = useSelector(state => state.motor?.apiRequestQQ);
     const dispatch = useDispatch();
+    const phone = useSelector(state => state.motor?.apiRequestQQ?.MobileNumber);
     const [rateModal, setrateModal] = useState(null);
 
-    const arr = [
-        {
-            title: "Payments",
-            icon: <AntDesign name='creditcard' size={15} color={colors.primary} />,
-            key: "transactions"
-        },
-        {
-            title: "How we get you",
-            key: "about",
-            icon: <AntDesign name='question' size={15} color={colors.primary} />
-        },
-        {
-            title: "Allocated Mentor",
-            key: "allocate",
-            icon: <AntDesign name='user' size={15} color={colors.primary} />
-        },
-        {
-            title: "Rate us",
-            key: 'rate',
-            icon: <AntDesign name='staro' size={15} color={colors.primary} />
-        },
-        {
-            title: "Refer",
-            key: "refer",
-            icon: <FontAwesome5 name='coins' size={15} color={colors.primary} />
-        },
-        {
-            title: "Logout",
-            key: "logout",
-            icon: <AntDesign name='logout' size={15} color={colors.primary} />
-        },
-    ];
 
     const onItemPress = (key) => {
         if (!key) {
@@ -72,68 +41,22 @@ const ProfileScreen = () => {
                 ]
             );
             return;
-            // dispatch(userLogoutAction())
         }
         if (key === 'rate') {
             setrateModal(true);
             return;
         }
-
         navigate(key)
-    }
-
-    const ListHeader = () => {
-        return (
-            <View style={{ padding: 20, flexDirection: "row" }}>
-                <TouchableOpacity onPress={() => navigate('editProfile')}>
-                    <Image source={require("../../assets/images/profile.png")} style={{ height: 70, width: 70, resizeMode: "contain" }} />
-                </TouchableOpacity>
-                <View style={{ flex: 1, paddingLeft: 20 }}>
-                    <HeadingText
-                        text={"Florence Jast"}
-                        // size={16}
-                        style={{}}
-                    />
-                    <View style={{ paddingTop: 6 }}>
-                        <View style={[flexRow]}>
-                            <Ionicons name='call-outline' size={18} color={colors.darkGrey} />
-                            <AppText
-                                text={"9876780987"}
-                                size={14}
-                                color={colors.darkGrey}
-                                style={{ paddingLeft: 10 }}
-                            />
-                        </View>
-                        <View style={[flexRow]}>
-                            <FontAwesome name='birthday-cake' size={15} color={colors.darkGrey} />
-                            <AppText
-                                text={"20 Aug, 1999"}
-                                size={14}
-                                color={colors.darkGrey}
-                                style={{ paddingLeft: 10, paddingTop: 3 }}
-                            />
-                        </View>
-                        <TouchableOpacity style={{ marginTop: 10, ...flexRow }} onPress={() => navigate('editProfile')}>
-                            <AppText
-                                text='View Profile '
-                                color={colors.primary}
-                            />
-                            <AntDesign name='right' size={15} color={colors.primary} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        )
     }
 
     return (
         <View style={screenStyle}>
             <SafeAreaView style={{ flex: 1 }}>
                 <FlatList
-                    data={arr}
+                    data={profileScreenArr}
                     key={(a, b) => String(b)}
                     showsVerticalScrollIndicator={false}
-                    ListHeaderComponent={() => <ListHeader />}
+                    ListHeaderComponent={() => <UserProfileComponent userData={userData} phone={phone} />}
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity

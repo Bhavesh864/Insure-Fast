@@ -6,6 +6,7 @@ import { AsyncLogin } from '../../store/actions/AppAction'
 import { colors } from '../../styles/colors'
 import { Center, screenStyle } from '../../styles/CommonStyling'
 import { CustomSafeAreaView } from '../../styles/SafeAreaCustomView'
+import { AppText } from '../../Utility/TextUtility'
 
 
 const SplashScreen = () => {
@@ -29,6 +30,7 @@ const SplashScreen = () => {
                     <Image source={require("../../assets/images/insureFastLogo.png")} style={{ height: 150, width: 250, resizeMode: "contain" }} />
                 </View>
             </View>
+            <AppText text='Version: 1.1.1' style={{ margin: 20, alignSelf: 'center' }} size={20} />
         </CustomSafeAreaView>
     )
 }
@@ -37,7 +39,7 @@ const SplashScreen = () => {
 const styles = StyleSheet.create({
     cont: {
         ...screenStyle,
-        ...Center
+        ...Center,
     },
     logoImg: {
         height: 200,

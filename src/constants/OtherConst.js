@@ -1,5 +1,9 @@
 import React from "react";
 import { BikeInsuranceSvgIcon, CarInsuranceSvgIcon, HealthInsuranceSvgIcon, LifeInsuranceSvgIcon, OtherMenuSvgIcon, TermInsuranceSvgIcon } from "../assets/svg/basicSvgs";
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { colors } from "../styles/colors";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+
 
 
 export const idvOptions = [
@@ -194,60 +198,93 @@ export const AddOnsList = [
 
 export const insuranceTypesArr = [
     {
-        name: "Health Insurance",
+        name: "HEALTH",
         key: "healthInsuranceFor",
         icon: <HealthInsuranceSvgIcon />,
         image: require("../assets/images/types/healthcare.png")
     },
     {
-        name: "Car Insurance",
+        name: "CAR",
         key: "carRegistration",
         icon: <CarInsuranceSvgIcon />,
         image: require("../assets/images/types/car.png"),
         payloads: { vehicleType: "Pvt Car", title: "Car Insurance" }
     },
     {
-        name: "Two Wheeler Insurance",
+        name: "BIKE",
         key: "carRegistration", //"twoWheelerRegNumber",
         icon: <BikeInsuranceSvgIcon />,
         image: require("../assets/images/types/scooter.png"),
         payloads: { vehicleType: "MotorBike", title: "Two Wheeler Insurance" }
     },
     {
-        name: "Taxi Insurance",
+        name: "TAXI",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/pcv.jpeg"),
         payloads: { vehicleType: "Passenger Carrying", title: "PCV Insurance" }
     },
     {
-        name: "Goods Carrying Vehicle (GCV)",
+        name: "GCV",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/commercialVehicle.png"),
         payloads: { vehicleType: "Goods Carrying", title: "GCV Insurance" }
     },
     {
-        name: "Private Car TP",
+        name: "Car TP",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/sport-car.png"),
         payloads: { vehicleType: "Pvt Car", title: "Car Insurance", isThirdParty: true }
     },
     {
-        name: "Private Two Wheeler TP",
+        name: "BIKE TP",
         key: "carRegistration",
         icon: <TermInsuranceSvgIcon />,
         image: require("../assets/images/types/motorbike.png"),
         payloads: { vehicleType: "MotorBike", title: "Two Wheeler Insurance", isThirdParty: true }
     },
     {
-        name: "Life Insurance\n(Coming Soon)",
+        name: "Life \n(Coming Soon)",
         key: "",
         icon: <LifeInsuranceSvgIcon />,
         image: require("../assets/images/types/umberella.png")
     },
 ]
+
+export const profileScreenArr = [
+    {
+        title: "Payments",
+        icon: <AntDesign name='creditcard' size={15} color={colors.primary} />,
+        key: "transactions"
+    },
+    {
+        title: "How we get you",
+        key: "about",
+        icon: <AntDesign name='question' size={15} color={colors.primary} />
+    },
+    {
+        title: "Allocated Mentor",
+        key: "allocate",
+        icon: <AntDesign name='user' size={15} color={colors.primary} />
+    },
+    {
+        title: "Rate us",
+        key: 'rate',
+        icon: <AntDesign name='staro' size={15} color={colors.primary} />
+    },
+    {
+        title: "Refer",
+        key: "refer",
+        icon: <FontAwesome5 name='coins' size={15} color={colors.primary} />
+    },
+    {
+        title: "Logout",
+        key: "logout",
+        icon: <AntDesign name='logout' size={15} color={colors.primary} />
+    },
+];
 
 
 export const insurancePlans = [
@@ -396,6 +433,17 @@ export const previousPolicyStatusesArr = [
     // }
 ]
 
+export const previousPolicyStatusesArrCommercial = [
+    {
+        title: "Just third party insurance only",
+        key: "thirdParty"
+    },
+    {
+        title: "Comprehansive policy",
+        key: "comprehensive"
+    },
+]
+
 
 
 export const policyExpiryArr = [
@@ -414,6 +462,7 @@ export const policyExpiryArr = [
     {
         title: "Not Remeber!",
         key: "none"
+
     }
 ]
 
@@ -440,16 +489,20 @@ export const healthInsuranceForArr = [
         key: "father"
     },
     {
-        title: "Other Members",
-        key: "other"
-    }
-]
-
-export const otherHealthInsuranceForArr = [
-    {
         title: "Mother",
         key: "mother"
     },
+    // {
+    //     title: "Other Members",
+    //     key: "other"
+    // }
+]
+
+export const otherHealthInsuranceForArr = [
+    // {
+    //     title: "Mother",
+    //     key: "mother"
+    // },
     {
         title: "Grand father",
         key: "grandFather"
@@ -469,37 +522,94 @@ export const otherHealthInsuranceForArr = [
 ]
 
 
+export const medicalHistoryArr = [
+    {
+        key: 1,
+        title: 'Existing illness',
+        subtitle: 'Blood Pressure, Diabetes, Heart conditions, Asthma, Thyroid, Cancer etc.'
+    },
+    {
+        key: 2,
+        title: 'Surgical Procedure',
+        subtitle: 'Appendix, Gall bladder, C-section etc.'
+    },
+    {
+        key: 3,
+        title: 'None of these',
+        subtitle: ''
+    }
+]
+
+
+export const diseasesArr = [
+    {
+        key: 1,
+        title: 'Diabetes'
+    },
+    {
+        key: 2,
+        title: 'BP / Hypertension'
+    },
+    {
+        key: 3,
+        title: 'Heart Ailments'
+    },
+    {
+        key: 4,
+        title: 'Other health issues'
+    },
+]
+
 
 export const staticCitiesArr = [
     {
-        name: "Delhi"
+        District: "Delhi",
+        pinCode: 110001
     },
     {
-        name: "Bengaluru"
+        District: "Bengaluru",
+        pinCode: 560004
+
     },
     {
-        name: "Pune"
+        District: "Pune",
+        pinCode: 411005
+
     },
     {
-        name: "Mumbai"
+        District: "Mumbai",
+        pinCode: 400001
+
     },
     {
-        name: "Hyderabad"
+        District: "Hyderabad",
+        pinCode: 500001
+
     },
     {
-        name: "Gurgaon"
+        District: "Gurgaon",
+        pinCode: 122003
+
     },
     {
-        name: "Thane"
+        District: "Thane",
+        pinCode: 40604
+
     },
     {
-        name: "Ghaziabad"
+        District: "Ghaziabad",
+        pinCode: 201003
+
     },
     {
-        name: "Lucknow"
+        District: "Lucknow",
+        pinCode: 226001
+
     },
     {
-        name: "Jaipur"
+        District: "Jaipur",
+        pinCode: 332001
+
     },
 ]
 
@@ -546,6 +656,17 @@ export const newPolicyTypes = [
         title: "StandAlone OD",
         key: "own_damage"
     }
+]
+
+export const commercialVehiclePolicyList = [
+    {
+        title: "Comprehensive",
+        key: "Comprehensive"
+    },
+    {
+        title: "Third Party",
+        key: "ThirdParty"
+    },
 ]
 
 export const pcvGcvPolicyTypes = [
