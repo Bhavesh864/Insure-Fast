@@ -4,7 +4,6 @@ import { InputField, ModalTitleHeader } from '../CustomFields';
 import { AppText } from '../../Utility/TextUtility';
 import { colors } from '../../styles/colors';
 import { Center, height, width } from '../../styles/CommonStyling';
-import { color } from 'react-native-reanimated';
 import { sendQuotation } from '../../store/actions/PolicyAction';
 import { AppToastMessage } from '../custom/SnackBar';
 

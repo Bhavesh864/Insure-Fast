@@ -39,7 +39,7 @@ public class ReactNativeFlipper {
       NetworkFlipperPlugin networkFlipperPlugin = new NetworkFlipperPlugin();
       NetworkingModule.setCustomClientBuilder(
           new NetworkingModule.CustomClientBuilder() {
-            @Override
+            // @Override
             public void apply(OkHttpClient.Builder builder) {
               builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkFlipperPlugin));
             }
@@ -53,12 +53,12 @@ public class ReactNativeFlipper {
       if (reactContext == null) {
         reactInstanceManager.addReactInstanceEventListener(
             new ReactInstanceEventListener() {
-              @Override
+              // @Override
               public void onReactContextInitialized(ReactContext reactContext) {
                 reactInstanceManager.removeReactInstanceEventListener(this);
                 reactContext.runOnNativeModulesQueueThread(
                     new Runnable() {
-                      @Override
+                      // @Override
                       public void run() {
                         client.addPlugin(new FrescoFlipperPlugin());
                       }

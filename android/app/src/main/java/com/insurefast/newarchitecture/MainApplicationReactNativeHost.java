@@ -24,6 +24,7 @@ import com.insurefast.newarchitecture.components.MainComponentsRegistry;
 import com.insurefast.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
+// import com.lugg.ReactNativeConfig.ReactNativeConfigPackage; 
 
 /**
  * A {@link ReactNativeHost} that helps you load everything needed for the New Architecture, both

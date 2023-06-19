@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View, Image } from 'react-native'
 import { AvailableInsuranceComponent, HomeHeader, HomeScreenBanner, HowInsuranceWorkComponent } from '../../components/home/HomeComponents'
-// import HomeHeader from '../../components/home/HomeHeader'
 import { colors } from '../../styles/colors'
 import { Center, flexRow, screenStyle, width } from '../../styles/CommonStyling'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { useDispatch } from 'react-redux'
 import { getUserProfileData } from '../../store/actions/UserAction'
 import { CustomSafeAreaView } from '../../styles/SafeAreaCustomView'
-import { createCustomerAction, getRecentSearchedQuote } from '../../store/actions/PolicyAction'
+import { getRecentSearchedQuote } from '../../store/actions/PolicyAction'
 import { navigate } from '../../routes/RootNavigation'
 
 
