@@ -12,7 +12,6 @@ import { AppConst } from '../../constants/AppConst'
 import { AppToastMessage } from '../../components/custom/SnackBar'
 
 
-
 const OtpScreen = ({ route }) => {
     const mobile = route.params?.mobile;
     const responseData = route.params?.response;
