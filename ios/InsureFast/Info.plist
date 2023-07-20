@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string />
+	<string/>
 	<key>NSCameraUsageDescription</key>
 	<string>This allows us to use your device camera to upload and share picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

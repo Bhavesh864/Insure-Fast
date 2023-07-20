@@ -36,6 +36,7 @@ import ReferScreen from "../screens/other/ReferScreen";
 import ClaimDetailsScreen from "../screens/Claim/ClaimDetailsScreen";
 import WebviewQuatationScreen from "../screens/other/WebviewQuatationScreen";
 import MedicalHistoryScreen from "../screens/InsuranceProcess/HealthInsurance/MedicalHistoryScreen";
+import TermsConditions from "../screens/Auth/TermsConditions";
 
 
 const Stack = createStackNavigator();
@@ -48,6 +49,7 @@ export const AuthNavigation = () => (
     <Stack.Screen component={LoginOptionsScreen} name="loginOptions" />
     <Stack.Screen component={LoginScreen} name="login" />
     <Stack.Screen component={OtpScreen} name="otpScreen" />
+    <Stack.Screen component={TermsConditions} name="termsConditions" />
   </Stack.Navigator>
 )
 

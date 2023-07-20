@@ -1,74 +1,79 @@
 import React, { useEffect, useState } from 'react'
-import { NativeModules, PermissionsAndroid, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Linking, PermissionsAndroid, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Button, InputField } from '../../components/CustomFields'
 import { navigate } from '../../routes/RootNavigation'
 import { ChangeAppStatus } from '../../store/actions/AppAction'
 import { colors } from '../../styles/colors'
-import { flexRow, screenStyle } from '../../styles/CommonStyling'
+import { flexRow, normalTextStyle, screenStyle } from '../../styles/CommonStyling'
 import { AppText, HeadingText } from '../../Utility/TextUtility'
 import { WhatsAppSvgIcon } from '../../assets/svg/basicSvgs';
 import { customerLoginAction } from '../../store/actions/UserAction';
-import { AppConst } from '../../constants/AppConst';
 import { AppToastMessage } from '../../components/custom/SnackBar';
+import { AppConst } from '../../constants/AppConst';
+import PrivacyPoliciesModal from '../../components/modals/PrivacyPoliciesModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ route, navigation }) => {
-    // const loginType = route.params?.type ? route.params?.type : "user";
+    const [showModal, setShowModal] = useState(false);
     const [mobile, setMobile] = useState("");
     const [selectedCode, setSelectedCode] = useState("+91");
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        // navigation.addListener('focus', async () => {
-        //     if (Platform.OS == 'android') {
 
-        //     }
-        // });
+    const checkPermission = async () => {
+        const data = await AsyncStorage.getItem("smsPermission");
+        const smsPermission = JSON.stringify(data)
+
+        // if (Platform.OS == 'ios') {
+        //     onVerified()
+        //     return
+        // }
+
+        if (smsPermission == null || smsPermission == 'null') {
+            setShowModal(true);
+        }
+    }
+
+
+
+
+    useEffect(() => {
+        checkPermission()
     }, []);
 
-    const onAction = (body) => {
+
+    const onAction = async (body) => {
         if (mobile.length < 10) {
             AppToastMessage('Please enter a valid number!');
             return;
         }
-        customerLoginAction(body).then(res => {
-            console.log(JSON.stringify(res));
-            if (res?.data?.ErrorMessage == 'Done') {
-                navigate("otpScreen", { mobile, response: res?.customer });
-            } else {
-                AppToastMessage(res?.data?.ErrorMessage);
+        if (Platform.OS == 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+                );
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                    await AsyncStorage.setItem('smsPermission', JSON.stringify('true'))
+                    AppConst.showConsoleLog('Permission Approved!');
+                    customerLoginAction(body).then(res => {
+                        console.log(JSON.stringify(res));
+                        if (res?.data?.ErrorMessage == 'Done') {
+                            navigate("otpScreen", { mobile, response: res?.customer });
+                        } else {
+                            AppToastMessage(res?.data?.ErrorMessage);
+                        }
+                    });
+                } else {
+                    AppToastMessage('Permission Denied!');
+                }
+            } catch (error) {
+                AppConst.showConsoleLog('Permission err', error)
             }
-        });
-
-        // try {
-        //     let phone = mobile
-        //     if (!phone) {
-        //         AppToastMessage("Please enter valid mobile number");
-        //         return;
-        //     }
-        //     // if (mobile.trim() && mobile?.length > 9) {
-        //     let body = {
-        //         "phone_number": phone,
-        //         "country_code": "91"
-        //     }
-        //     userLoginAction(body).then(res => {
-        //         AppConst.showConsoleLog("login res: ", res);
-        //         if (res?.status) {
-        //             navigate("otpScreen", { mobile, response: res?.data });
-        //         } else {
-        //             AppToastMessage(res?.message);
-        //         }
-        //     })
-        // } catch (error) {
-
-        // }
-        // }
+        }
     }
 
-    const employeeLogin = () => {
-        dispatch(ChangeAppStatus(3))
-    }
 
     return (
         <View style={screenStyle}>
@@ -141,19 +146,28 @@ const LoginScreen = ({ route, navigation }) => {
                         />
                     </View>
                 </View>
-                <View style={{ padding: 20 }}>
-                    <Text style={{ textAlign: "center", maxWidth: "80%", alignSelf: "center" }}>
-                        <AppText
-                            text={"By continuing you confirm that you agree with our"}
-                            color={colors.darkGrey}
-                        />
-                        <AppText
-                            text={"Term and Conditions"}
-                            color={colors.primary}
-                        />
+                <View style={{ padding: 20, paddingHorizontal: 30 }}>
+                    <Text style={{ ...normalTextStyle, color: colors.darkGrey, alignSelf: 'center', textAlign: 'center' }}>
+                        {`By continuing you confirm that you agree with our `}
+                        <Text onPress={() => {
+                            navigate('termsConditions');
+                            // Linking.openURL('https://insurefast.in/tnc')
+                        }}
+                            style={{ ...normalTextStyle, color: colors.primary, }}
+                        >Terms and Conditions</Text>
                     </Text>
                 </View>
             </SafeAreaView>
+            {showModal &&
+                <PrivacyPoliciesModal onClose={() => {
+                    setShowModal(false)
+                    // onVerified()
+                }}
+                    onVerify={() => {
+                        setShowModal(false)
+                        // onVerified()
+                    }}
+                />}
         </View>
     )
 }

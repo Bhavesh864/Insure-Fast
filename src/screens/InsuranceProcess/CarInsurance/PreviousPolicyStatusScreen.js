@@ -13,6 +13,7 @@ import ListShowModal from '../../../components/modals/ListShowModal'
 import DataListSelectModal from '../../../components/modals/DataListSelectModal'
 import { AppToastMessage } from '../../../components/custom/SnackBar'
 import moment from 'moment'
+import { flexSpaceAround } from '../../../styles/CommonStyling'
 
 
 const PreviousPolicyStatusScreen = () => {

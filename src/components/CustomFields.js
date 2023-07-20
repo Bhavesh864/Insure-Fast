@@ -382,7 +382,7 @@ export const ModalHeader = ({ title = '', onPress = () => { } }) => {
 };
 
 
-export const ModalTitleHeader = ({ title = '', onPress = () => { }, style = {}, color = colors.black }) => {
+export const ModalTitleHeader = ({ title = '', onPress = () => { }, style = {}, color = colors.black, showCloseBtn = true }) => {
   return (
     <View
       style={[styles.modalTitleHeader, style]}>
@@ -392,7 +392,7 @@ export const ModalTitleHeader = ({ title = '', onPress = () => { }, style = {}, 
         text={title}
         color={color}
       />
-      <AntDesign name='close' size={25} color={color} style={styles.closeIcon} onPress={() => onPress()} />
+      {showCloseBtn && <AntDesign name='close' size={25} color={color} style={styles.closeIcon} onPress={() => onPress()} />}
     </View>
   );
 };

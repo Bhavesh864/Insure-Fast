@@ -11,10 +11,15 @@ import { useDispatch } from 'react-redux'
 import { verifyOtpAction } from '../../store/actions/UserAction'
 import { AppConst } from '../../constants/AppConst'
 import { AppToastMessage } from '../../components/custom/SnackBar'
+import RateUsModal from '../../components/modals/RateUsModal'
+import PrivacyPoliciesModal from '../../components/modals/PrivacyPoliciesModal'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const OtpScreen = ({ route }) => {
     const mobile = route.params?.mobile;
     const responseData = route.params?.response;
+    const [showModal, setShowModal] = useState(false);
+    const [gavePermissaion, setgavePermissaion] = useState(false)
     const dispatch = useDispatch();
     const [otp, setotp] = useState({
         first: '',
@@ -24,51 +29,26 @@ const OtpScreen = ({ route }) => {
         five: ''
     });
 
-    useEffect(() => {
-        let smslistenerSubs = null;
-        if (Platform.OS == 'android') {
-            setTimeout(async () => {
-                try {
-                    const granted = await PermissionsAndroid.request(
-                        PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
-                    );
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        AppConst.showConsoleLog('Permission Approved!');
-                        NativeModules.SMSListener.startListen();
+    const checkPermission = async () => {
+        const data = await AsyncStorage.getItem("smsPermission");
+        const smsPermission = JSON.stringify(data)
 
-                        const eventEmitter = new NativeEventEmitter();
-                        smslistenerSubs = eventEmitter.addListener('SMSEventListener', (events) => {
-                            AppConst.showConsoleLog('otp event:', events);
-                            if (events) {
-                                let fetchedOtp = events.OTP;
-                                setotp({
-                                    first: fetchedOtp?.charAt(0),
-                                    second: fetchedOtp?.charAt(1),
-                                    third: fetchedOtp?.charAt(2),
-                                    four: fetchedOtp?.charAt(3),
-                                    five: fetchedOtp?.charAt(4),
-                                });
-                            }
-                        })
-                    } else {
-                        AppToastMessage('Permission Denied!');
-                    }
-                } catch (error) {
-                    AppConst.showConsoleLog('Permission err', error)
-                }
-            }, 200);
+        // if (Platform.OS == 'ios') {
+        //     onVerified()
+        //     return
+        // }
+
+        if (smsPermission == null || smsPermission == 'null') {
+            setShowModal(true);
         }
+    }
 
-        return () => {
-            if (Platform.OS == 'android') {
-                NativeModules.SMSListener.unregisterReceiver();
-                if (smslistenerSubs) {
-                    smslistenerSubs.remove();
-                }
-            }
-        }
 
-    }, []);
+
+
+    // useEffect(() => {
+    //     checkPermission()
+    // }, []);
 
 
     useEffect(() => {
@@ -76,6 +56,7 @@ const OtpScreen = ({ route }) => {
             onVerify();
         }
     }, [otp]);
+
 
     const onVerify = () => {
         // navigate("login", { type: "employee" })
@@ -101,6 +82,52 @@ const OtpScreen = ({ route }) => {
             AppToastMessage('Please enter 5 digit otp!')
         }
     }
+
+    // const onVerified = () => {
+    //     let smslistenerSubs = null;
+    //     if (Platform.OS == 'android') {
+    //         setTimeout(async () => {
+    //             try {
+    //                 const granted = await PermissionsAndroid.request(
+    //                     PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
+    //                 );
+    //                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //                     AppConst.showConsoleLog('Permission Approved!');
+    //                     await AsyncStorage.setItem('smsPermission', JSON.stringify('true'))
+    //                     NativeModules.SMSListener.startListen();
+
+    //                     const eventEmitter = new NativeEventEmitter();
+    //                     smslistenerSubs = eventEmitter.addListener('SMSEventListener', (events) => {
+    //                         AppConst.showConsoleLog('otp event:', events);
+    //                         if (events) {
+    //                             let fetchedOtp = events.OTP;
+    //                             setotp({
+    //                                 first: fetchedOtp?.charAt(0),
+    //                                 second: fetchedOtp?.charAt(1),
+    //                                 third: fetchedOtp?.charAt(2),
+    //                                 four: fetchedOtp?.charAt(3),
+    //                                 five: fetchedOtp?.charAt(4),
+    //                             });
+    //                         }
+    //                     })
+    //                 } else {
+    //                     AppToastMessage('Permission Denied!');
+    //                 }
+    //             } catch (error) {
+    //                 AppConst.showConsoleLog('Permission err', error)
+    //             }
+    //         }, 200);
+    //     }
+
+    //     return () => {
+    //         if (Platform.OS == 'android') {
+    //             NativeModules.SMSListener.unregisterReceiver();
+    //             if (smslistenerSubs) {
+    //                 smslistenerSubs.remove();
+    //             }
+    //         }
+    //     }
+    // }
 
     return (
         <View style={screenStyle}>
@@ -155,6 +182,16 @@ const OtpScreen = ({ route }) => {
                     </View>
                 </KeyboardAvoidingView>
             </SafeAreaView>
+            {/* {showModal &&
+                <PrivacyPoliciesModal onClose={() => {
+                    setShowModal(false)
+                    // onVerified()
+                }}
+                    onVerify={() => {
+                        setShowModal(false)
+                        onVerified()
+                    }}
+                />} */}
         </View>
     )
 }
